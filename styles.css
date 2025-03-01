@@ -211,7 +211,7 @@ body {
 .close-btn {
   position: fixed; /* 🔥 画面固定にすることで、スライドショーとは独立 */
   display: none; /* 🔥 最初は非表示 */
-  bottom: 10px;
+  top: 60px;
   right: 20px;
   font-size: 0.8rem; /* ボタンサイズ */
   color: black;
