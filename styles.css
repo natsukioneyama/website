@@ -218,7 +218,7 @@ body {
 .slide-caption {
   position: absolute;
   bottom: 55px;
-  left: 5px;
+  left: 20px;
   color: black;
   font-family: Arial, sans-serif;
   display: none; /* 🔥 初期状態では非表示 */
@@ -262,7 +262,7 @@ body {
     justify-content: flex-start;
     position: absolute; /* 🔥 画像の上に配置するために絶対配置 */
     bottom: 25px;
-    left: 5px; /* 🔥 左端からの余白 */
+    left: 20px; /* 🔥 左端からの余白 */
     flex-wrap: wrap; /* ✅ テキストがはみ出る場合は折り返す */
     word-wrap: break-word; /* ✅ 長い単語も適切に折り返す */
     white-space: normal; /* ✅ 改行を許可 */
