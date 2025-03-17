@@ -297,7 +297,8 @@ body {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   pointer-events: auto; /* クリックを有効にする */
-
+　width: 44px;
+  height: 44px;
 }
 
 
@@ -319,7 +320,7 @@ body {
 
 .close-btn::before {
     content: "<<"; /* ← ここで `<<` を表示 */
-    font-size:   30px;
+    font-size:   15px;
     color: black;
     font-weight: bold;
 }
