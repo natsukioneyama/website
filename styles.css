@@ -5,16 +5,11 @@
   box-sizing: border-box;
 }
 
-html, body {
-    height: 100dvh; /* ナビバーの影響を受けない */
-    overflow-x: hidden;
-    margin: 0;
-    padding: 0;
-}
+
             
 body {
   background: #fff;
-   padding-bottom: env(safe-area-inset-bottom, 20px); /* iPhoneのナビバー分の余白を確保 */
+
 }   
    
 
