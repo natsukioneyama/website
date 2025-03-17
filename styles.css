@@ -319,7 +319,7 @@ body {
 
 .close-btn::before {
     content: "<<"; /* ← ここで `<<` を表示 */
-    font-size: 15px;
+    font-size:   30px;
     color: black;
     font-weight: bold;
 }
