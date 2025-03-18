@@ -299,7 +299,6 @@ body {
   pointer-events: auto; /* クリックを有効にする */
   width: 60px;
   height: 60px;
-  background-color: rgba(255, 0, 0, 0.352);
 }
 
 
