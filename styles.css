@@ -445,10 +445,10 @@ body {
   }
 }
 
-/* ✅ スマホ（767px以下）：2列 */
+/* ✅ スマホ（767px以下）：1列 */
 @media (max-width: 767px) {
   .grid-sizer, .gallery-item {
-    width: 50%;
+    width: 100%;
   }
   .caption {
     font-size: 1.3rem;
