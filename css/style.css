@@ -1,0 +1,144 @@
+ :root { --maxw:1100px; --gap:10px; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",Arial,sans-serif;color:#0a0a0a}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:var(--maxw);margin:0 auto;padding:24px}
+
+    .hero{ text-align:center; padding:50px 0 40px;}
+    .hero h1{font-size:1rem;margin:0 0 2px;font-weight:700}
+    .hero p{font-size:.9rem;margin:0;font-weight:700}
+
+    .hero-link {text-decoration: none;color: inherit;display: inline-block;}
+    .hero-link:hover {text-decoration: none;}
+    
+    /* 見出し+横線 */
+    .section-title{
+      display:flex;align-items:center;gap:16px;margin:24px 0 18px;
+      font-size:1.7rem;font-weight:700;letter-spacing:.02em
+    }
+    .section-title::after{content:"";flex:1;height:1px;background:#0a0a0a;margin-bottom:1px;}
+
+    /* ---- Projects（カード2つ） ---- */
+    .projects-grid{display:block;margin:50px 0;}
+    .project-card{display:block;width:40%;max-width: 300px;margin:0 auto 24px;text-align:left;}
+    .project-card img,.project-card video{display:block;width:100%;height:auto;margin:0;}
+    .project-caption{margin:6px 0 0;font-weight:700;font-size:.9rem;}
+
+
+    /* ---- Masonry Overview（Masonry.js 用） ---- */
+    .masonry{margin:60px 0;opacity: 0;}
+    .masonry.is-ready { opacity: 1; transition: opacity .2s; }
+    /*.masonry-sizer,.masonry-item{width:20%}*/
+    .masonry-item{margin-bottom:var(--gap)}
+    .masonry-item img,.masonry-item video{width:100%;height:auto;display:block;background:#ececec}
+
+    /* ---- Contacts / Bio ---- */
+    .contacts{display:flex;justify-content:center;gap:28px;border-top:1px solid #0a0a0a;padding:20px 8px;font-size:.8rem}
+    .contacts a:hover{opacity:.5}
+    .bio{border-top:1px solid #0a0a0a;padding:50px 0;line-height:1.8;font-size:.8rem}
+    .footer-copyright{ text-align:center;font-size:.6rem;color:#666;padding:16px 0;}
+
+    /* ---- Lightbox ---- */
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;z-index:9999}
+    .lightbox.open{display:block}
+    .lb-inner{position:relative;width:100%;height:100%}
+    .lb-header{
+      position:absolute;top:0;left:0;right:0;background:rgba(255,255,255,.94);
+      display:flex;gap:12px;align-items:flex-start;justify-content:space-between;
+      padding:10px 16px;border-bottom:1px solid rgba(0,0,0,.1);z-index: 3;
+    }
+    .artist-name { font-weight: 800 !important; font-size: 0.9rem; margin-bottom: 2px;}
+
+    .lb-title{font-weight:600;font-size:0.8rem;margin-bottom:2px}
+    .lb-meta{font-size:0.8rem;font-weight:600; line-height:1.4}
+    .lb-actions{display:flex;gap:16px;font-weight:800 !important;font-size:13px}
+    .lb-page{font-size:12px;opacity:.8}
+
+     #lb-close { all: unset; cursor: pointer;  font-weight: normal !important;  }
+
+    #lb-close:focus { outline: none; }
+    .lb-stage {position: absolute;left: 50%;transform: translateX(-50%);top: 64px;width: min(92vw, 820px);display: flex;justify-content: center;align-items: flex-start;}
+    .lb-media{display:block;max-width:min(100%,800px);height:auto;max-height: calc(100vh - 80px);}
+    .lb-prev,.lb-next{
+      background:none;border:none;cursor:pointer;font-size:40px;color:#a2a2a279;
+      position:absolute;top:50%;transform:translateY(-50%)
+    }
+    .lb-prev{left:12px}.lb-next{right:12px}
+    .lb-hotspot{position:absolute;top: var(--lb-stage-top, 0);left:0;width:50%;height: var(--lb-stage-height, 100vh);background:transparent;border:0;z-index:2}
+    .lb-hotspot-right{left:50%}
+
+
+ #overview { --gutter: 10px; }
+
+/* PC 等：5列（gutter×4 を引く） */
+#overview .masonry-sizer,
+#overview .masonry-item {
+  width: calc((100% - (var(--gutter) * 4)) / 5);
+}
+
+/* 例：タブレットで4列にしたい場合（任意） */
+@media (max-width: 900px) {
+  #overview .masonry-sizer,
+  #overview .masonry-item {
+    width: calc((100% - (var(--gutter) * 3)) / 4);
+  }
+}
+    @media (max-width:768px){
+   
+      .lb-prev,.lb-next{display:none}
+      .contacts{flex-direction: column;align-items: center;gap: 10px; }
+      .artist-name {font-size:0.8rem;font-weight: 600;}
+      .lb-actions {font-size: 0.8rem;}
+    }
+    @media (max-width: 480px) {
+    #overview .masonry-sizer,
+    #overview .masonry-item {
+    width: calc((100% - (var(--gutter) * 2)) / 3);
+  }
+
+    .hero h1{
+      font-size: 0.9rem;
+    }
+
+    .hero h1 p {
+      font-size: 0.8rem;
+    }
+       .section-title{
+      font-size: 1.5rem;
+     }
+   
+     .project-card{
+    width: 88%;      /* ← 40% → 88% に拡大（お好みで90～94%でも） */
+    max-width: none; /* 300px 上限を外す */
+  }
+
+  /* 左（タイトル/クレジット）を縮め可にして右を守る */
+  .lb-header > :first-child { min-width: 0; }  /* ← 左側の包み(div)を縮めOKに */
+
+
+  /* 右カラムは折り返し禁止（actions全体と各要素）*/
+  .lb-actions { 
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap;      /* ← まとめて折り返し禁止 */
+    flex: 0 0 auto;
+  }
+  #lb-contact,
+  #lb-close,
+  .lb-page {
+    white-space: nowrap;      /* ← 個別にも保険をかける */
+    flex: 0 0 auto;
+    display: inline-block;
+  }
+
+  /* Gridを使っていないので不要だが、将来Grid化するなら有効 */
+  /* .lb-header { grid-template-columns: minmax(0,1fr) auto auto; } */
+
+    #overview .masonry-sizer,
+  #overview .masonry-item {
+    width: calc((100% - (var(--gutter) * 2)) / 3);
+  }
+}
+
+
