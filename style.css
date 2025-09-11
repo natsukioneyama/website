@@ -446,6 +446,27 @@ a, a:link, a:visited, a:hover, a:active{
   text-decoration: none !important;
 }
 
+/* === Info > SELECTED CLIENTS のチップを強制表示＆デザイン復帰 === */
+.ov-info .tags{
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px 10px !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 8px 0 12px !important;
+}
+.ov-info .tags li{
+  display: inline-block !important;
+  font-size: 11px !important;
+  padding: 4px 10px !important;
+  border-radius: 9999px !important;
+  background: rgba(0,0,0,.06) !important;  /* うっすらグレーの楕円 */
+}
+.ov-info .tags li a{
+  display: block !important;
+  color: #111 !important;
+  text-decoration: none !important;
+}
 
 
 
