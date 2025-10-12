@@ -162,7 +162,21 @@ body.info {
   font-size: 0.95rem;
 }
 
+.insta-icon {
+  display: inline-block;
+  margin-top: 12px;
+}
 
+.insta-icon svg {
+  width: 22px;
+  height: 22px;
+  vertical-align: middle;
+  transition: opacity 0.3s ease;
+}
+
+.insta-icon:hover svg {
+  opacity: 0.7;
+}
 
 
 
