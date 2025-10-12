@@ -5,7 +5,7 @@
 
 // ===== 設定 =====
 const FRAME_COUNT  = 29;        // 実枚数に合わせる
-const FRAME_DIR    = "img/01/"; // 画像フォルダ
+const FRAME_DIR    = "img07/"; // 画像フォルダ
 const EXT          = ".webp";
 const PAD_DIGITS   = 2;         // 01.webp 形式なら 2
 
