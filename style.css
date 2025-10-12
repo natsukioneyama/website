@@ -167,9 +167,15 @@ body.info {
   margin-top: 12px;
 }
 
+
+.insta-icon {
+  display: inline-block;
+  margin-top: 12px;
+}
+
 .insta-icon svg {
-  width: 22px;
-  height: 22px;
+  width: 28px;   /* ← ここをお好みで。20〜32pxくらいがスマホではバランス◎ */
+  height: 28px;
   vertical-align: middle;
   transition: opacity 0.3s ease;
 }
@@ -177,8 +183,6 @@ body.info {
 .insta-icon:hover svg {
   opacity: 0.7;
 }
-
-
 
 
 
