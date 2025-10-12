@@ -174,8 +174,8 @@ body.info {
 }
 
 .insta-icon svg {
-  width: 28px;   /* ← ここをお好みで。20〜32pxくらいがスマホではバランス◎ */
-  height: 28px;
+  width: 20px;   /* ← ここをお好みで。20〜32pxくらいがスマホではバランス◎ */
+  height: 20px;
   vertical-align: middle;
   transition: opacity 0.3s ease;
 }
