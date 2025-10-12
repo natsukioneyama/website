@@ -179,6 +179,25 @@ body.info {
   opacity: 0.7;
 }
 
+.insta-icon {
+  display: block;        /* ← 独立した行に */
+  margin: 10px auto 8px; /* 上下の間隔＋中央寄せ */
+  width: 22px;           /* アイコンの見た目サイズ */
+}
 
+.insta-icon svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: opacity 0.3s ease;
+}
+
+.insta-icon:hover svg {
+  opacity: 0.7;
+}
+
+.back {                  /* Backを必ず次の行に */
+  margin-top: 6px;
+}
 
 
