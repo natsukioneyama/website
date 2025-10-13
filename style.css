@@ -137,12 +137,11 @@ body.info {
 
 .info-box h1 {
   font-size: 1.3rem;     
-  margin-bottom: 0.5em;
+  margin-bottom: 5rem;
 }
 
 .info-box p {
   font-size: 0.9rem;       
-  margin-top: 5rem;
 }
 
 .info-box a {
