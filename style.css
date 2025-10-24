@@ -1,0 +1,188 @@
+:root{
+  --bg:#a80000;
+  --frame-h: min(clamp(400px, 60vmin, 600px), 100svh);
+  overflow-x: clip; 
+}
+@supports (overflow: clip) {
+  html, body { overflow: clip; }  /* 対応端末ではより強力に */
+}
+
+*{ box-sizing:border-box; }
+
+@media (max-width: 768px) and (pointer: coarse){
+  :root{
+    /* 下部の安全域も考慮して縦方向の上限でキャップ */
+    --ui-bottom: calc(22px + env(safe-area-inset-bottom));
+    --frame-h: min(92vmin, calc(100svh - 140px - var(--ui-bottom)));
+    /* ↑ 92vmin で基本大きくしつつ、画面の実高(svh)から
+       アイコン等の余白(約140px)を引いた値を上限にする */
+  }
+}
+
+html {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+body {
+background: var(--bg);
+min-height: 100svh;
+height: 100vh;
+overflow: hidden;
+margin: 0; 
+display: grid; 
+place-items: center; 
+}
+#scrubber{
+  position: static;       /* 変更：absolute をやめる */
+  z-index: 10;
+  /* top/left/transform は削除 */
+  display: grid;
+  place-items: center;
+  user-select: none;
+  cursor: ew-resize;
+  touch-action: none;
+  -webkit-user-select: none;
+}
+
+
+#frame { max-height: var(--frame-h);  max-width: 92vw; height:auto; width:auto; }
+.frame{
+  /* ここが “一定に見える高さ” の肝 */
+  height: var(--frame-h);
+  max-width: 92vw;          
+  display: grid;
+  place-items: center;       
+}
+.frame img{
+  max-height: 100%;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;       
+}
+
+.loading{
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  opacity: .7;
+  letter-spacing: .08em;
+  font-size: clamp(12px, 2.2vmin, 14px);
+}
+.loading.hidden{ display:none; }
+
+
+
+#info-btn {
+  position: fixed;
+  left: 50%;
+  bottom: calc(20px + env(safe-area-inset-bottom)); /* iPhone安全域も考慮 */
+  transform: translateX(-50%);
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #ffffff;
+  border-radius: 50%;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-size: 15px;
+  line-height: 18px;
+  text-align: center;
+  text-decoration: none;
+  transition: 0.3s ease;
+  opacity: 0.7;
+  z-index: 50;                   /* 他要素より前に */
+  -webkit-tap-highlight-color: transparent; /* タップ時の灰色ハイライト除去 */
+  touch-action: manipulation;              /* iOSのクリック遅延防止 */
+}
+
+/* 見た目は変えず、ヒットエリアだけ拡大 */
+#info-btn::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 48px;   /* タッチ可能範囲（Apple推奨は44px以上） */
+  height: 48px;
+  transform: translate(-50%, -50%);
+}
+
+/* hover（PC用） */
+#info-btn:hover {
+  opacity: 1;
+}
+
+body.info {
+  font-family: "neue-haas-unica", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  background: #a80000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh; 
+  height: 100vh;      
+  margin: 0;
+}
+
+.info-box {
+  text-align: center;
+  letter-spacing: 0.2px;
+}
+
+.info-box h1 {
+  font-size: 0.8rem; 
+  font-weight: 500;  
+  letter-spacing: 0.03em;
+  opacity: 0.9;  
+  margin-bottom: 5rem;
+}
+
+.info-box p {
+  font-size: 0.8rem;  
+  font-weight: 200; 
+  letter-spacing: 0.03em;    
+}
+
+.info-box a {
+  color: #fff;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.info-box a:hover {
+  opacity: 0.6;
+}
+
+.info-box a[href="index.html"] {
+  display: block;      
+  font-size: 0.95rem;
+  margin-top: 5rem;
+}
+
+body.info .insta-icon {
+  display: block;      
+  width: 15px;
+  margin: 10px auto 6px; 
+}
+
+body.info .insta-icon svg {
+display: block;
+width: 100%;
+height: auto;
+transition: opacity 0.3s ease;
+}
+
+body.info .insta-icon:hover svg {
+  opacity: 0.7;
+}
+
+
+
