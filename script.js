@@ -237,3 +237,4 @@ window.addEventListener("load", () => {
   }, totalDuration);
 });
 
+
