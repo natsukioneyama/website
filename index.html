@@ -243,6 +243,29 @@
 
   <!-- JS -->
   <script src="script.js" defer></script>
+    <script>
+(function () {
+  const ua = navigator.userAgent || "";
+  // Instagramアプリ内ブラウザを検出
+  const inIG = ua.includes("Instagram");
+  if (!inIG) return;
+
+  // 現在のURLを取得
+  const url = window.location.href;
+
+  // iOS or Android 判定
+  const isiOS = /iPhone|iPad|iPod/i.test(ua);
+  const isAndroid = /Android/i.test(ua);
+
+  // iOSならSafari、AndroidならChromeで開く
+  if (isiOS) {
+    window.location = "x-safari-" + url;
+  } else if (isAndroid) {
+    window.location = "intent://" + url.replace(/^https?:\/\//, "") +
+      "#Intent;scheme=https;package=com.android.chrome;end";
+  }
+})();
+</script>
 </body>
 </html>
 
