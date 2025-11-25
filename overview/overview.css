@@ -136,27 +136,13 @@ body {
   justify-content: center;
 }
 
-/* iPhone Safari 対応 + 画像90vw でもキャプションとかぶらないようにする */
+
 @media (max-width: 767px) {
   .gm-frame {
-    /* ナビバーの高さ変動対策：固定heightはやめてautoにする */
-    height: auto !important;
-
-    /* 画像がキャプションを押し出さないように、
-       画面高からキャプション分(だいたい140px)を引いた高さまでに制限 */
-    max-height: calc(100vh - 140px) !important;
-
-    /* 位置調整（あなたの元の意図を残す） */
-    top: -8px !important;
-
-    /* ここで幅を 90vw にできる */
+    position: relative;
+    top: -10px !important;   /* ← 上に20px移動 */
     width: 90vw;
-  }
-
-  /* キャプションまわりに少し余白を足しておくと安心 */
-  .gm-caption {
-    margin-top: 12px;
-    padding-bottom: calc(env(safe-area-inset-bottom) + 12px);
+    height: 70vh;
   }
 }
 
@@ -166,7 +152,6 @@ body {
     width: 85vw !important;
   }
 }
-
 
 .gm-frame img {
   display:block;
