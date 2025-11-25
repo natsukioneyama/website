@@ -5,8 +5,8 @@
   // Initialize Justified Gallery
   document.addEventListener('DOMContentLoaded', () => {
     $grid.justifiedGallery({
-      rowHeight: 140,
-      margins: 50,
+      rowHeight: 100,
+      margins: 60,
       lastRow: 'nojustify',
       captions: false,
       cssAnimation: true,
