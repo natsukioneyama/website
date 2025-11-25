@@ -743,3 +743,42 @@ const open = (list, start=0) => {
 
 
 
+
+
+// ========================
+// ページに戻ってきた時に動画を再生し直す処理
+// ========================
+
+// 背景動画
+const bgVideo = document.getElementById('bg-video');
+
+// デスクトップアイコン群の動画
+const iconVideos = document.querySelectorAll('.icon video');
+
+// 再生させる関数
+function resumeAllVideos() {
+  // 背景動画
+  if (bgVideo) {
+    bgVideo.play().catch(() => {});
+  }
+
+  // アイコン内の動画すべて
+  iconVideos.forEach(v => {
+    v.play().catch(() => {});
+  });
+}
+
+// タブが再び可視状態になった時
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    resumeAllVideos();
+  }
+});
+
+// 戻る操作（Back/Forward Cache復帰）で戻ってきた時（特にiOSで重要）
+window.addEventListener('pageshow', event => {
+  if (event.persisted) {
+    resumeAllVideos();
+  }
+});
+
