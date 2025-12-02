@@ -2,7 +2,7 @@
   --bar-h: 72px;
   --gutter: clamp(3px, 2vw, 5px);
   /* 画像下のキャプション＋Backが占める高さの見積もり */
-  --gm-footer-h: clamp(80px, 14vw, 128px);
+  --gm-footer-h: clamp(120px, 14vw, 128px);
 }
 
 /* ============ Base ============ */
@@ -124,29 +124,29 @@ body {
 
 .gm-frame {
   position: relative;
-  width: 95vw;
+  width: 98vw;
+
   /* 画面全高から「キャプション＋BACK用の高さ」を差し引く */
   height: calc(100vh - var(--gm-footer-h));
-  /* 念のための上限（好みで調整） */
-  max-height: 80vh;
+  /* ← ここでもう十分制限されているので、
+       max-height: 80vh; は削除 or コメントアウト */
 
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-
+/* スマホ幅のときはフッター（キャプション＋BACK）を少し高めに確保 */
 @media (max-width: 767px) {
-  .gm-frame {
-    position: relative;
-    width: 95vw;
+  .gm {
+    --gm-footer-h: 140px;  /* 足りなければ 150px, 160px にして微調整 */
   }
 }
 
 /* iPhone SEクラス（幅380px以下）の全デバイス用 */
  @media screen and (max-width: 380px) {
   .gm-frame {
-    width: 85vw !important;
+    width: 98vw !important;
   }
 }
 
