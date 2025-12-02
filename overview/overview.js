@@ -429,3 +429,55 @@
     }
   }, true);
 })();  
+
+
+
+// ===============================
+// Keyboard navigation for gallery
+// ===============================
+(function () {
+  const modal = document.getElementById('galleryModal');
+  if (!modal) return;
+
+  const prevBtn  = modal.querySelector('[data-prev]');
+  const nextBtn  = modal.querySelector('[data-next]');
+  const closeBtn = modal.querySelector('[data-close]');
+
+  if (!prevBtn || !nextBtn || !closeBtn) return;
+
+  // モーダルが開いているかどうかを aria-hidden から判定
+  let isOpen = modal.getAttribute('aria-hidden') === 'false';
+
+  // aria-hidden が変わったら isOpen を更新
+  const obs = new MutationObserver(() => {
+    isOpen = modal.getAttribute('aria-hidden') === 'false';
+  });
+  obs.observe(modal, { attributes: true, attributeFilter: ['aria-hidden'] });
+
+  // キーボードイベント
+  document.addEventListener('keydown', (e) => {
+    if (!isOpen) return; // ギャラリーが開いている時だけ反応
+
+    // Esc で閉じる
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      e.preventDefault();
+      closeBtn.click();
+      return;
+    }
+
+    // → で次、← で前
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      nextBtn.click();
+      return;
+    }
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      prevBtn.click();
+      return;
+    }
+  });
+})();
+``
+
+

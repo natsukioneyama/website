@@ -124,8 +124,7 @@ body {
 
 .gm-frame {
   position: relative;
-  width: 90vw;
-
+  width: 95vw;
   /* 画面全高から「キャプション＋BACK用の高さ」を差し引く */
   height: calc(100vh - var(--gm-footer-h));
   /* 念のための上限（好みで調整） */
@@ -140,14 +139,12 @@ body {
 @media (max-width: 767px) {
   .gm-frame {
     position: relative;
-    top: -10px !important;   /* ← 上に20px移動 */
-    width: 90vw;
-    height: 70vh;
+    width: 95vw;
   }
 }
 
 /* iPhone SEクラス（幅380px以下）の全デバイス用 */
-@media screen and (max-width: 380px) {
+ @media screen and (max-width: 380px) {
   .gm-frame {
     width: 85vw !important;
   }
@@ -200,14 +197,14 @@ body {
 
 .gm-ttl {
   margin: 0;
-  font-weight: 500;
-  font-size: .7rem;
+  font-weight: 400;
+  font-size: .8rem;
 }
 
 .gm-sub {
   margin: 0;
-  font-weight: 500;
-  font-size: .7rem;
+  font-weight: 400;
+  font-size: .8rem;
 }
 
 /* カウンター（右下） */
@@ -216,7 +213,7 @@ body {
   right: 15px;
   bottom: 30px;
   color: #000000;
-  font-weight: 500;
+  font-weight: 400;
   font-size: .8rem;
   letter-spacing: .04em;
 }
@@ -229,8 +226,8 @@ body {
   border: 0;
   background: transparent;
   color: #000000;
-  font-size: .9rem;
-  font-weight: 500;
+  font-size: .8rem;
+  font-weight: 400;
   text-align: center;
   z-index: 10;
 }
