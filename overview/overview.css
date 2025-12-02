@@ -137,7 +137,7 @@ body {
 }
 
 /* スマホ幅のときはフッター（キャプション＋BACK）を少し高めに確保 */
-@media (max-width: 767px) {
+@media (max-width: 767px) { 
   .gm {
     --gm-footer-h: 140px;  /* 足りなければ 150px, 160px にして微調整 */
   }
