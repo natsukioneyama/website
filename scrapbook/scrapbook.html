@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scrapbook</title>
+
+  <!-- 必要ならここにサイト共通CSSも追加 -->
+  <!-- <link rel="stylesheet" href="../css/style.css"> -->
+  <link rel="stylesheet" href="./scrapbook.css">
+</head>
+<body>
+
+  <header class="scrap-header">
+  <a class="scrap-back" href="#" id="scrapBack">←BACK</a>
+  <h1 class="scrap-title">SCRAPBOOK | NATSUKI ONEYAMA</h1>
+</header>
+
+
+  <main>
+    <!-- justified-layout 用のコンテナ -->
+    <div id="grid">
+
+       <figure class="jl-item"
+        data-w="716"
+        data-h="656"
+        data-full="img/01.png">
+       <img src="img/01.png" width="161" height="200" alt="">
+       </figure>
+
+
+       <figure class="jl-item"
+        data-w="2088"
+        data-h="1164"
+        data-full="img/03.png">
+       <img src="img/03.png" width="160" height="200" alt="">
+       </figure>
+       <figure class="jl-item"
+        data-w="772"
+        data-h="1208"
+        data-full="img/04.webp">
+       <img src="img/04.webp" width="160" height="200" alt="">
+       </figure>
+        <figure class="jl-item"
+        data-w="1000"
+        data-h="563"
+        data-full="img/05.webp">
+       <img src="img/05.webp" width="160" height="200" alt="">
+       </figure>
+
+
+       <figure class="jl-item is-video"
+        data-w="904"
+        data-h="1542"
+        data-full="img/v01.mp4">
+        <!-- グリッド用の短い動画（ほぼ同じでもOK） -->
+        <video src="img/v01.mp4" muted loop playsinline></video>
+        <button class="fs-btn" aria-label="Fullscreen"></button>
+        </figure>
+        <figure class="jl-item is-video"
+        data-w="720"
+        data-h="1280"
+        data-full="img/v02.mp4">
+        <!-- グリッド用の短い動画（ほぼ同じでもOK） -->
+        <video src="img/v02.mp4" muted loop playsinline></video>
+        <button class="fs-btn" aria-label="Fullscreen"></button>
+        </figure>
+
+       
+
+
+      <!-- 必要な分だけ続けて追加 -->
+
+    </div>
+  </main>
+
+  <!-- ===== 最小構成の Lightbox ===== -->
+  <div id="gallery-modal" aria-hidden="true">
+    <div class="gm-backdrop" data-close></div>
+    <div class="gm-frame" role="dialog" aria-modal="true">
+      <div class="gm-box">
+        <!-- 画像用 -->
+        <img class="gm-image" alt="">
+        <!-- 動画用（短い動画をここで再生） -->
+        <video class="gm-video" playsinline muted controls></video>
+      </div>
+    </div>
+  </div>
+
+  <!-- justified-layout 本体 -->
+  <script src="./justified-layout.umd.js"></script>
+  <!-- scrapbook 専用スクリプト -->
+  <script src="./scrapbook.js"></script>
+</body>
+</html>

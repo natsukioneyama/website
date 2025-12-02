@@ -1,0 +1,207 @@
+/* ============ Base ============ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  color: #111;
+  background: #000000;
+}
+
+/* ============ Scrapbook Header ============ */
+
+.scrap-header {
+  width: 100%;
+  max-width: min(1200px, 94vw);
+  margin: 28px auto 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.scrap-back {
+  font-size: 12px;
+  text-decoration: none;
+  color: #ffffff; /* 好きな赤に調整 */
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+
+.scrap-back:hover {
+  opacity: 0.8;
+}
+
+.scrap-title {
+  flex: 1;
+  text-align: center;
+  color: #ffffff; /* タイトル色 */
+  font-size: 12px;
+  font-weight: 200;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+
+/* ============ Grid コンテナ ============ */
+/* 高さは JS（justified-layout）で更新 */
+#grid {
+  position: relative;
+  width: min(1200px, 94vw);
+  margin: 16px auto 48px;
+  padding-top: 100px;
+}
+
+/* ============ Items (images & videos) ============ */
+
+
+/* 中身（画像・動画）はボックスにフィット */
+.jl-item img,
+.jl-item video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* data-w/data-h が実際の比率と合っていればほぼトリミングなし */
+}
+
+.jl-item {
+  position: absolute;
+  margin: 0;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.jl-item img {
+  display: block;
+  width: 100;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 動画は切らずに全部見せたい */
+.jl-item video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000; /* 余白が出る部分を黒で埋める */
+}
+
+
+/* ============ 動画のフルスクリーン ============ */
+.jl-item.is-video video:fullscreen,
+.jl-item.is-video video:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+/* ============ Fullscreen button ============ */
+.fs-btn {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.fs-btn::before {
+  content: "⤢";
+  color: #fff;
+  font-size: 14px;
+  line-height: 22px;
+  display: block;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* PC ホバー時だけ表示 */
+.jl-item.is-video:hover .fs-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* タッチデバイスでは常に表示 */
+@media (hover: none) {
+  .fs-btn {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============ Lightbox ============ */
+#gallery-modal[aria-hidden="true"] {
+  display: none;
+}
+
+#gallery-modal[aria-hidden="false"] {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gm-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.86);
+}
+
+.gm-frame {
+  position: relative;
+  max-width: 100vw;
+  max-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gm-box {
+  position: relative;
+}
+
+.gm-image {
+  max-width: 62vw;
+  max-height: 62vh;
+  display: none;
+}
+
+.gm-video {
+  max-width: 82vw;
+  max-height: 82vh;
+  display: none;
+}
+
+/* 表示中だけ block にする（JS側で切り替え） */
+.gm-image.is-active,
+.gm-video.is-active {
+  display: block;
+}
+
+/* 小さい画面での細かい調整（必要なら） */
+@media (max-width: 480px) {
+  #grid {
+    width: 96vw;
+    margin: 8px auto 32px;
+  }
+}
