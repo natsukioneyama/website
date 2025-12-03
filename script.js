@@ -225,7 +225,6 @@
 
       // まず viewer を開く
       sv.classList.add('open');
-      sv.removeAttribute('hidden');
 
       // 動画の場合
       if (isVideo) {
@@ -299,7 +298,6 @@
   // 閉じる処理
   function closeSV() {
     sv.classList.remove('open');
-    sv.setAttribute('hidden', 'true');
 
     // 動画停止
     if (svVideoWrap && svVideoTag) {
