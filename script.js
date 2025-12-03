@@ -134,6 +134,8 @@
 
 
 
+
+
 // ==== Simple Viewer: open (画像 or 動画 or HTML snippet) ====
 (function () {
   const sv = document.getElementById('simple-viewer');
@@ -205,10 +207,14 @@
     });
   }
 
-  // アイコンをクリックしたときに viewer を開く
+  // ★ここを書き換え：simple-view アイコンをクリックした瞬間にイベントを完全に止める
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.icon[data-type="simple-view"]');
     if (!btn) return;
+
+    // ここで他の click ハンドラにイベントを渡さない
+    e.preventDefault();
+    e.stopPropagation();
 
     const src = btn.dataset.src || '';
     if (!src) return;
@@ -217,14 +223,12 @@
     const isImage = /\.(webp|jpg|jpeg|png|gif|avif)(\?.*)?$/i.test(src);
     const isHtml  = /\.html?(\?.*)?$/i.test(src);
 
-    // 動画
+    // 共通：まず viewer を開く
+    sv.classList.add('open');
+    sv.removeAttribute('hidden');
+
+    // 動画の場合
     if (isVideo) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      sv.classList.add('open');
-      sv.removeAttribute('hidden');
-
       // 画像・テキストを片付ける
       if (svText) {
         svText.hidden = true;
@@ -255,13 +259,8 @@
       return;
     }
 
-    // 画像 or HTML のときだけこの先に進む
+    // 画像 or HTML 以外は無視
     if (!(isImage || isHtml)) return;
-    e.preventDefault();
-    e.stopPropagation();
-
-    sv.classList.add('open');
-    sv.removeAttribute('hidden');
 
     // 動画を片付ける
     if (svVideoWrap && svVideoTag) {
