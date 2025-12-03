@@ -117,31 +117,26 @@
 }
 
 
-  function show(i){
-    index = (i + items.length) % items.length;
-    const a = items[index];
+function show(i){
+  index = (i + items.length) % items.length;
+  const a = items[index];
 
-    imgEl.classList.remove('ready');
-    const nextSrc = a.getAttribute('href');
+  // 画像のフェードイン管理
+  imgEl.classList.remove('ready');
+  const nextSrc = a.getAttribute('href');
 
-    // decode を使った高速切り替え
-    const preloadImg = new Image();
-    preloadImg.src = nextSrc;
-
-    preloadImg.decode()
-    .then(() => {
-    imgEl.src = nextSrc;
+  // すでに読み込み済みなら即表示
+  if (imgEl.src === nextSrc && imgEl.complete) {
     imgEl.classList.add('ready');
-  })
-  .catch(() => {
-    // decode をサポートしないブラウザ用フォールバック
+  } else {
+    imgEl.onload = () => {
+      imgEl.classList.add('ready');
+    };
     imgEl.src = nextSrc;
-    imgEl.onload = () => imgEl.classList.add('ready');
-  });
+  }
 
-
-    
-  tt1El.textContent = a.dataset.title || '';
+  // キャプション更新
+  ttlEl.textContent = a.dataset.title || '';
   l1El.textContent  = a.dataset.line1 || '';
   l2El.textContent  = a.dataset.line2 || '';
 
@@ -153,9 +148,10 @@
 
   // 画面が広いときだけ「さらに次(+2)」もプリロード
   if (window.innerWidth > 900) {
-   preload(index + 2);
- }
- }
+    preload(index + 2);
+  }
+}
+
 
 
   function openViewer(nodeList, start){
