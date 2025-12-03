@@ -28,7 +28,7 @@
   }
 })();
 
-   
+  
 
 
 // ==========================================================
@@ -141,8 +141,8 @@
   const sv = document.getElementById('simple-viewer');
   if (!sv) return;
 
-  const svImg   = sv.querySelector('.simple-viewer__img');
-  const svText  = sv.querySelector('.simple-viewer__text');
+  const svImg  = sv.querySelector('.simple-viewer__img');
+  const svText = sv.querySelector('.simple-viewer__text');
 
   // 動画まわり
   const svVideoWrap = sv.querySelector('.sv-video');
@@ -207,96 +207,93 @@
     });
   }
 
-  // ★ここを書き換え：simple-view アイコンをクリックした瞬間にイベントを完全に止める
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.icon[data-type="simple-view"]');
-    if (!btn) return;
+  // simple-view 用アイコンに直接クリックイベントを付ける
+  const svButtons = document.querySelectorAll('.icon[data-type="simple-view"]');
 
-    // ここで他の click ハンドラにイベントを渡さない
-    e.preventDefault();
-    e.stopPropagation();
+  svButtons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      // 他のクリック処理が動かないように最初に止める
+      e.preventDefault();
+      e.stopPropagation();
 
-    const src = btn.dataset.src || '';
-    if (!src) return;
+      const src = btn.dataset.src || '';
+      if (!src) return;
 
-    const isVideo = /\.(mp4|webm|mov)(\?.*)?$/i.test(src);
-    const isImage = /\.(webp|jpg|jpeg|png|gif|avif)(\?.*)?$/i.test(src);
-    const isHtml  = /\.html?(\?.*)?$/i.test(src);
+      const isVideo = /\.(mp4|webm|mov)(\?.*)?$/i.test(src);
+      const isImage = /\.(webp|jpg|jpeg|png|gif|avif)(\?.*)?$/i.test(src);
+      const isHtml  = /\.html?(\?.*)?$/i.test(src);
 
-    // 共通：まず viewer を開く
-    sv.classList.add('open');
-    sv.removeAttribute('hidden');
+      // まず viewer を開く
+      sv.classList.add('open');
+      sv.removeAttribute('hidden');
 
-    // 動画の場合
-    if (isVideo) {
-      // 画像・テキストを片付ける
-      if (svText) {
-        svText.hidden = true;
-        svText.innerHTML = '';
+      // 動画の場合
+      if (isVideo) {
+        if (svText) {
+          svText.hidden = true;
+          svText.innerHTML = '';
+        }
+        if (svImg) {
+          svImg.removeAttribute('src');
+          svImg.style.display = 'none';
+        }
+
+        if (svVideoWrap && svVideoTag) {
+          svVideoWrap.hidden = false;
+
+          if (svProgBar) svProgBar.style.width = '0%';
+          if (svPlayBtn) svPlayBtn.textContent = 'PAUSE';
+
+          svVideoTag.src = src;
+          svVideoTag.muted = true;
+          svVideoTag.playsInline = true;
+          svVideoTag.autoplay = true;
+          svVideoTag.currentTime = 0;
+
+          svVideoTag.play().catch(() => {});
+        }
+
+        return;
       }
-      if (svImg) {
-        svImg.removeAttribute('src');
-        svImg.style.display = 'none';
-      }
 
-      // 動画 UI を表示
+      // 画像 / HTML 以外は無視
+      if (!(isImage || isHtml)) return;
+
+      // 動画を片付ける
       if (svVideoWrap && svVideoTag) {
-        svVideoWrap.hidden = false;
-
-        // 初期状態
+        svVideoWrap.hidden = true;
+        try { svVideoTag.pause(); } catch (_) {}
+        svVideoTag.removeAttribute('src');
+        svVideoTag.load();
         if (svProgBar) svProgBar.style.width = '0%';
-        if (svPlayBtn) svPlayBtn.textContent = 'PAUSE';
-
-        svVideoTag.src = src;
-        svVideoTag.muted = true;          // 背景サムネと同じくミュート
-        svVideoTag.playsInline = true;
-        svVideoTag.autoplay = true;
-        svVideoTag.currentTime = 0;
-
-        svVideoTag.play().catch(() => {});
       }
 
-      return;
-    }
+      if (svText) { svText.hidden = true; svText.innerHTML = ''; }
+      if (svImg)  { svImg.removeAttribute('src'); svImg.style.display = 'none'; }
 
-    // 画像 or HTML 以外は無視
-    if (!(isImage || isHtml)) return;
+      // 画像
+      if (isImage && svImg) {
+        svImg.style.display = 'block';
+        svImg.loading = 'lazy';
+        svImg.decoding = 'async';
+        svImg.src = src;
+        return;
+      }
 
-    // 動画を片付ける
-    if (svVideoWrap && svVideoTag) {
-      svVideoWrap.hidden = true;
-      try { svVideoTag.pause(); } catch (_) {}
-      svVideoTag.removeAttribute('src');
-      svVideoTag.load();
-      if (svProgBar) svProgBar.style.width = '0%';
-    }
-
-    if (svText) { svText.hidden = true; svText.innerHTML = ''; }
-    if (svImg)  { svImg.removeAttribute('src'); svImg.style.display = 'none'; }
-
-    // 画像
-    if (isImage && svImg) {
-      svImg.style.display = 'block';
-      svImg.loading = 'lazy';
-      svImg.decoding = 'async';
-      svImg.src = src;
-      return;
-    }
-
-    // HTML スニペット
-    if (isHtml && svText) {
-      fetch(src)
-        .then(r => r.text())
-        .then(html => {
-          svText.innerHTML = html;
-          svText.hidden = false;
-        })
-        .catch(() => {
-          svText.innerHTML = '<div style="padding:1rem">Failed to load.</div>';
-          svText.hidden = false;
-        });
-      return;
-    }
+      // HTML スニペット
+      if (isHtml && svText) {
+        fetch(src)
+          .then(r => r.text())
+          .then(html => {
+            svText.innerHTML = html;
+            svText.hidden = false;
+          })
+          .catch(() => {
+            svText.innerHTML = '<div style="padding:1rem">Failed to load.</div>';
+            svText.hidden = false;
+          });
+      }
+    });
   });
 
   // 閉じる処理
