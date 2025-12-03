@@ -208,92 +208,105 @@
   }
 
   // simple-view 用アイコンに直接クリックイベントを付ける
+　　  // simple-view 用アイコンに直接イベントを付ける
   const svButtons = document.querySelectorAll('.icon[data-type="simple-view"]');
 
+  const openSimpleViewer = (btn, e) => {
+    // スクロールや他のクリック処理を止める（iPhone 用に早めに止めたい）
+    e.preventDefault();
+    e.stopPropagation();
+
+    const src = btn.dataset.src || '';
+    if (!src) return;
+
+    const isVideo = /\.(mp4|webm|mov)(\?.*)?$/i.test(src);
+    const isImage = /\.(webp|jpg|jpeg|png|gif|avif)(\?.*)?$/i.test(src);
+    const isHtml  = /\.html?(\?.*)?$/i.test(src);
+
+    // viewer を開く
+    sv.classList.add('open');
+
+    // 動画の場合
+    if (isVideo) {
+      if (svText) {
+        svText.hidden = true;
+        svText.innerHTML = '';
+      }
+      if (svImg) {
+        svImg.removeAttribute('src');
+        svImg.style.display = 'none';
+      }
+
+      if (svVideoWrap && svVideoTag) {
+        svVideoWrap.hidden = false;
+
+        if (svProgBar) svProgBar.style.width = '0%';
+        if (svPlayBtn) svPlayBtn.textContent = 'PAUSE';
+
+        svVideoTag.src = src;
+        svVideoTag.muted = true;
+        svVideoTag.playsInline = true;
+        svVideoTag.autoplay = true;
+        svVideoTag.currentTime = 0;
+
+        svVideoTag.play().catch(() => {});
+      }
+
+      return;
+    }
+
+    // 画像 / HTML 以外は無視
+    if (!(isImage || isHtml)) return;
+
+    // 動画を片付ける
+    if (svVideoWrap && svVideoTag) {
+      svVideoWrap.hidden = true;
+      try { svVideoTag.pause(); } catch (_) {}
+      svVideoTag.removeAttribute('src');
+      svVideoTag.load();
+      if (svProgBar) svProgBar.style.width = '0%';
+    }
+
+    if (svText) { svText.hidden = true; svText.innerHTML = ''; }
+    if (svImg)  { svImg.removeAttribute('src'); svImg.style.display = 'none'; }
+
+    // 画像
+    if (isImage && svImg) {
+      svImg.style.display = 'block';
+      svImg.loading = 'lazy';
+      svImg.decoding = 'async';
+      svImg.src = src;
+      return;
+    }
+
+    // HTML スニペット
+    if (isHtml && svText) {
+      fetch(src)
+        .then(r => r.text())
+        .then(html => {
+          svText.innerHTML = html;
+          svText.hidden = false;
+        })
+        .catch(() => {
+          svText.innerHTML = '<div style="padding:1rem">Failed to load.</div>';
+          svText.hidden = false;
+        });
+    }
+  };
+
   svButtons.forEach((btn) => {
+    // iPhone では touchstart / pointerdown で開く
+    btn.addEventListener('pointerdown', (e) => {
+      openSimpleViewer(btn, e);
+    });
+
+    // 念のため click が来ても何もしない（ダブル発火防止）
     btn.addEventListener('click', (e) => {
-      // 他のクリック処理が動かないように最初に止める
       e.preventDefault();
       e.stopPropagation();
-
-      const src = btn.dataset.src || '';
-      if (!src) return;
-
-      const isVideo = /\.(mp4|webm|mov)(\?.*)?$/i.test(src);
-      const isImage = /\.(webp|jpg|jpeg|png|gif|avif)(\?.*)?$/i.test(src);
-      const isHtml  = /\.html?(\?.*)?$/i.test(src);
-
-      // まず viewer を開く
-      sv.classList.add('open');
-
-      // 動画の場合
-      if (isVideo) {
-        if (svText) {
-          svText.hidden = true;
-          svText.innerHTML = '';
-        }
-        if (svImg) {
-          svImg.removeAttribute('src');
-          svImg.style.display = 'none';
-        }
-
-        if (svVideoWrap && svVideoTag) {
-          svVideoWrap.hidden = false;
-
-          if (svProgBar) svProgBar.style.width = '0%';
-          if (svPlayBtn) svPlayBtn.textContent = 'PAUSE';
-
-          svVideoTag.src = src;
-          svVideoTag.muted = true;
-          svVideoTag.playsInline = true;
-          svVideoTag.autoplay = true;
-          svVideoTag.currentTime = 0;
-
-          svVideoTag.play().catch(() => {});
-        }
-
-        return;
-      }
-
-      // 画像 / HTML 以外は無視
-      if (!(isImage || isHtml)) return;
-
-      // 動画を片付ける
-      if (svVideoWrap && svVideoTag) {
-        svVideoWrap.hidden = true;
-        try { svVideoTag.pause(); } catch (_) {}
-        svVideoTag.removeAttribute('src');
-        svVideoTag.load();
-        if (svProgBar) svProgBar.style.width = '0%';
-      }
-
-      if (svText) { svText.hidden = true; svText.innerHTML = ''; }
-      if (svImg)  { svImg.removeAttribute('src'); svImg.style.display = 'none'; }
-
-      // 画像
-      if (isImage && svImg) {
-        svImg.style.display = 'block';
-        svImg.loading = 'lazy';
-        svImg.decoding = 'async';
-        svImg.src = src;
-        return;
-      }
-
-      // HTML スニペット
-      if (isHtml && svText) {
-        fetch(src)
-          .then(r => r.text())
-          .then(html => {
-            svText.innerHTML = html;
-            svText.hidden = false;
-          })
-          .catch(() => {
-            svText.innerHTML = '<div style="padding:1rem">Failed to load.</div>';
-            svText.hidden = false;
-          });
-      }
-    });
+    }, { passive: false });
   });
+
 
   // 閉じる処理
   function closeSV() {
