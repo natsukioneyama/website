@@ -130,20 +130,89 @@
 
 
 
+
+
+
+
 // ==== Simple Viewer: open (画像 or 動画 or HTML snippet) ====
 (function () {
   const sv = document.getElementById('simple-viewer');
   if (!sv) return;
-  const svImg  = sv.querySelector('.simple-viewer__img');
-  const svText = sv.querySelector('.simple-viewer__text');
 
+  const svImg   = sv.querySelector('.simple-viewer__img');
+  const svText  = sv.querySelector('.simple-viewer__text');
+
+  // 動画まわり
+  const svVideoWrap = sv.querySelector('.sv-video');
+  const svVideoTag  = sv.querySelector('.sv-video__tag');
+  const svProgBar   = sv.querySelector('.sv-progress__bar');
+  const svProgTrack = sv.querySelector('.sv-progress');
+  const svPlayBtn   = sv.querySelector('.sv-btn--play');
+  const svFsBtn     = sv.querySelector('.sv-btn--fs');
+
+  // 進捗バーをクリック / タップしてシーク
+  if (svProgTrack && svVideoTag) {
+    const seekFromClientX = (clientX) => {
+      const rect = svProgTrack.getBoundingClientRect();
+      if (!rect.width || !svVideoTag.duration) return;
+
+      let ratio = (clientX - rect.left) / rect.width;
+      if (ratio < 0) ratio = 0;
+      if (ratio > 1) ratio = 1;
+
+      svVideoTag.currentTime = ratio * svVideoTag.duration;
+    };
+
+    svProgTrack.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      e.stopPropagation(); // 背景クリック扱いにしない
+      seekFromClientX(e.clientX);
+    });
+  }
+
+  // プログレスバー更新
+  if (svVideoTag && svProgBar) {
+    svVideoTag.addEventListener('timeupdate', () => {
+      if (!svVideoTag.duration) return;
+      const ratio = svVideoTag.currentTime / svVideoTag.duration;
+      svProgBar.style.width = `${ratio * 100}%`;
+    });
+  }
+
+  // 再生 / 一時停止
+  if (svPlayBtn && svVideoTag) {
+    svPlayBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (svVideoTag.paused) {
+        svVideoTag.play().catch(() => {});
+        svPlayBtn.textContent = 'PAUSE';
+      } else {
+        svVideoTag.pause();
+        svPlayBtn.textContent = 'PLAY';
+      }
+    });
+  }
+
+  // フルスクリーン
+  if (svFsBtn && svVideoTag) {
+    svFsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (svVideoTag.requestFullscreen) {
+        svVideoTag.requestFullscreen();
+      } else if (svVideoTag.webkitEnterFullscreen) {
+        svVideoTag.webkitEnterFullscreen(); // iOS Safari
+      }
+    });
+  }
+
+  // アイコンをクリックしたときに viewer を開く
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.icon[data-type="simple-view"]');
     if (!btn) return;
 
     const src = btn.dataset.src || '';
     if (!src) return;
-    
+
     const isVideo = /\.(mp4|webm|mov)(\?.*)?$/i.test(src);
     const isImage = /\.(webp|jpg|jpeg|png|gif|avif)(\?.*)?$/i.test(src);
     const isHtml  = /\.html?(\?.*)?$/i.test(src);
@@ -156,37 +225,58 @@
       sv.classList.add('open');
       sv.removeAttribute('hidden');
 
-      const old = sv.querySelector('video');
-      if (old) old.remove();
+      // 画像・テキストを片付ける
+      if (svText) {
+        svText.hidden = true;
+        svText.innerHTML = '';
+      }
+      if (svImg) {
+        svImg.removeAttribute('src');
+        svImg.style.display = 'none';
+      }
 
-      const v = document.createElement('video');
-      v.src = src;
-      v.controls = true;
-      v.autoplay = true;
-      v.muted = true;
-      v.playsInline = true;
-      v.style.maxWidth = '90vw';
-      v.style.maxHeight = '80vh';
-      v.style.objectFit = 'contain';
+      // 動画 UI を表示
+      if (svVideoWrap && svVideoTag) {
+        svVideoWrap.hidden = false;
 
-      sv.appendChild(v);
+        // 初期状態
+        if (svProgBar) svProgBar.style.width = '0%';
+        if (svPlayBtn) svPlayBtn.textContent = 'PAUSE';
+
+        svVideoTag.src = src;
+        svVideoTag.muted = true;          // 背景サムネと同じくミュート
+        svVideoTag.playsInline = true;
+        svVideoTag.autoplay = true;
+        svVideoTag.currentTime = 0;
+
+        svVideoTag.play().catch(() => {});
+      }
+
       return;
     }
 
-    // 画像 or HTML を開くときだけイベントを握る
+    // 画像 or HTML のときだけこの先に進む
     if (!(isImage || isHtml)) return;
     e.preventDefault();
     e.stopPropagation();
 
     sv.classList.add('open');
     sv.removeAttribute('hidden');
+
+    // 動画を片付ける
+    if (svVideoWrap && svVideoTag) {
+      svVideoWrap.hidden = true;
+      try { svVideoTag.pause(); } catch (_) {}
+      svVideoTag.removeAttribute('src');
+      svVideoTag.load();
+      if (svProgBar) svProgBar.style.width = '0%';
+    }
+
     if (svText) { svText.hidden = true; svText.innerHTML = ''; }
     if (svImg)  { svImg.removeAttribute('src'); svImg.style.display = 'none'; }
 
     // 画像
-    if (isImage) {
-      const old = sv.querySelector('video');
-      if (old) old.remove();
+    if (isImage && svImg) {
       svImg.style.display = 'block';
       svImg.loading = 'lazy';
       svImg.decoding = 'async';
@@ -194,10 +284,8 @@
       return;
     }
 
-    // HTMLスニペット（例: ./credits/credits_snippet.html）
+    // HTML スニペット
     if (isHtml && svText) {
-      const old = sv.querySelector('video');
-      if (old) old.remove();
       fetch(src)
         .then(r => r.text())
         .then(html => {
@@ -211,28 +299,53 @@
       return;
     }
   });
-  
-  // 閉じる：ESC か、背景クリックで閉じる
+
+  // 閉じる処理
+  function closeSV() {
+    sv.classList.remove('open');
+    sv.setAttribute('hidden', 'true');
+
+    // 動画停止
+    if (svVideoWrap && svVideoTag) {
+      try { svVideoTag.pause(); } catch (_) {}
+      svVideoTag.removeAttribute('src');
+      svVideoTag.load();
+      svVideoWrap.hidden = true;
+      if (svProgBar) svProgBar.style.width = '0%';
+    }
+
+    if (svImg) {
+      svImg.removeAttribute('src');
+      svImg.style.display = 'none';
+    }
+
+    if (svText) {
+      svText.hidden = true;
+      svText.innerHTML = '';
+    }
+  }
+
+  // ESC で閉じる
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeSV();
   });
 
+  // 背景クリックで閉じる
   sv.addEventListener('click', (e) => {
-    // sv 自身（背景）をクリックしたときだけ閉じる
     if (e.target === sv) {
       closeSV();
     }
   });
-
-  function closeSV() {
-    sv.classList.remove('open');
-    sv.setAttribute('hidden', 'true');
-    const v = sv.querySelector('video');
-    if (v) { try { v.pause(); } catch(_){} v.remove(); }
-    if (svImg) { svImg.removeAttribute('src'); svImg.style.display = 'none'; }
-    if (svText) { svText.hidden = true; svText.innerHTML = ''; }
-  }
 })();
+
+
+
+
+
+
+
+
+
 
 // ==========================================================
 //  Draggable icons — PCは --dx/--dy、Mobileは --mx/--my を更新

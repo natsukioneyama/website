@@ -201,11 +201,30 @@
 </div>
 
 
-  <!-- ================= Simple Viewer ================= -->
-  <div id="simple-viewer">
-    <img class="simple-viewer__img" alt="" draggable="false">
-    <div class="simple-viewer__text" hidden></div>
+<div id="simple-viewer" hidden>
+  <!-- 動画ビュー -->
+  <div class="sv-video" hidden>
+    <video class="sv-video__tag" playsinline></video>
+
+    <div class="sv-video__controls">
+      <div class="sv-progress">
+        <div class="sv-progress__bar"></div>
+      </div>
+      <div class="sv-nav">
+        <button type="button" class="sv-btn sv-btn--play">PAUSE</button>
+        <button type="button" class="sv-btn sv-btn--fs">FULL</button>
+      </div>
+    </div>
   </div>
+
+  <!-- 画像ビュー -->
+  <img class="simple-viewer__img" alt="">
+
+  <!-- テキストビュー（credits snippet など） -->
+  <div class="simple-viewer__text"></div>
+</div>
+
+
 
   <!-- ================= Overview Modal ================= -->
   <div id="overviewModal" aria-hidden="true">
