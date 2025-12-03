@@ -113,9 +113,6 @@
   const img = new Image();
   img.src = href;
 
-  // decode 対応ブラウザはここで先読み完了を待つ
-  if (img.decode) img.decode();
-
   preloaded.add(href);
 }
 
