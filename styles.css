@@ -283,6 +283,8 @@ a.icon {
   }
 }
 
+
+
 /* ---- 4. Simple Viewer ---- */
 #simple-viewer {
   position: fixed;
@@ -298,6 +300,12 @@ a.icon {
 #simple-viewer.open {
   opacity: 1;
   pointer-events: auto;
+}
+
+/* 中身のラッパー。サイズだけ軽く制限 */
+#simple-viewer .sv-inner {
+  max-width: 90vw;
+  max-height: 90vh;
 }
 
 /* 画像ビュー用 */

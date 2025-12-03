@@ -133,9 +133,6 @@
 
 
 
-
-
-
 // ==== Simple Viewer: open (画像 or 動画 or HTML snippet) ====
 (function () {
   const sv = document.getElementById('simple-viewer');
@@ -144,7 +141,6 @@
   const svImg  = sv.querySelector('.simple-viewer__img');
   const svText = sv.querySelector('.simple-viewer__text');
 
-  // 動画まわり
   const svVideoWrap = sv.querySelector('.sv-video');
   const svVideoTag  = sv.querySelector('.sv-video__tag');
   const svProgBar   = sv.querySelector('.sv-progress__bar');
@@ -167,7 +163,7 @@
 
     svProgTrack.addEventListener('pointerdown', (e) => {
       e.preventDefault();
-      e.stopPropagation(); // 背景クリック扱いにしない
+      e.stopPropagation();
       seekFromClientX(e.clientX);
     });
   }
@@ -202,17 +198,15 @@
       if (svVideoTag.requestFullscreen) {
         svVideoTag.requestFullscreen();
       } else if (svVideoTag.webkitEnterFullscreen) {
-        svVideoTag.webkitEnterFullscreen(); // iOS Safari
+        svVideoTag.webkitEnterFullscreen();
       }
     });
   }
 
-  // simple-view 用アイコンに直接クリックイベントを付ける
-　　  // simple-view 用アイコンに直接イベントを付ける
+  // simple-view 用アイコンに pointerdown で直接イベントを付ける
   const svButtons = document.querySelectorAll('.icon[data-type="simple-view"]');
 
   const openSimpleViewer = (btn, e) => {
-    // スクロールや他のクリック処理を止める（iPhone 用に早めに止めたい）
     e.preventDefault();
     e.stopPropagation();
 
@@ -223,58 +217,38 @@
     const isImage = /\.(webp|jpg|jpeg|png|gif|avif)(\?.*)?$/i.test(src);
     const isHtml  = /\.html?(\?.*)?$/i.test(src);
 
-    // viewer を開く
     sv.classList.add('open');
 
-    // 動画の場合
-    if (isVideo) {
-      if (svText) {
-        svText.hidden = true;
-        svText.innerHTML = '';
-      }
-      if (svImg) {
-        svImg.removeAttribute('src');
-        svImg.style.display = 'none';
-      }
+    // 全ビューを一旦隠す（CSS の display だけ触るのでデザインはそのまま）
+    if (svVideoWrap) svVideoWrap.style.display = 'none';
+    if (svImg) {
+      svImg.style.display = 'none';
+      svImg.removeAttribute('src');
+    }
+    if (svText) {
+      svText.style.display = 'none';
+      svText.innerHTML = '';
+    }
 
-      if (svVideoWrap && svVideoTag) {
-        svVideoWrap.hidden = false;
+    // 動画
+    if (isVideo && svVideoWrap && svVideoTag) {
+      svVideoWrap.style.display = 'flex';
 
-        if (svProgBar) svProgBar.style.width = '0%';
-        if (svPlayBtn) svPlayBtn.textContent = 'PAUSE';
+      if (svProgBar) svProgBar.style.width = '0%';
+      if (svPlayBtn) svPlayBtn.textContent = 'PAUSE';
 
-        svVideoTag.src = src;
-        svVideoTag.muted = true;
-        svVideoTag.playsInline = true;
-        svVideoTag.autoplay = true;
-        svVideoTag.currentTime = 0;
-
-        svVideoTag.play().catch(() => {});
-      }
-
+      svVideoTag.src = src;
+      svVideoTag.muted = true;
+      svVideoTag.playsInline = true;
+      svVideoTag.autoplay = true;
+      svVideoTag.currentTime = 0;
+      svVideoTag.play().catch(() => {});
       return;
     }
-
-    // 画像 / HTML 以外は無視
-    if (!(isImage || isHtml)) return;
-
-    // 動画を片付ける
-    if (svVideoWrap && svVideoTag) {
-      svVideoWrap.hidden = true;
-      try { svVideoTag.pause(); } catch (_) {}
-      svVideoTag.removeAttribute('src');
-      svVideoTag.load();
-      if (svProgBar) svProgBar.style.width = '0%';
-    }
-
-    if (svText) { svText.hidden = true; svText.innerHTML = ''; }
-    if (svImg)  { svImg.removeAttribute('src'); svImg.style.display = 'none'; }
 
     // 画像
     if (isImage && svImg) {
       svImg.style.display = 'block';
-      svImg.loading = 'lazy';
-      svImg.decoding = 'async';
       svImg.src = src;
       return;
     }
@@ -285,57 +259,38 @@
         .then(r => r.text())
         .then(html => {
           svText.innerHTML = html;
-          svText.hidden = false;
+          svText.style.display = 'block';
         })
         .catch(() => {
-          svText.innerHTML = '<div style="padding:1rem">Failed to load.</div>';
-          svText.hidden = false;
+          svText.innerHTML = 'Failed to load.';
+          svText.style.display = 'block';
         });
     }
   };
 
   svButtons.forEach((btn) => {
-    // iPhone では touchstart / pointerdown で開く
+    // iPhone 対策：pointerdown で開く
     btn.addEventListener('pointerdown', (e) => {
       openSimpleViewer(btn, e);
     });
 
-    // 念のため click が来ても何もしない（ダブル発火防止）
+    // click はキャンセル専用（ダブル発火防止）
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
     }, { passive: false });
   });
 
-
   // 閉じる処理
   function closeSV() {
     sv.classList.remove('open');
 
-    // 動画停止
     if (svVideoWrap && svVideoTag) {
       try { svVideoTag.pause(); } catch (_) {}
       svVideoTag.removeAttribute('src');
       svVideoTag.load();
-      svVideoWrap.hidden = true;
-      if (svProgBar) svProgBar.style.width = '0%';
-    }
-
-    if (svImg) {
-      svImg.removeAttribute('src');
-      svImg.style.display = 'none';
-    }
-
-    if (svText) {
-      svText.hidden = true;
-      svText.innerHTML = '';
     }
   }
-
-  // ESC で閉じる
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeSV();
-  });
 
   // 背景クリックで閉じる
   sv.addEventListener('click', (e) => {
@@ -343,7 +298,13 @@
       closeSV();
     }
   });
+
+  // ESC で閉じる
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSV();
+  });
 })();
+
 
 
 
