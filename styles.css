@@ -291,7 +291,6 @@ a.icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.9);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
