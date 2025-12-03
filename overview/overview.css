@@ -234,11 +234,11 @@ body {
 
 @media (orientation: portrait) and (max-width: 767px) {
   .gm-caption {
-    bottom: 15!important;
+    bottom: 12!important;
   }
 
   .gm-close {
-    bottom: 15 !important;
+    bottom: 12 !important;
   }
 }
 

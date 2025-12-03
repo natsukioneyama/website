@@ -5,8 +5,8 @@
   // Initialize Justified Gallery
   document.addEventListener('DOMContentLoaded', () => {
     $grid.justifiedGallery({
-      rowHeight: 130,
-      margins: 8, 
+      rowHeight: 120,
+      margins: 50, 
       lastRow: 'nojustify',
       captions: false,
       cssAnimation: true,
@@ -94,36 +94,73 @@
   const l2El  = document.getElementById('gmLine2');
   const ctrEl = document.getElementById('gmCounter');
 
-  let items = [];
-  let index = 0;
 
-  function updateCounter(){ ctrEl.textContent = `${index+1}/${items.length}`; }
-  const preloaded = new Set();
-  
-  function preload(i) {
+ let items = [];
+ let index = 0;
+ const preloaded = new Set();   // ← ここに移動
+
+  function updateCounter() {
+  if (!ctrEl) return;          // 念のため安全に
+  ctrEl.textContent = `${index + 1}/${items.length}`;
+ }
+
+ function preload(i) {
   if (i < 0 || i >= items.length) return;
+
   const href = items[i].getAttribute('href');
   if (!href || preloaded.has(href)) return;
-  preloaded.add(href);
+
   const img = new Image();
   img.src = href;
- }
+
+  // decode 対応ブラウザはここで先読み完了を待つ
+  if (img.decode) img.decode();
+
+  preloaded.add(href);
+}
+
 
   function show(i){
     index = (i + items.length) % items.length;
     const a = items[index];
+
     imgEl.classList.remove('ready');
     const nextSrc = a.getAttribute('href');
-    if (imgEl.src === nextSrc && imgEl.complete) { imgEl.classList.add('ready'); }
-    imgEl.onload = () => { imgEl.classList.add('ready'); };
+
+    // decode を使った高速切り替え
+    const preloadImg = new Image();
+    preloadImg.src = nextSrc;
+
+    preloadImg.decode()
+    .then(() => {
     imgEl.src = nextSrc;
-    ttlEl.textContent = a.dataset.title || '';
-    l1El.textContent  = a.dataset.line1 || '';
-    l2El.textContent  = a.dataset.line2 || '';
-    updateCounter();
-    preload(index+1);
-    preload(index-1);
-  }
+    imgEl.classList.add('ready');
+  })
+  .catch(() => {
+    // decode をサポートしないブラウザ用フォールバック
+    imgEl.src = nextSrc;
+    imgEl.onload = () => imgEl.classList.add('ready');
+  });
+
+
+    
+  tt1El.textContent = a.dataset.title || '';
+  l1El.textContent  = a.dataset.line1 || '';
+  l2El.textContent  = a.dataset.line2 || '';
+
+  updateCounter();
+
+  // すぐ前後を常にプリロード
+  preload(index + 1);
+  preload(index - 1);
+
+  // 画面が広いときだけ「さらに次(+2)」もプリロード
+  if (window.innerWidth > 900) {
+   preload(index + 2);
+ }
+ }
+
+
   function openViewer(nodeList, start){
     items = Array.from(nodeList);
     index = start || 0;
