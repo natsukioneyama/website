@@ -95,16 +95,16 @@
   const ctrEl = document.getElementById('gmCounter');
 
 
- let items = [];
- let index = 0;
- const preloaded = new Set();   // ← ここに移動
+let items = [];
+let index = 0;
+const preloaded = new Set();   // ← ここに移動
 
-  function updateCounter() {
+function updateCounter() {
   if (!ctrEl) return;          // 念のため安全に
   ctrEl.textContent = `${index + 1}/${items.length}`;
- }
+}
 
- function preload(i) {
+function preload(i) {
   if (i < 0 || i >= items.length) return;
 
   const href = items[i].getAttribute('href');
@@ -112,6 +112,9 @@
 
   const img = new Image();
   img.src = href;
+
+  // decode 対応ブラウザはここで先読み完了を待つ
+  if (img.decode) img.decode();
 
   preloaded.add(href);
 }
@@ -151,6 +154,11 @@ function show(i){
     preload(index + 2);
   }
 }
+
+
+
+
+
 
 
 
