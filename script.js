@@ -149,7 +149,10 @@
   const svFsBtn     = sv.querySelector('.sv-btn--fs');
 
   // 進捗バーをクリック / タップしてシーク
+    // 進捗バーをクリック / ドラッグしてシーク
   if (svProgTrack && svVideoTag) {
+    let isSeeking = false;
+
     const seekFromClientX = (clientX) => {
       const rect = svProgTrack.getBoundingClientRect();
       if (!rect.width || !svVideoTag.duration) return;
@@ -161,12 +164,31 @@
       svVideoTag.currentTime = ratio * svVideoTag.duration;
     };
 
+    const onPointerMove = (e) => {
+      if (!isSeeking) return;
+      e.preventDefault();
+      seekFromClientX(e.clientX);
+    };
+
+    const onPointerUp = (e) => {
+      if (!isSeeking) return;
+      isSeeking = false;
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+    };
+
     svProgTrack.addEventListener('pointerdown', (e) => {
       e.preventDefault();
-      e.stopPropagation();
+      e.stopPropagation(); // 背景クリック扱いにしない
+
+      isSeeking = true;
       seekFromClientX(e.clientX);
+
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointerup', onPointerUp);
     });
   }
+
 
   // プログレスバー更新
   if (svVideoTag && svProgBar) {
@@ -231,20 +253,32 @@
     }
 
     // 動画
-    if (isVideo && svVideoWrap && svVideoTag) {
-      svVideoWrap.style.display = 'flex';
+    // 動画
+if (isVideo && svVideoWrap && svVideoTag) {
+  svVideoWrap.style.display = 'flex';
 
-      if (svProgBar) svProgBar.style.width = '0%';
-      if (svPlayBtn) svPlayBtn.textContent = 'PAUSE';
+  if (svProgBar) svProgBar.style.width = '0%';
+  if (svPlayBtn) svPlayBtn.textContent = 'PAUSE';
 
-      svVideoTag.src = src;
-      svVideoTag.muted = true;
-      svVideoTag.playsInline = true;
-      svVideoTag.autoplay = true;
-      svVideoTag.currentTime = 0;
-      svVideoTag.play().catch(() => {});
-      return;
-    }
+  svVideoTag.src = src;
+  svVideoTag.loop = true; 
+  svVideoTag.muted = true;
+  svVideoTag.playsInline = true;
+  svVideoTag.autoplay = true;
+  svVideoTag.currentTime = 0;
+
+  // メタデータ読み込み後に縦横判定
+  svVideoTag.onloadedmetadata = () => {
+    const isPortrait = svVideoTag.videoHeight > svVideoTag.videoWidth;
+
+    svVideoWrap.classList.toggle('is-portrait',  isPortrait);
+    svVideoWrap.classList.toggle('is-landscape', !isPortrait);
+  };
+
+  svVideoTag.play().catch(() => {});
+  return;
+}
+
 
     // 画像
     if (isImage && svImg) {
@@ -282,7 +316,7 @@
   });
 
   // 閉じる処理
-  function closeSV() {
+    function closeSV() {
     sv.classList.remove('open');
 
     if (svVideoWrap && svVideoTag) {
@@ -290,7 +324,18 @@
       svVideoTag.removeAttribute('src');
       svVideoTag.load();
     }
+
+    // ★ 追加：コントロールの表示状態とタイマーをリセット
+    const controls = sv.querySelector('.sv-video__controls');
+    if (controls) {
+      controls.classList.remove('is-visible');
+    }
+    if (hideControlsTimer) {
+      clearTimeout(hideControlsTimer);
+      hideControlsTimer = null;
+    }
   }
+
 
   // 背景クリックで閉じる
   sv.addEventListener('click', (e) => {
@@ -303,6 +348,41 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeSV();
   });
+
+  let hideControlsTimer = null;
+
+  function showControls() {
+    const controls = sv.querySelector('.sv-video__controls');
+    if (!controls) return;
+
+    controls.classList.add('is-visible');
+    if (hideControlsTimer) clearTimeout(hideControlsTimer);
+
+    hideControlsTimer = setTimeout(() => {
+      controls.classList.remove('is-visible');
+    }, 3000);
+  }
+
+  // iPhone だけタップで表示
+  if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
+
+    if (svVideoTag) {
+      svVideoTag.addEventListener('click', () => {
+        showControls();
+      });
+    }
+
+    const controls = sv.querySelector('.sv-video__controls');
+    if (controls) {
+      controls.addEventListener('pointerdown', () => {
+        if (hideControlsTimer) clearTimeout(hideControlsTimer);
+      });
+      controls.addEventListener('pointerup', () => {
+        showControls();
+      });
+    }
+  }
+
 })();
 
 

@@ -330,24 +330,36 @@ a.icon {
 
 
 
+
 /* ==== Simple Viewer: video custom UI (no fade) ==== */
 #simple-viewer .sv-video {
   position: relative;
-  max-width: 90vw;
-  max-height: 80vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-block; /* ← 中身（video）のサイズ＝枠のサイズにする */
 }
 
-/* 実際の動画 */
+
+/* 実際の動画サイズはここで決める */
 #simple-viewer .sv-video__tag {
-  width: 100%;
+  display: block;
+  width: auto;
   height: auto;
-  max-height: 80vh;
+  max-width: 90vw;   /* 共通の上限。あとで調整可 */
+  max-height: 80vh;  /* 共通の上限。あとで調整可 */
   object-fit: contain;
-  background: #000;
 }
+
+/* 横動画向け（幅を優先して少し低め） */
+#simple-viewer .sv-video.is-landscape > .sv-video__tag {
+  max-width: 95vw;
+  max-height: 70vh;
+}
+
+/* 縦動画向け（高さを優先して細め） */
+#simple-viewer .sv-video.is-portrait > .sv-video__tag {
+  max-width: 60vw;
+  max-height: 80vh;
+}
+
 
 /* コントロール帯（下側のグラデーション） */
 #simple-viewer .sv-video__controls {
@@ -356,15 +368,22 @@ a.icon {
   right: 0;
   bottom: 0;
   padding: 10px 12px 14px;
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,.7) 0%,
-    rgba(0,0,0,.4) 40%,
-    rgba(0,0,0,0) 100%
-  );
   color: #fff;
   font-size: 12px;
 }
+
+/* PC のときだけホバーでコントロール表示 */
+@media (hover: hover) and (pointer: fine) {
+  #simple-viewer .sv-video__controls {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  #simple-viewer .sv-video:hover .sv-video__controls {
+    opacity: 1;
+  }
+}
+
 
 /* プログレスバー本体（太め・常時表示） */
 #simple-viewer .sv-progress {
@@ -407,6 +426,20 @@ a.icon {
 #simple-viewer .sv-btn:hover {
   opacity: 1;
 }
+
+@media (hover: none) and (pointer: coarse) {
+  #simple-viewer .sv-video__controls {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .35s ease;
+  }
+
+  #simple-viewer .sv-video__controls.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 
 
 
