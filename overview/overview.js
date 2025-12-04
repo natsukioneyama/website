@@ -1,78 +1,15 @@
-// === Overview with Justified Gallery + group head caption on hover ===
-(function(){
+(function () {
   const $grid = $('#overviewGrid');
+  if (!$grid.length) return;
 
-  // Initialize Justified Gallery
-  document.addEventListener('DOMContentLoaded', () => {
-    $grid.justifiedGallery({
-      rowHeight: 150,
-      margins: 10, 
-      lastRow: 'nojustify',
-      captions: false,
-      cssAnimation: true,
-      imagesAnimationDuration: 200
-    })
-    .on('jg.complete', () => {
-      markGroupHeads(); // ensure captions exist after JG has sized items
-       
-      // Group hover (desktop)
-      $grid.on('mouseenter', 'a.jg-entry', function(){
-        const g = this.dataset.group || '';
-        if (!g) return;
-        $grid.addClass('is-group-hover');
-        $grid.find('a.jg-entry').each(function(){
-          this.classList.toggle('is-in-group', (this.dataset.group || '') === g);
-        });
-      });
-      $grid.on('mouseleave', function(){
-        $grid.removeClass('is-group-hover');
-        $grid.find('a.jg-entry').removeClass('is-in-group');
-      });
-    });
-
-    // ====== Reset hover state when leaving grid or empty area ======
-    function clearGroupState($grid){
-      $grid.removeClass('is-group-hover');
-      $grid.find('a.jg-entry').removeClass('is-in-group');
-    }
-
-    // グリッド外にマウスが出た時
-    $grid.on('mouseleave', function(){
-     clearGroupState($grid);
-    });
-
-    // グリッド内を動いていて画像上にいない時（空白部分）
-    $grid.on('mousemove', function(e){
-     if (!$(e.target).closest('a.jg-entry').length) {
-    clearGroupState($grid);
-    }
-  });
-
-    // タッチデバイスでも指を離したらリセット
-   $grid.on('touchend', function(){
-    clearGroupState($grid);
-  });
-
-  
-    // Click -> open viewer
-    $grid.on('click', 'a.jg-entry', (ev) => {
-      ev.preventDefault();
-      const $items = $grid.find('a.jg-entry');
-      const idx = $items.index(ev.currentTarget);
-      openViewer($items, idx);
-    });
-  });
-
-  // Add data-head="1" to the first item of each group and inject caption node
-  function markGroupHeads(){
+  function markGroupHeads() {
     const seen = new Map();
-    $grid.find('a.jg-entry').each(function(){
+    $grid.find('a.jg-entry').each(function () {
       const g = this.dataset.group || '__nogroup__';
       if (seen.has(g)) return;
       seen.set(g, true);
       this.setAttribute('data-head', '1');
 
-      // Create caption
       const cap = document.createElement('span');
       cap.className = 'ov-cap';
       const title = this.dataset.title || '';
@@ -82,6 +19,89 @@
       this.appendChild(cap);
     });
   }
+
+  function clearGroupState() {
+    $grid.removeClass('is-group-hover');
+    $grid.find('a.jg-entry').removeClass('is-in-group');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+
+    function getRowHeight() {
+      const w = window.innerWidth;
+      if (w <= 480) {
+        return 130;      // iPhone 幅
+      } else if (w <= 768) {
+        return 140;     // 小さめタブレット
+      } else if (w <= 1200) {
+        return 150;     // 中画面
+      } else {
+        return 180;     // 大画面
+      }
+    }
+
+    function initGallery() {
+      $grid
+        .justifiedGallery({
+          rowHeight: getRowHeight(),
+          margins: 15,
+          lastRow: 'nojustify',
+          captions: false,
+          cssAnimation: true,
+          imagesAnimationDuration: 200
+        })
+        .on('jg.complete', () => {
+          markGroupHeads();
+        });
+    }
+
+    // ★ 初回ロード時にだけ計算
+    initGallery();
+
+    // ★ もしどうしても向き変更だけ対応したいならこれを追加（なくてもOK）
+    // window.addEventListener('orientationchange', () => {
+    //   clearGroupState();
+    //   $grid.find('img, a, div').each(function () {
+    //     this.removeAttribute('style');
+    //   });
+    //   $grid.justifiedGallery('destroy');
+    //   initGallery();
+    // });
+
+    // 以下は今までどおり（hover / click など）
+    $grid.on('mouseenter', 'a.jg-entry', function () {
+      const g = this.dataset.group || '';
+      if (!g) return;
+      $grid.addClass('is-group-hover');
+      $grid.find('a.jg-entry').each(function () {
+        this.classList.toggle('is-in-group', (this.dataset.group || '') === g);
+      });
+    });
+
+    $grid.on('mouseleave', function () {
+      clearGroupState();
+    });
+
+    $grid.on('mousemove', function (e) {
+      if (!$(e.target).closest('a.jg-entry').length) {
+        clearGroupState();
+      }
+    });
+
+    $grid.on('touchend', function () {
+      clearGroupState();
+    });
+
+    $grid.on('click', 'a.jg-entry', (ev) => {
+      ev.preventDefault();
+      const $items = $grid.find('a.jg-entry');
+      const idx = $items.index(ev.currentTarget);
+      openViewer($items, idx);
+    });
+  });
+})();
+
+
 
 
 
@@ -225,7 +245,7 @@ function show(i){
       if (dx < 0) next(); else prev();
     }
   });
-})();
+
 /* ==== PC用 横ドラッグ（マウス） ==== */
 (() => {
   const modal = document.getElementById('galleryModal');
