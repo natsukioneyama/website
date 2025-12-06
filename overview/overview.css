@@ -1,54 +1,135 @@
-:root{
-  --bar-h: 72px;
-  --gutter: clamp(3px, 2vw, 5px);
-  /* 画像下のキャプション＋Backが占める高さの見積もり */
-  --gm-footer-h: clamp(120px, 14vw, 128px);
+/* ============ Base ============ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-/* ============ Base ============ */
-* { box-sizing: border-box; }
-html, body { height: 100%; margin: 0; }
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* overview ベース */
+:root {
+  --bar-h: 72px;
+  --gutter: clamp(3px, 2vw, 5px);
+}
 
 body {
   font-family: system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
-  overflow-x: hidden;
   color: #111;
-  background: #d20606;
+  background: #d20606; /* overview と同じ赤 */
+  overflow-x: hidden;
 }
 
 /* ============ Top bar ============ */
 .topbar {
-  position: relative; top: 0; z-index: 10;
-  display: grid; grid-template-columns: 1fr auto;
+  position: relative;
+  top: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
   gap: 12px;
   padding: 10px var(--gutter);
   min-height: var(--bar-h);
 }
-.brand { display:flex; flex-direction:column; line-height: 1.2; position:fixed;}
-.brand .artist { font-weight: 700; font-size: 18px; }
-.brand .role { font-weight: 600; font-size: 12px; letter-spacing: .05em; }
 
-.toplinks { position: fixed; top: 28px; right: 10px; }
-.toplinks a { font-size: 12px; font-weight: 600;  color: inherit; text-decoration: none;}
-.toplinks a:hover { opacity: .8; }
+.brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  position: fixed;
+}
 
-/* ============ Page ============ */
-.page { padding: 0 var(--gutter) var(--gutter); }
+.brand .artist {
+  font-weight: 700;
+  font-size: 18px;
+}
 
-/* ============ Overview (Justified Gallery) ============ */
-.justified-grid { margin-top: 8px; position:relative; font-size:0; line-height:0;}
-.justified-grid a { display: inline-block; overflow: hidden;  }
-.justified-grid img { display:block; width:100%; height:auto; }
+.brand .role {
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .05em;
+}
+
+.toplinks {
+  position: fixed;
+  top: 28px;
+  right: 10px;
+}
+
+.toplinks a {
+  font-size: 12px;
+  font-weight: 600;
+  color: inherit;
+  text-decoration: none;
+}
+
+.toplinks a:hover {
+  opacity: .8;
+}
 
 
-/* Hover caption: only on the head (data-head="1") when that group is hovered */
+
+
+
+
+
+/* ============ Layout wrapper ============ */
+.page {
+  padding: 0 var(--gutter) var(--gutter);
+}
+
+/* ============ Grid (justified-layout 用) ============ */
+#grid {
+  position: relative;
+  width: 100%;
+  margin: 8px 0 25px;
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+
+/* ★ JS で body に .jl-ready が付いたら表示 */
+body.jl-ready #grid {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.25s ease;
+}
+
+
+/* ============ Items (images & videos) ============ */
+/* 各アイテム（画像・動画共通） */
+.jl-item {
+  position: absolute;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* 中身（画像・動画）はボックスにフィット */
+.jl-item img,
+.jl-item video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* data-w/data-h が実際の比率と合っていればほぼトリミングなし */
+}
+
+
+
+/* ============ Hover caption & group highlight ============ */
+/* キャプション共通スタイル */
 .ov-cap {
   position: absolute;
   left: 4px;
-  bottom: 1px;
-  color: #000000;
-  font-size: 0.6rem !important;
+  top: 2px;
+  color: #000;
+  font-size: 0.6rem;
   font-family: inherit;
   font-style: normal;
   opacity: 0;
@@ -60,100 +141,219 @@ body {
 .ov-cap em,
 .ov-cap i {
   display: block;
-  opacity: .9;
-  font-style: normal;   /* ← 斜体をオフ */
+  opacity: 0.9;
+  font-style: normal;  /* 斜体オフ */
   font-weight: 600;
 }
+
 .ov-cap b,
-.ov-cap strong { font-weight: 600; font-style: normal; }
+.ov-cap strong {
+  font-weight: 600;
+  font-style: normal;
+}
 
+/* PC: グループ hover 時のオーバーレイ & キャプション表示 */
+@media (hover: hover) and (pointer: fine) {
 
-
-/* 画像の薄化はやめる ＋ ホバー時の白オーバーレイ */
-@media (hover:hover) and (pointer:fine) {
-  .justified-grid.is-group-hover a.is-in-group img {
-    opacity: 1;
-  }
-
-  .justified-grid.is-group-hover a.is-in-group::after {
+  /* グループに属するサムネだけ白オーバーレイ */
+  #grid.is-group-hover .jl-item.is-in-group::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(255, 255, 255, 0.542);
+    background: rgba(255, 255, 255, 0.763);
     pointer-events: none;
-    z-index: 1; /* ← オーバーレイは下層 */
+    z-index: 1;
   }
-}
 
-/* ----- Scoped positioning: confine overlay/caption to the anchor only when active ----- */
-
-/* タッチ端末用：ドラッグ抑制など */
-@media (hover: none) and (pointer: coarse) {
-  #overviewGrid a.jg-entry {
-    -webkit-tap-highlight-color: transparent;
-    -webkit-user-drag: none;
-    touch-action: manipulation;
-  }
-  #overviewGrid img {
-    -webkit-user-drag: none;
-    -webkit-touch-callout: none;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-}
-
-
-/* ヘッドだけキャプションを表示し、必ず最前面に */
-@media (hover:hover) and (pointer:fine) {
-  .justified-grid.is-group-hover a[data-head="1"].is-in-group .ov-cap {
+  /* グループの先頭のサムネだけキャプションを表示 */
+  #grid.is-group-hover .jl-item[data-head="1"].is-in-group .ov-cap {
     opacity: 1;
-    z-index: 2; /* ← オーバーレイより前 */
+    z-index: 2; /* オーバーレイより前 */
   }
 }
 
-/* ============ Custom Gallery (Lightbox) ============ */
-.gm[aria-hidden="true"] { display: none; }
-.gm {
-  position: fixed; inset: 0; z-index: 9999;
-  display: grid; place-items: center;
-}
-.gm-backdrop {
-  position: absolute; inset: 0;
-  border: 0; padding: 0; margin: 0; background: #d20606;
+/* モバイル: 1回タップでキャプション表示、グループをハイライト */
+/* グループの先頭サムネだけキャプション表示（タップ中のグループ） */
+#grid.is-group-tap .jl-item[data-head="1"].is-in-group .ov-cap {
+  opacity: 1;
+  z-index: 2; /* オーバーレイより前 */
 }
 
+/* is-in-group が付いたサムネだけ半透明オーバーレイ */
+#grid.is-group-tap .jl-item.is-in-group::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.763);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* キャプションは常にオーバーレイより前 */
+#grid .ov-cap {
+  position: absolute;
+  z-index: 2;
+}
+
+
+
+
+
+
+
+
+
+
+/* ============ Fullscreen for video ============ */
+/* フルスクリーン時は必ずオリジナル比率を守る */
+.jl-item.is-video video:fullscreen,
+.jl-item.is-video video:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* レターボックスでもトリミングしない */
+  background: #000;
+}
+
+/* ============ Fullscreen button ============ */
+.fs-btn {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.fs-btn::before {
+  content: "⤢"; /* fullscreen アイコン */
+  color: #fff;
+  font-size: 14px;
+  line-height: 22px;
+  display: block;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* マウスホバー時だけ表示（PC） */
+.jl-item.is-video:hover .fs-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* タッチデバイスでは常に表示（hover が無い環境用） */
+@media (hover: none) {
+  .fs-btn {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============ Small screen tweaks ============ */
+@media (max-width: 480px) {
+  .brand .artist {
+    font-size: 16px;
+  }
+}
+
+
+
+
+
+
+
+
+
+/* ========== Lightbox: gm (gallery modal) ========== */
+
+.gm[aria-hidden="true"] {
+  display: none;
+}
+
+.gm {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+
+  /* ★ 画面下のキャプション・クローズボタン用スペース */
+  --gm-footer-h: 120px;
+}
+
+@media (max-width: 767px) {
+  .gm {
+    --gm-footer-h: 140px;
+  }
+}
+
+
+.gm-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: #d20606; /* overview と同じ赤 */
+}
+
+/* hidden が付いたら確実に消す */
+.gm-frame img[hidden],
+.gm-video-wrap[hidden] {
+  display: none !important;
+}
+
+
+
+/* Frame (画像・動画の枠) */
 .gm-frame {
   position: relative;
   width: 98vw;
 
-  /* 画面全高から「キャプション＋BACK用の高さ」を差し引く */
   height: calc(100vh - var(--gm-footer-h));
-  /* ← ここでもう十分制限されているので、
-       max-height: 80vh; は削除 or コメントアウト */
+
+  padding: 0;
+  box-sizing: border-box;
 
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* スマホ幅のときはフッター（キャプション＋BACK）を少し高めに確保 */
-@media (max-width: 767px) { 
-  .gm {
-    --gm-footer-h: 140px;  /* 足りなければ 150px, 160px にして微調整 */
+
+/* ---- iPhone / 小さい画面用：Lightbox のセンター調整 ---- */
+@media (max-width: 768px) {
+
+
+  .gm-caption {
+    left: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .gm-counter {
+    right: 14px;
+    bottom: calc(28px + env(safe-area-inset-bottom));
+  }
+
+  .gm-close {
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
   }
 }
 
-/* iPhone SEクラス（幅380px以下）の全デバイス用 */
- @media screen and (max-width: 380px) {
-  .gm-frame {
-    width: 98vw !important;
-  }
-}
 
+
+/* 画像 */
 .gm-frame img {
-  display:block;
-  opacity:0;
-  transition: opacity .15s ease;
+  flex: 0 0 auto;
+  display: block;
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
@@ -161,31 +361,33 @@ body {
   -webkit-user-drag: none;
 }
 
-/* ===== カスタムギャラリー内 各要素配置 ===== */
-/* --- gm-caption 上部に名前と肩書き --- */
-.gm-name {
-  margin-bottom: 2px; /* 下との余白 */
+/* 動画 wrapper */
+/* 中身の video の幅にピッタリ縮むようにする */
+.gm-video-wrap {
+  position: relative;         /* sv-controls の基準 */
+  flex: 0 0 auto;
+  display: inline-flex;       /* ★ 幅 = 子要素（video）の幅 */
+  align-items: center;
+  justify-content: center;
 }
 
-.gm-name .gm-main {
-  font-weight: 700;
-  font-size: .9rem;
-  line-height: 1;
-  letter-spacing: 0.05em;
-  margin: 0;
-  color: #000000;
+/* 動画本体 */
+.gm-video-wrap video {
+  display: block;
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+
+    pointer-events: auto;
+
 }
 
-.gm-name .gm-subtitle {
-  font-weight: 700;
-  font-size: .7rem;
-  letter-spacing: 0.04em;
-  margin: 0;
-  color: #000000;
-  
-}
 
-/* キャプション（左下寄せ） */
+
+
+
+
+/* ===== caption & text ===== */
 .gm-caption {
   position: absolute;
   left: 10px;
@@ -207,7 +409,21 @@ body {
   font-size: .8rem;
 }
 
-/* カウンター（右下） */
+.gm-name .gm-main {
+  font-weight: 700;
+  font-size: .9rem;
+  letter-spacing: 0.05em;
+  display: none;
+}
+
+.gm-name .gm-subtitle {
+  font-weight: 700;
+  font-size: .7rem;
+  letter-spacing: 0.04em;
+  display: none;
+}
+
+/* counter (右下) */
 .gm-counter {
   position: absolute;
   right: 15px;
@@ -216,45 +432,41 @@ body {
   font-weight: 400;
   font-size: .8rem;
   letter-spacing: .04em;
+  display: none;
 }
-  
-/* クローズボタン（カウンターの下） */
+
+/* close button */
 .gm-close {
   position: absolute;
   right: 10px;
-  bottom: 10px; /* カウンターの上に被らないよう調整 */
+  bottom: 10px;
   border: 0;
   background: transparent;
   color: #000000;
   font-size: .8rem;
   font-weight: 400;
-  text-align: center;
   z-index: 10;
 }
 
-@media (orientation: portrait) and (max-width: 767px) {
-  .gm-caption {
-    bottom: 12!important;
-  }
-
-  .gm-close {
-    bottom: 12 !important;
-  }
-}
-
-
-/* Click zones */
+/* click zones */
 .gm-hit {
-  position: absolute; top: 0; bottom: 0; width: 50vw; height: 100vh;
-  border: 0; background: transparent; cursor: ew-resize;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50vw;
+  height: 100vh;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+
+  z-index: 5;   /* ★ 追加：動画(z=20)より低くする */
 }
+
+
 .gm-prev { left: 0; }
 .gm-next { right: 0; }
 
-
-.gm-frame img.ready{opacity:1;}
-
-/* ==== iPhoneでのタップ時ハイライト防止 ==== */
+/* prevent iOS tap highlight */
 .gm-hit,
 .gm-close,
 .gm-backdrop {
@@ -264,26 +476,16 @@ body {
   -webkit-user-select: none;
 }
 
-
-
-/* === デフォルトではスクロール可能に戻す === */
-html, body {
-  overscroll-behavior: auto;
-  touch-action: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* === ギャラリーモーダル(.gm)が開いている時だけスクロール禁止 === */
+/* modal open: disable scroll */
 .gm[aria-hidden="false"] {
-  position: fixed;                 /* 背景を固定して動かさない */
+  position: fixed;
   inset: 0;
-  overflow: hidden !important;     /* スクロールを封じる */
+  overflow: hidden !important;
   overscroll-behavior: contain !important;
   touch-action: none !important;
   -webkit-overflow-scrolling: auto !important;
 }
 
-/* モーダル内の frame/caption の揺れも封じる */
 .gm-frame,
 .gm-caption {
   overscroll-behavior: contain !important;
@@ -294,38 +496,123 @@ html, body {
 
 
 
-/* === Mobile: 1st tap shows caption & dim .is-in-group only === */
-@media (hover: none) and (pointer: coarse) {
-  /* 1回目タップで付く .tap-armed のときだけキャプション表示 */
-  #overviewGrid a.tap-armed .ov-cap {
-    opacity: 1;
-  }
-  
-  /* is-in-group が付いたサムネだけ半透明オーバーレイを重ねる */
-  #overviewGrid.is-group-tap .jg-entry.is-in-group::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(255, 255, 255, 0.54); /* ← 白の薄いレイヤー */
-    pointer-events: none;
-    z-index: 1; /* オーバーレイは下層 */
-  }
 
-   #overviewGrid .ov-cap {
-    position: absolute;
-    z-index: 2; /* ← これが決定打 */
-   }
 
-  /* 念のためトランジションを維持 */
-  #overviewGrid.is-group-tap .jg-entry {
-    transition: opacity .15s ease;
+
+
+
+
+
+
+
+
+
+
+
+
+/* ====== Custom video controls (sv) ====== */
+
+/* 動画のラッパー */
+.gm-video-wrap {
+  position: relative;         /* sv-controls の基準 */
+  flex: 0 0 auto;
+  display: inline-flex;       /* 幅 = 子要素（video）の幅 */
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  opacity: 0;
+  transition: opacity .35s ease;
+  pointer-events: auto;       /* ★ タップを受け付ける */
+}
+
+.gm-video-wrap.is-ready {
+  opacity: 1;
+}
+
+/* コントロール本体 */
+.sv-controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;            /* 動画の下辺に沿わせる */
+  padding: 12px 14px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  opacity: 0;           /* 初期は非表示 */
+  pointer-events: none; /* 非表示中はクリック不可 */
+  transition: opacity .25s ease;
+  z-index: 10;
+
+  background: linear-gradient(to top, rgba(0,0,0,0.35), rgba(0,0,0,0));
+  border-radius: 0 0 6px 6px;
+}
+
+/* PC：ホバーで表示 */
+.gm-video-wrap:hover .sv-controls {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* JS で付与するクラス */
+.sv-controls.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* プログレスバー */
+.sv-progress {
+  position: relative;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.sv-progress__bar {
+  width: 0;         /* 0% → 100% に伸びる */
+  height: 100%;
+  background: #fff; /* 白の方が見やすい */
+}
+
+/* ボタン行 */
+.sv-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ボタン共通 */
+.sv-btn {
+  border: none;
+  background: transparent;
+  color: #fff;          /* 白字にする */
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  padding: 4px 0;
+  cursor: pointer;
+}
+
+/* モバイルでも少し余裕を */
+@media (max-width: 480px) {
+  .sv-controls {
+    padding: 8px 12px;
   }
 }
 
-/* === Desktop hover: サムネにホバーしたらキャプション表示 === */
-@media (hover: hover) and (pointer: fine) {
-  #overviewGrid a.jg-entry:hover .ov-cap {
-    opacity: 1;
-    transform: translateY(0);
+/* iPhone 等：初期は非表示、.is-visible で表示 */
+@media (hover: none) and (pointer: coarse) {
+  .gm-video-wrap .sv-controls {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .35s ease;
   }
+
+  .gm-video-wrap .sv-controls.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
 }
