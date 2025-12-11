@@ -1,0 +1,561 @@
+/* ============ Base ============ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #F7F7F5;
+  -webkit-tap-highlight-color: transparent; 
+}
+
+:root {
+  --bar-h: 44px;
+  --thumbs-scale: min(1, 100vw / 440);
+}
+
+/* ベース */
+body {
+  font-family: "roboto-mono", monospace;
+  color: #111;
+  overflow-x: hidden;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ===== 画面下に固定されるシンプルヘッダー ===== */
+.topbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #F7F7F5;         /* デバッグ終わったら白でOK */
+  z-index: 1000;
+  overflow: hidden;            /* パネルが閉じている時にハミ出しを隠す */
+}
+
+/* 中身を上下に並べるだけ */
+.topbar-inner {
+  padding: 6px 20px 9px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== 上に伸びるパネル部分 ===== */
+.header-panel {
+  font-size: 0.55rem;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  font-weight: 800;
+
+
+  max-height: 0;               /* 閉じているときは高さゼロ */
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(4px);
+
+  transition:
+    max-height 0.25s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* 開いたときだけ中身を見せる */
+body.header-open .header-panel {
+  max-height: 200px;           /* テキストの量に合わせて調整 */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== 一番下の細いバー（名前＋CONTACT） ===== */
+.topbar-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 左側のブランドボタン */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+
+  /* ★ 文字色は常に継承＋タップ時の青ハイライトを消す */
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+.brand:focus,
+.brand:active {
+  outline: none;
+}
+
+.brand .artist,
+.brand .role {
+  margin: 0;
+  line-height: 1;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  font-weight: 100;
+}
+
+/* 右側 CONTACT */
+.toplinks {
+margin-left: auto;
+display: flex; 
+align-items: center; 
+gap: 10px;
+}
+
+.toplinks a {
+display: inline-block; 
+font-size: 0.6rem;
+line-height: 1;
+font-weight: 100; 
+letter-spacing: 0.06em;
+color: inherit;
+text-decoration: none;
+}
+
+.toplinks a:hover {
+  opacity: 0.75;
+}
+
+/* Lightbox 中はバーごと消す */
+body.gm-open .topbar {
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+.artist a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.artist a:visited {
+  color: inherit;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ============ Layout wrapper ============ */
+.page {
+  max-width: none;
+  margin: 0;
+  padding: 6px 5px;
+}
+
+/* ============ 7ブロックの「横並びの列」 ============ */
+.thumbs {
+display: flex;
+flex-direction: column;
+gap: 8px;
+/* 中央寄せ */
+margin: 40px auto;
+}
+
+.col {
+  display: flex;
+  flex-direction: row;      /* 各ブロック内は横並び */
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+.jl-item {
+  margin: 0;
+}
+
+
+.col-2 { margin-top: 6px; }
+.col-3 { margin-top: 6px; }
+.col-4 { margin-top: 6px; }
+.col-5 { margin-top: 4px; }
+.col-6 { margin-top: 6px; }
+
+
+.jl-item img {
+  display: block;
+  height: auto;
+  width: auto;
+}
+
+
+
+/* ========================================
+ベース（〜375px, SE相当） 
+======================================== */
+.col-1 .jl-item img { width: 55px; }
+.col-2 .jl-item img { width: 46px; }
+.col-3 .jl-item img { width: 57px; }
+.col-4 .jl-item img { width: 56px; }
+.col-5 .jl-item img { width: 50px; }
+/* ★ 横イメージだけ少し大きくする（列指定を上書き） */
+.jl-item.landscape img {
+  width: 100px;  
+}
+
+
+
+
+/* ========================================
+iphone / Pro (390〜414px) portrait 
+======================================== */
+@media (min-width: 390px) and (max-width: 414px) and (orientation: portrait) {
+  .is-touch .col-1 .jl-item img { width: 58px; }
+  .is-touch .col-2 .jl-item img { width: 49px; }
+  .is-touch .col-3 .jl-item img { width: 60px; }
+  .is-touch .col-4 .jl-item img { width: 59px; }
+  .is-touch .col-5 .jl-item img { width: 52px; }
+  .is-touch .jl-item.landscape img { width: 103px; }
+}
+
+
+/* Plus / Pro Max（415〜460px） */
+@media (min-width: 415px) and (max-width: 460px)and (orientation: portrait) {
+ .is-touch .col-1 .jl-item img { width: 64px; }
+ .is-touch .col-2 .jl-item img { width: 55px; }
+ .is-touch .col-3 .jl-item img { width: 66px; }
+ .is-touch .col-4 .jl-item img { width: 65px; }
+ .is-touch .col-5 .jl-item img { width: 59px; }
+ .is-touch .jl-item.landscape img {
+  width: 109px;  
+}
+}
+
+
+/* ================= iphone landscape =======================
+普通 iPhone（374〜414px） */
+/* Plus / Pro Max（415〜460px） */
+/* ★ここにスマホ横 MQ を追加 
+======================================== */
+@media (max-width: 956px) and (orientation: landscape) {
+ .is-touch .page {
+    display: flex;
+    justify-content: center;
+  }
+ .is-touch .thumbs {
+    margin: 20px auto 0;
+  }
+}
+
+
+/* ========================================
+   iPad 全体（縦） mini / 11 / 13 共通
+   ======================================== */
+@media (min-width: 742px) and (max-width: 1366px) and (orientation: portrait) {
+
+  .is-touch .page {
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    align-items: center;
+  }
+
+  .is-touch .thumbs {
+    margin: 20px auto 0;
+  }
+
+  .is-touch .col-1 .jl-item img { width: 100px; }
+  .is-touch .col-2 .jl-item img { width: 90px; }
+  .is-touch .col-3 .jl-item img { width: 90px; }
+  .is-touch .col-4 .jl-item img { width: 80px; }
+  .is-touch .col-5 .jl-item img { width: 80px; }
+  .is-touch .col-6 .jl-item img { width: 70px; }
+
+  .is-touch .jl-item.landscape img {
+    width: 160px;
+  }
+}
+
+/* ========================================
+   iPad 全体（横） mini / 11 / 13 共通
+   ======================================== */
+@media (min-width: 1132px) and (max-width: 1800px) and (orientation: landscape) {
+
+  .is-touch .page {
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    align-items: center;
+  }
+
+  .is-touch .thumbs {
+    margin: 20px auto 0;
+  }
+
+  .is-touch .col-1 .jl-item img { width: 100px; }
+  .is-touch .col-2 .jl-item img { width: 90px; }
+  .is-touch .col-3 .jl-item img { width: 90px; }
+  .is-touch .col-4 .jl-item img { width: 80px; }
+  .is-touch .col-5 .jl-item img { width: 80px; }
+  .is-touch .col-6 .jl-item img { width: 70px; }
+
+  .is-touch .jl-item.landscape img {
+    width: 160px;
+  }
+}
+
+
+
+/* ========================================
+   Desktop（PCブラウザ専用）
+   ======================================== */
+/* Desktop（PCブラウザ専用：横幅480px以上・ポインタfine） */
+@media (min-width: 480px) and (pointer: fine) {
+  .is-desktop .page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;   /* 縦方向中央 */
+    align-items: center;       /* 横方向中央 */
+    min-height: 100vh;
+  }
+
+  .is-desktop .thumbs {
+    margin: 0 auto; /* 中央配置 */
+  }
+
+  .is-desktop .col-1 .jl-item img { width: 88px; }
+  .is-desktop .col-2 .jl-item img { width: 80px; }
+  .is-desktop .col-3 .jl-item img { width: 80px; }
+  .is-desktop .col-4 .jl-item img { width: 76px; }
+  .is-desktop .col-5 .jl-item img { width: 70px; }
+  .is-desktop .col-6 .jl-item img { width: 70px; }
+
+  .is-desktop .jl-item.landscape img {
+    width: 150px;
+  }
+}
+
+
+
+
+
+
+/* ============ LIGHTBOX ============ */
+
+.gm {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: grid;
+  place-items: center;
+
+  --gm-footer-h: 120px;
+
+  /* ★ 背景をサイトと同じ色にしておく */
+  background: #F7F7F5;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+@media (max-width: 767px) {
+  .gm {
+    --gm-footer-h: 140px;
+  }
+}
+
+/* aria-hidden="false" のときだけ表示する */
+.gm[aria-hidden="false"] {
+opacity: 1;
+visibility: visible;
+pointer-events: auto;
+}
+
+.gm-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: #F7F7F5;
+}
+
+.gm-frame {
+  position: relative;
+  width: 98vw;
+  height: calc(100vh - var(--gm-footer-h));
+
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* ★ フレーム側も同じ背景色 */
+  background: #F7F7F5;
+}
+
+.gm-frame img {
+  flex: 0 0 auto;
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+
+  /* ★ 読み込み中に見える下地もクリーム色に */
+  background-color: #F7F7F5;
+}
+.gm-img { opacity: 0; transition: opacity 0.2s ease; }
+.gm-img.ready { opacity: 1; }
+
+/* caption & text */
+.gm-caption {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  color: #000;
+  pointer-events: none;
+  text-align: left;
+}
+
+.gm-ttl {
+  margin: 0;
+  font-weight: 100;
+  font-size: 0.6rem;
+}
+
+.gm-sub {
+  margin: 0;
+  font-weight: 100;
+  font-size: 0.6rem;
+}
+
+.gm-name .gm-main {
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  display: none; /* 必要なら表示に変えられます */
+}
+
+.gm-name .gm-subtitle {
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  display: none;
+}
+
+/* counter (右下) */
+.gm-counter {
+  position: absolute;
+  right: 15px;
+  bottom: 30px;
+  color: #111;
+  font-weight: 400;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+
+/* close button */
+.gm-close {
+  position: absolute;        /* 今までと同じ位置指定で OK（必要に応じて absolute → fixed に） */
+  right: 10px;
+  bottom: 10px;
+
+  font-size: .6rem;        /* 文字サイズは小さいまま */
+  letter-spacing: 0.08em;
+  font-family: inherit;
+
+  background: transparent;
+  border: none;
+
+  /* ★ ここで“透明なヒットエリア”を広げる */
+  padding: 0;     /* 上下左右に余白を付ける → ここ全体がクリック領域 */
+  cursor: pointer;
+  pointer-events: auto;
+
+
+  /* 見た目上はテキストだけに見えるように */
+  color: #111;
+  z-index: 30;
+}
+/* 透明の大きいクリック領域をつくる */
+.gm-close::before {
+  content: "";
+  position: absolute;
+  top: -20px;   /* テキストの上方向に20px拡張 */
+  bottom: -20px;/* 下方向にも20px拡張 → bottom:10px は維持される */
+  left: -25px;
+  right: -25px;
+  pointer-events: auto;     /* ← これで透明の領域も押せる */
+  /* ← この外側のボックスが実際のクリック領域 */
+}
+
+
+
+/* click zones */
+.gm-hit {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50vw;
+  height: 100vh;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.gm-prev { left: 0; }
+.gm-next { right: 0; }
+
+/* modal open: disable scroll */
+body.gm-open {
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: contain;
+}
+
+
+/* Lightbox まわりは全部 同じ背景色で塗りつぶす */
+.gm,
+.gm-backdrop,
+.gm-frame,
+.gm-video-wrap,
+.gm-img,
+.gm-video-wrap video {
+  background-color: #F7F7F5;
+}
+
+
+
+/* iOS のタップ時の黒いハイライトを消す */
+a,
+button,
+.jl-item img {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
