@@ -506,12 +506,14 @@ pointer-events: auto;
 .gm-close::before {
   content: "";
   position: absolute;
-  top: -20px;   /* テキストの上方向に20px拡張 */
-  bottom: -20px;/* 下方向にも20px拡張 → bottom:10px は維持される */
-  left: -25px;
-  right: -25px;
-  pointer-events: auto;     /* ← これで透明の領域も押せる */
-  /* ← この外側のボックスが実際のクリック領域 */
+
+  /* 上下左右にしっかり余裕を持たせる */
+  top: -30px;     /* 上に 30px ひろげる */
+  bottom: -30px;  /* 下に 30px ひろげる */
+  left: -35px;    /* 左に 35px ひろげる */
+  right: -35px;   /* 右に 35px ひろげる */
+
+  pointer-events: auto;  /* 透明ボックスもタップ可能に */
 }
 
 
