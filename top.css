@@ -321,7 +321,7 @@ iphone / Pro (390〜414px) portrait
   }
 
  .is-touch .thumbs {
-    margin: 20px auto 0;
+    margin: 0 auto;
   }
 
    .is-touch .col-1 .jl-item img { width: 100px; }
