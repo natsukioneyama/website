@@ -273,25 +273,24 @@ iphone / Pro (390〜414px) portrait
    ======================================== */
 @media (min-width: 742px) and (max-width: 1366px) and (orientation: portrait) {
 
-  .is-touch .page {
+   .is-touch .page {
     display: flex;
     justify-content: center;
     min-height: 100vh;
     align-items: center;
   }
 
-  .is-touch .thumbs {
-    margin: 20px auto 0;
+    .is-touch .thumbs {
+    margin: 0 auto 80px;
   }
+    .is-touch .col-1 .jl-item img { width: 100px; }
+    .is-touch .col-2 .jl-item img { width: 90px; }
+    .is-touchn .col-3 .jl-item img { width: 90px; }
+    .is-touch .col-4 .jl-item img { width: 80px; }
+    .is-touch .col-5 .jl-item img { width: 80px; }
+    .is-touch .col-6 .jl-item img { width: 70px; }
 
-  .is-touch .col-1 .jl-item img { width: 100px; }
-  .is-touch .col-2 .jl-item img { width: 90px; }
-  .is-touch .col-3 .jl-item img { width: 90px; }
-  .is-touch .col-4 .jl-item img { width: 80px; }
-  .is-touch .col-5 .jl-item img { width: 80px; }
-  .is-touch .col-6 .jl-item img { width: 70px; }
-
-  .is-touch .jl-item.landscape img {
+    .is-touch .jl-item.landscape img {
     width: 160px;
   }
 }
@@ -325,7 +324,6 @@ iphone / Pro (390〜414px) portrait
 }
 
 
-
 /* ========================================
    Desktop（PCブラウザ専用）
    ======================================== */
@@ -354,6 +352,8 @@ iphone / Pro (390〜414px) portrait
     width: 150px;
   }
 }
+
+
 
 
 
