@@ -267,11 +267,20 @@ iphone / Pro (390〜414px) portrait
   }
 }
 
-
 /* ========================================
-   iPad 全体（縦） mini / 11 / 13 共通
+   iPad mini（縦・742px〜820px あたり）
    ======================================== */
-@media (min-width: 742px) and (max-width: 1366px) and (orientation: portrait) {
+@media (min-width: 742px) and (max-width: 818px) and (orientation: portrait) {
+    .is-touch .thumbs {
+    margin: 0 auto 60px;
+  }
+}
+
+/* 
+/* ========================================
+   iPad 全体（縦） 11 / 13 共通
+   ======================================== */
+@media (min-width: 819px) and (max-width: 1366px) and (orientation: portrait) {
 
    .is-touch .page {
     display: flex;
@@ -285,7 +294,7 @@ iphone / Pro (390〜414px) portrait
   }
     .is-touch .col-1 .jl-item img { width: 100px; }
     .is-touch .col-2 .jl-item img { width: 90px; }
-    .is-touchn .col-3 .jl-item img { width: 90px; }
+    .is-touch .col-3 .jl-item img { width: 90px; }
     .is-touch .col-4 .jl-item img { width: 80px; }
     .is-touch .col-5 .jl-item img { width: 80px; }
     .is-touch .col-6 .jl-item img { width: 70px; }
