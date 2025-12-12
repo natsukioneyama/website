@@ -218,9 +218,11 @@ margin: 40px auto;
 .col-3 .jl-item img { width: 57px; }
 .col-4 .jl-item img { width: 56px; }
 .col-5 .jl-item img { width: 50px; }
+.col-6 .jl-item img { width: 50px; }
+
 /* ★ 横イメージだけ少し大きくする（列指定を上書き） */
 .jl-item.landscape img {
-  width: 100px;  
+  width: 85px;  
 }
 
 
@@ -230,24 +232,28 @@ margin: 40px auto;
 iphone / Pro (390〜414px) portrait 
 ======================================== */
 @media (min-width: 390px) and (max-width: 414px) and (orientation: portrait) {
-  .is-touch .col-1 .jl-item img { width: 58px; }
-  .is-touch .col-2 .jl-item img { width: 49px; }
-  .is-touch .col-3 .jl-item img { width: 60px; }
-  .is-touch .col-4 .jl-item img { width: 59px; }
-  .is-touch .col-5 .jl-item img { width: 52px; }
-  .is-touch .jl-item.landscape img { width: 103px; }
+   .is-touch .col-1 .jl-item img { width: 58px; }
+   .is-touch .col-2 .jl-item img { width: 49px; }
+   .is-touch .col-3 .jl-item img { width: 60px; }
+   .is-touch .col-4 .jl-item img { width: 59px; }
+   .is-touch .col-5 .jl-item img { width: 52px; }
+   .is-touch .col-6 .jl-item img { width: 53px; }
+
+   .is-touch .jl-item.landscape img { width: 88px; }
 }
 
 
 /* Plus / Pro Max（415〜460px） */
 @media (min-width: 415px) and (max-width: 460px)and (orientation: portrait) {
- .is-touch .col-1 .jl-item img { width: 64px; }
- .is-touch .col-2 .jl-item img { width: 55px; }
- .is-touch .col-3 .jl-item img { width: 66px; }
- .is-touch .col-4 .jl-item img { width: 65px; }
- .is-touch .col-5 .jl-item img { width: 59px; }
- .is-touch .jl-item.landscape img {
-  width: 109px;  
+   .is-touch .col-1 .jl-item img { width: 64px; }
+   .is-touch .col-2 .jl-item img { width: 55px; }
+   .is-touch .col-3 .jl-item img { width: 66px; }
+   .is-touch .col-4 .jl-item img { width: 65px; }
+   .is-touch .col-5 .jl-item img { width: 59px; }
+   .is-touch .col-6 .jl-item img { width: 59px; }
+
+   .is-touch .jl-item.landscape img {
+  width: 94px;  
 }
 }
 
@@ -258,11 +264,11 @@ iphone / Pro (390〜414px) portrait
 /* ★ここにスマホ横 MQ を追加 
 ======================================== */
 @media (max-width: 956px) and (orientation: landscape) {
- .is-touch .page {
+  .is-touch .page {
     display: flex;
     justify-content: center;
   }
- .is-touch .thumbs {
+  .is-touch .thumbs {
     margin: 20px auto 0;
   }
 }
@@ -282,34 +288,7 @@ iphone / Pro (390〜414px) portrait
    ======================================== */
 @media (min-width: 819px) and (max-width: 1366px) and (orientation: portrait) {
 
-   .is-touch .page {
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
-    align-items: center;
-  }
-
-    .is-touch .thumbs {
-    margin: 0 auto 80px;
-  }
-    .is-touch .col-1 .jl-item img { width: 100px; }
-    .is-touch .col-2 .jl-item img { width: 90px; }
-    .is-touch .col-3 .jl-item img { width: 90px; }
-    .is-touch .col-4 .jl-item img { width: 80px; }
-    .is-touch .col-5 .jl-item img { width: 80px; }
-    .is-touch .col-6 .jl-item img { width: 70px; }
-
-    .is-touch .jl-item.landscape img {
-    width: 160px;
-  }
-}
-
-/* ========================================
-   iPad 全体（横） mini / 11 / 13 共通
-   ======================================== */
-@media (min-width: 1132px) and (max-width: 1800px) and (orientation: landscape) {
-
-  .is-touch .page {
+ .is-touch .page {
     display: flex;
     justify-content: center;
     min-height: 100vh;
@@ -317,21 +296,44 @@ iphone / Pro (390〜414px) portrait
   }
 
   .is-touch .thumbs {
-    margin: 20px auto 0;
+    margin: 0 auto 80px;
   }
-
   .is-touch .col-1 .jl-item img { width: 100px; }
   .is-touch .col-2 .jl-item img { width: 90px; }
   .is-touch .col-3 .jl-item img { width: 90px; }
   .is-touch .col-4 .jl-item img { width: 80px; }
   .is-touch .col-5 .jl-item img { width: 80px; }
-  .is-touch .col-6 .jl-item img { width: 70px; }
-
+  .is-touch .col-6 .jl-item img { width: 95px; }
   .is-touch .jl-item.landscape img {
-    width: 160px;
+    width: 129px;
   }
 }
 
+/* ========================================
+   iPad 全体（横） mini / 11 / 13 共通
+   ======================================== */
+@media (min-width: 1132px) and (max-width: 1800px) and (orientation: landscape) {
+.is-touch .page {
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    align-items: center;
+  }
+
+ .is-touch .thumbs {
+    margin: 20px auto 0;
+  }
+
+   .is-touch .col-1 .jl-item img { width: 100px; }
+   .is-touch .col-2 .jl-item img { width: 90px; }
+   .is-touch .col-3 .jl-item img { width: 90px; }
+   .is-touch .col-4 .jl-item img { width: 80px; }
+   .is-touch .col-5 .jl-item img { width: 80px; }
+   .is-touch .col-6 .jl-item img { width: 95px; }
+   .is-touch .jl-item.landscape img {
+    width: 129px;
+  }
+}
 
 /* ========================================
    Desktop（PCブラウザ専用）
@@ -350,17 +352,21 @@ iphone / Pro (390〜414px) portrait
     margin: 0 auto; /* 中央配置 */
   }
 
-  .is-desktop .col-1 .jl-item img { width: 88px; }
-  .is-desktop .col-2 .jl-item img { width: 80px; }
-  .is-desktop .col-3 .jl-item img { width: 80px; }
-  .is-desktop .col-4 .jl-item img { width: 76px; }
-  .is-desktop .col-5 .jl-item img { width: 70px; }
-  .is-desktop .col-6 .jl-item img { width: 70px; }
+  .is-desktop .col-1 .jl-item img { width: 80px; }
+  .is-desktop .col-2 .jl-item img { width: 71px; }
+  .is-desktop .col-3 .jl-item img { width: 71px; }
+  .is-desktop .col-4 .jl-item img { width: 66px; }
+  .is-desktop .col-5 .jl-item img { width: 66px; }
+  .is-desktop .col-6 .jl-item img { width: 66px; }
 
   .is-desktop .jl-item.landscape img {
-    width: 150px;
+    width: 113px;
   }
 }
+
+
+
+
 
 
 
