@@ -14,21 +14,39 @@ document.addEventListener('DOMContentLoaded', () => {
     root.classList.add('is-desktop');
   }
 
-  /* ===== HEADER OPEN トグル ===== */
-  const brandBtn = document.querySelector('.js-header-toggle');
-  if (brandBtn) {
-    brandBtn.addEventListener('click', () => {
-      document.body.classList.toggle('header-open');
-    });
-  }
 
-  /* CONTACT は mailto だけ（特別な処理無し） */
-  const contactLink = document.querySelector('.js-contact');
-  if (contactLink) {
-    contactLink.addEventListener('click', () => {
-      // mailto リンクなので何もしない
-    });
+
+/* ===== INFO PAGE TOGGLE ===== */
+
+const infoLink = document.querySelector('.js-info');
+const infoPage = document.getElementById('infoPage');
+
+function setInfoOpen(isOpen) {
+  document.body.classList.toggle('info-open', isOpen);
+  if (infoPage) {
+    infoPage.setAttribute('aria-hidden', String(!isOpen));
   }
+}
+
+if (infoLink && infoPage) {
+  infoLink.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    if (document.body.classList.contains('gm-open')) return;
+
+    const isOpen = document.body.classList.contains('info-open');
+    setInfoOpen(!isOpen);
+  });
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    setInfoOpen(false);
+  }
+});
+
+
+
 
   /* ===== LIGHTBOX (gm) ===== */
   const gm       = document.getElementById('gm');
