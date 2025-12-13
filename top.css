@@ -253,11 +253,11 @@ body {
 .jl-item img {
   display: block;
   height: auto;
-  width: 50px;
+  width: 40px;
 }
 
 .jl-item.landscape img {
-  width: 66px;
+  width: 65px;
 }
 
 /* ========================================
@@ -265,8 +265,8 @@ body {
    ======================================== */
 
 @media (min-width: 390px) and (max-width: 414px) and (orientation: portrait) {
-  .jl-item img { width: 55px; }
-  .jl-item.landscape img { width: 71px; }
+  .jl-item img { width: 43px; }
+  .jl-item.landscape img { width: 69px; }
 
   :root { --thumbs-shift: 0px; }
 }
@@ -276,7 +276,7 @@ body {
    ======================================== */
 
 @media (min-width: 415px) and (max-width: 460px) and (orientation: portrait) {
-  .jl-item img { width: 60px; }
+  .jl-item img { width: 50px; }
   .jl-item.landscape img { width: 77px; }
 
   :root { --thumbs-shift: 0px; }
