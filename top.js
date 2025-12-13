@@ -1,20 +1,5 @@
 // top.js
 document.addEventListener('DOMContentLoaded', () => {
-  const root = document.documentElement;
-
-  // タッチ端末かどうかをかなり広めに判定
-  const hasTouch =
-    ('ontouchstart' in window) ||
-    (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) ||
-    window.matchMedia('(pointer: coarse)').matches;
-
-  if (hasTouch) {
-    root.classList.add('is-touch');
-  } else {
-    root.classList.add('is-desktop');
-  }
-
-
 
 /* ===== INFO PAGE TOGGLE ===== */
 
