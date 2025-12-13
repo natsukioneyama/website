@@ -82,7 +82,6 @@ textarea {
   border: none;
   background: transparent;
   padding: 0;
-  cursor: pointer;
 
   /* ★ 文字色は常に継承＋タップ時の青ハイライトを消す */
   color: inherit;
@@ -148,7 +147,7 @@ body.info-open .info-page {
 }
 
 .info-page__inner {
-  padding-top: 100px;      /* ナビ直下 */
+  padding-top: 13px;      /* ナビ直下 */
   padding-left: 10px;    /* topbar-inner と同じ左余白 */
   padding-right: 20px;
   padding-bottom: 120px;
@@ -156,19 +155,25 @@ body.info-open .info-page {
   max-width: none;       /* 中央カラム解除 */
   margin: 0;             /* 左寄せ */
 
-  line-height: 1.3;
+  line-height: 1.5;
   font-size: 0.6rem;
-  letter-spacing: 0.06em;
   font-weight: 100;
+  letter-spacing: 0.06em;
 }
 
 .hp-label,
 .hp-list {
-  margin: 0 0 18px;
+  margin: 0 0 26px;
 }
 
 .hp-note  {
-  margin-bottom: 7px;
+  margin-bottom: 26px;
+}
+.hp-copyright {
+  font-size: 0.6rem;
+  font-weight: 100;
+  letter-spacing: 0.06em;
+  margin-top: 60px;
 }
 
 /* optional: Info表示中は背景スクロール停止 */
@@ -457,7 +462,7 @@ pointer-events: auto;
 
 .gm-ttl {
   margin: 0;
-  
+
   font-size: 0.6rem;
   font-weight: 100;
   letter-spacing: 0.06em;
