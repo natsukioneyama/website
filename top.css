@@ -11,7 +11,7 @@ body {
   padding: 0;
   background: #F7F7F5;
   -webkit-tap-highlight-color: transparent; 
-}
+  }
 
 :root {
   --bar-h: 44px;
@@ -192,29 +192,54 @@ body.info-open {
 
 
 
-/* ============ Layout wrapper ============ */
-.page {
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
-    align-items: center;
-  }
 
-/* ============ 7ブロックの「横並びの列」 ============ */
+
+
+
+/* ========================================
+   Layout wrapper（全デバイス共通：土台）
+   ======================================== */
+
+html,
+body {
+  height: 100%;
+}
+
+.page {
+  display: grid;
+  place-items: center;
+
+  /* iOS Safari viewport 安定化 */
+  min-height: 100vh;   /* fallback */
+  min-height: 100svh;  /* 実機でズレにくい */
+
+  /* セーフエリア対策 */
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+
+/* ========================================
+   Thumbs（全デバイス共通）
+   ======================================== */
+
 .thumbs {
-display: flex;
-flex-direction: column;
-gap: 8px;
-/* 中央寄せ */
-margin:0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  /* 横センター */
+  margin: 0 auto;
+
+  /* 縦位置の微調整（必要なときだけ MQ で値を変える） */
+  transform: translateY(var(--thumbs-shift, 0px));
 }
 
 .col {
-display: flex;
-flex-direction: row;
-align-items: center;
-gap: 6px;
-flex-wrap: nowrap;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
 }
 
 .jl-item {
@@ -222,13 +247,13 @@ flex-wrap: nowrap;
 }
 
 /* ========================================
-ベース（〜375px, SE相当） 
-======================================== */
+   iPhone ベース（〜389px）
+   ======================================== */
+
 .jl-item img {
   display: block;
   height: auto;
-  width: auto;
-  width: 50px; 
+  width: 50px;
 }
 
 .jl-item.landscape img {
@@ -236,141 +261,62 @@ flex-wrap: nowrap;
 }
 
 /* ========================================
-iphone / Pro (390〜414px) portrait 
-======================================== */
+   iPhone / Pro (390〜414px) portrait
+   ======================================== */
+
 @media (min-width: 390px) and (max-width: 414px) and (orientation: portrait) {
-  .is-touch .jl-item img {
-   width: 55px;   /* ← 70より少し大きめ。5列向き */
-  }
-  .is-touch .jl-item.landscape img {
-    width: 71px
-}
+  .jl-item img { width: 55px; }
+  .jl-item.landscape img { width: 71px; }
+
+  :root { --thumbs-shift: 0px; }
 }
 
-/* /* ========================================
-Plus / Pro Max（415〜460px）
-======================================== */ 
+/* ========================================
+   Plus / Pro Max（415〜460px）portrait
+   ======================================== */
+
 @media (min-width: 415px) and (max-width: 460px) and (orientation: portrait) {
-  .is-touch .jl-item img {
-   width: 60px;   /* ← 70より少し大きめ。5列向き */
-  }
-  .is-touch .jl-item.landscape img {
-    width: 77px
-}
-}
+  .jl-item img { width: 60px; }
+  .jl-item.landscape img { width: 77px; }
 
-/* ================= iphone landscape =======================
-普通 iPhone（374〜414px） */
-/* Plus / Pro Max（415〜460px） */
-/* ★ここにスマホ横 MQ を追加 
-======================================== */
-@media (max-width: 956px) and (orientation: landscape) {
- .is-touch .page {
-    display: flex;
-    justify-content: center;
-  }
- .is-touch .thumbs {
-    margin: 20px auto 0;
-  }
+  :root { --thumbs-shift: 0px; }
 }
 
 /* ========================================
-   iPad mini（縦・742px〜820px あたり）
+   iPad mini（縦・742〜818）
    ======================================== */
+
 @media (min-width: 742px) and (max-width: 818px) and (orientation: portrait) {
- .is-touch .page {
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
-    align-items: center;
-  } 
- .is-touch .thumbs {
-    margin: 0 auto 60px;
-  }
- .is-touch .jl-item img {
-   width: 60px;   /* ← 70より少し大きめ。5列向き */
-  }
- .is-touch .jl-item.landscape img {
-    width: 100px;
-  }
+  .jl-item img { width: 60px; }
+  .jl-item.landscape img { width: 100px; }
+
+  /* 必要なら -20〜-60 で調整 */
+  :root { --thumbs-shift: -40px; }
 }
 
-/* 
 /* ========================================
-   iPad 全体（縦） 11 / 13 共通
+   iPad 全体（縦・819〜1366）
    ======================================== */
+
 @media (min-width: 819px) and (max-width: 1366px) and (orientation: portrait) {
+  .jl-item img { width: 60px; }
+  .jl-item.landscape img { width: 100px; }
 
-.is-touch .page {
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
-    align-items: center;
-  }
-.is-touch .thumbs {
-    margin: 0 auto 80px;
-  }
-.is-touch .jl-item img {
-   width: 70px;   /* ← 70より少し大きめ。5列向き */
-  }
-.is-touch .jl-item.landscape img {
-    width: 100px;
-  }
-
+  /* 必要なら -40〜-90 で調整 */
+  :root { --thumbs-shift: -60px; }
 }
 
 /* ========================================
-   iPad 全体（横） mini / 11 / 13 共通
+   Desktop（PCブラウザ：pointer fine）
+   ここで .page を触らない（重要）
    ======================================== */
-@media (min-width: 1132px) and (max-width: 1800px) and (orientation: landscape) {
-  .is-touch .page {
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
-    align-items: center;
-  }
-  .is-touch .thumbs {
-    margin: 0 auto;
-  }
-  .is-touch .jl-item img {
-   width: 75px;   /* ← 70より少し大きめ。5列向き */
-  }
-  .is-touch .jl-item.landscape img {
-    width: 115px;
-  }
-  }
 
-  /* ========================================
-   Desktop（PCブラウザ専用）
-   ======================================== */
-/* Desktop（PCブラウザ専用：横幅480px以上・ポインタfine） */
 @media (min-width: 480px) and (pointer: fine) {
-  .is-desktop .page {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;   /* 縦方向中央 */
-    align-items: center;       /* 横方向中央 */
-    min-height: 100vh;
-  }
+  .jl-item img { width: 60px; }
+  .jl-item.landscape img { width: 100px; }
 
-  .is-desktop .thumbs {
-    margin: 0 auto; /* 中央配置 */
-  }
-  .is-desktop .jl-item img {
-   width: 60px;   /* ← 70より少し大きめ。5列向き */
-  }
-  .is-desktop .jl-item.landscape img {
-    width: 100px;
-  }
+  :root { --thumbs-shift: 0px; }
 }
-
-
-
-
-
-
-
-
 
 
 
