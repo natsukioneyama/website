@@ -291,7 +291,7 @@ body {
   .jl-item.landscape img { width: 100px; }
 
   /* 必要なら -20〜-60 で調整 */
-  :root { --thumbs-shift: -40px; }
+  :root { --thumbs-shift: 0px; }
 }
 
 /* ========================================
@@ -303,7 +303,7 @@ body {
   .jl-item.landscape img { width: 100px; }
 
   /* 必要なら -40〜-90 で調整 */
-  :root { --thumbs-shift: -60px; }
+  :root { --thumbs-shift: 0px; }
 }
 
 /* ========================================
