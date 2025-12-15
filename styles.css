@@ -265,10 +265,10 @@ body {
    ======================================== */
 
 @media (min-width: 390px) and (max-width: 414px) and (orientation: portrait) {
-  .jl-item img { width: 43px; }
-  .jl-item.landscape img { width: 69px; }
+  .is-touch .jl-item img { width: 43px; }
+  .is-touch .jl-item.landscape img { width: 69px; }
 
-  :root { --thumbs-shift: 0px; }
+  .is-touch :root { --thumbs-shift: 0px; }
 }
 
 /* ========================================
@@ -276,10 +276,10 @@ body {
    ======================================== */
 
 @media (min-width: 415px) and (max-width: 460px) and (orientation: portrait) {
-  .jl-item img { width: 50px; }
-  .jl-item.landscape img { width: 77px; }
+  .is-touch .jl-item img { width: 50px; }
+  .is-touch .jl-item.landscape img { width: 77px; }
 
-  :root { --thumbs-shift: 0px; }
+  .is-touch :root { --thumbs-shift: 0px; }
 }
 
 /* ========================================
@@ -287,24 +287,67 @@ body {
    ======================================== */
 
 @media (min-width: 742px) and (max-width: 818px) and (orientation: portrait) {
-  .jl-item img { width: 60px; }
-  .jl-item.landscape img { width: 100px; }
+  .is-touch .jl-item img { width: 60px; }
+  .is-touch .jl-item.landscape img { width: 100px; }
 
   /* 必要なら -20〜-60 で調整 */
-  :root { --thumbs-shift: 0px; }
+  .is-touch :root { --thumbs-shift: 0px; }
+}
+
+
+/* ========================================
+   iPad 11（縦・819px〜1180px あたり）
+   ======================================== */
+@media (min-width: 819px) and (max-width: 1022px) and (orientation: portrait) {
+  .is-touch .jl-item img { width: 70px; }
+  .is-touch .jl-item.landscape img { width: 120px; }
+
+  .is-touch :root { --thumbs-shift: 0px; }
 }
 
 /* ========================================
-   iPad 全体（縦・819〜1366）
+   iPad 13（縦・819px〜1180px あたり）
    ======================================== */
+@media (min-width: 1023px) and (max-width: 1366px) and (orientation: portrait) {
+  .is-touch .jl-item img { width: 80px; }
+  .is-touch .jl-item.landscape img { width: 130px; }
 
-@media (min-width: 819px) and (max-width: 1366px) and (orientation: portrait) {
-  .jl-item img { width: 60px; }
-  .jl-item.landscape img { width: 100px; }
-
-  /* 必要なら -40〜-90 で調整 */
-  :root { --thumbs-shift: 0px; }
+  .is-touch :root { --thumbs-shift: 0px; }
 }
+
+
+/* ========================================
+   iPad mini（ランドスケープ）
+   ======================================== */
+@media (min-width: 1132px) and (max-width: 1178px) and (orientation: landscape) {
+  .is-touch .jl-item img { width: 60px; }
+  .is-touch .jl-item.landscape img { width: 100px; }
+
+  .is-touch :root { --thumbs-shift: 0px; }
+}
+
+/* ========================================
+   iPad 11（ランドスケープ）
+   ======================================== */
+@media (min-width: 1179px) and (max-width: 1364px) and (orientation: landscape) {
+  .is-touch .jl-item img { width: 70px; }
+  .is-touch .jl-item.landscape img { width: 120px; }
+
+  .is-touch :root { --thumbs-shift: 0px; }
+}
+
+
+
+/* ========================================
+   iPad 13（ランドスケープ）
+   ======================================== */
+@media (min-width: 1365px) and (max-width: 1800px) and (orientation: landscape) {
+.is-touch .jl-item img { width: 80px; }
+.is-touch .jl-item.landscape img { width: 130px; }
+
+.is-touch :root { --thumbs-shift: 0px; }
+}
+
 
 /* ========================================
    Desktop（PCブラウザ：pointer fine）
@@ -312,13 +355,11 @@ body {
    ======================================== */
 
 @media (min-width: 480px) and (pointer: fine) {
-  .jl-item img { width: 60px; }
-  .jl-item.landscape img { width: 100px; }
+.is-desktop .jl-item img { width: 80px; }
+.is-desktop .jl-item.landscape img { width: 130px; }
 
-  :root { --thumbs-shift: 0px; }
+.is-desktop :root { --thumbs-shift: 0px; }
 }
-
-
 
 
 
