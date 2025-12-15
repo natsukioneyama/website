@@ -232,6 +232,7 @@ body {
 
   /* 縦位置の微調整（必要なときだけ MQ で値を変える） */
   transform: translateY(var(--thumbs-shift, 0px));
+  --thumbs-shift: 0px;
 }
 
 .col {
