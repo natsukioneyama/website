@@ -169,6 +169,10 @@ body.info-open .info-page {
 .hp-note  {
   margin-bottom: 26px;
 }
+ .hp-pdflink  {
+  margin: 56px 0;
+ }
+
 .hp-copyright {
   font-size: 0.6rem;
   font-weight: 100;
