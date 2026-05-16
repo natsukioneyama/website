@@ -479,6 +479,26 @@ items.forEach((item) => {
     gm.setAttribute('aria-hidden', 'false');
   }
 
+  function openNextImageOrProject() {
+  const activeItems = getActiveItems();
+
+  if (currentIndex < activeItems.length - 1) {
+    openAt(currentIndex + 1);
+  } else {
+    openNextProject();
+  }
+}
+
+function openPrevImageOrProject() {
+  const activeItems = getActiveItems();
+
+  if (currentIndex > 0) {
+    openAt(currentIndex - 1);
+  } else {
+    openPrevProject();
+  }
+}
+
   function closeModal() {
     gm.setAttribute('aria-hidden', 'true');
 
@@ -588,9 +608,9 @@ function openPrevProject() {
   });
 
   gmNext.addEventListener('click', (e) => {
-    e.stopPropagation();
-    openAt(currentIndex + 1);
-  });
+  e.stopPropagation();
+  openNextImageOrProject();
+});
 
   gmClose.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -620,13 +640,13 @@ if (gmPrevProject) {
       e.preventDefault();
       closeModal();
     } else if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      openAt(currentIndex + 1);
+    e.preventDefault();
+    openNextImageOrProject();
     } else if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      openAt(currentIndex - 1);
-    }
-  });
+    e.preventDefault();
+    openPrevImageOrProject();
+   }
+});
 
 
 
