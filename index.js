@@ -69,18 +69,6 @@ const PROJECTS = {
       title: "Carl Diner",
       line1: "",
       line2: ""
-    },
-    {
-      src: "img/pp/carldiner_01/05.webp",
-      title: "Carl Diner",
-      line1: "",
-      line2: ""
-    },
-    {
-      src: "img/pp/carldiner_01/06.webp",
-      title: "Carl Diner",
-      line1: "",
-      line2: ""
     }
   ],
 
@@ -120,12 +108,6 @@ numerochina: [
   },
   {
     src: "img/numerochina/01/03.webp",
-    title: "NUMERO CHINA",
-    line1: "Carla Rossi",
-    line2: ""
-  },
-   {
-    src: "img/numerochina/01/04.webp",
     title: "NUMERO CHINA",
     line1: "Carla Rossi",
     line2: ""
@@ -174,12 +156,6 @@ replicaman: [
   },
     {
     src: "img/replicaman/ss24/04.webp",
-    title: "REPLICA MAN",
-    line1: "Pavel Golik",
-    line2: ""
-  },
-  {
-    src: "img/replicaman/ss24/05.webp",
     title: "REPLICA MAN",
     line1: "Pavel Golik",
     line2: ""
@@ -255,12 +231,6 @@ costume: [
     title: "COSTUME",
     line1: "Sascha Oda",
     line2: ""
-  },
-  {
-    src: "img/costume/saschaoda/01/04.webp",
-    title: "COSTUME",
-    line1: "Sascha Oda",
-    line2: ""
   }
 ],
 
@@ -289,31 +259,31 @@ numeroswitzerland: [
   {
     src: "img/numeroswitzerland/issue_01/01.webp",
     title: "NUMERO SWITZERLAND",
-    line1: "",
+    line1: "Antoine & Charlie",
     line2: ""
   },
   {
     src: "img/numeroswitzerland/issue_01/02.webp",
     title: "NUMERO SWITZERLAND",
-    line1: "",
+    line1: "Antoine & Charlie",
     line2: ""
   },
   {
     src: "img/numeroswitzerland/issue_01/03.webp",
     title: "NUMERO SWITZERLAND",
-    line1: "",
+    line1: "Antoine & Charlie",
     line2: ""
   },
     {
     src: "img/numeroswitzerland/issue_01/04.webp",
     title: "NUMERO SWITZERLAND",
-    line1: "",
+    line1: "Antoine & Charlie",
     line2: ""
   },
   {
     src: "img/numeroswitzerland/issue_01/05.webp",
     title: "NUMERO SWITZERLAND",
-    line1: "",
+    line1: "Antoine & Charlie",
     line2: ""
   }
 ],
@@ -323,116 +293,46 @@ beautypapers: [
   {
     src: "img/beautypapers/01/01.webp",
     title: "BEAUTY PAPERS",
-    line1: "",
+    line1: "Jérémie Monnier",
     line2: ""
   },
   {
     src: "img/beautypapers/01/02.webp",
     title: "BEAUTY PAPERS",
-    line1: "",
+    line1: "Jérémie Monnier",
     line2: ""
   },
   {
     src: "img/beautypapers/01/03.webp",
     title: "BEAUTY PAPERS",
-    line1: "",
+    line1: "Jérémie Monnier",
     line2: ""
   },
     {
     src: "img/beautypapers/01/04.webp",
     title: "BEAUTY PAPERS",
-    line1: "",
+    line1: "Jérémie Monnier",
     line2: ""
   },
   {
     src: "img/beautypapers/01/05.webp",
     title: "BEAUTY PAPERS",
-    line1: "",
+    line1: "Jérémie Monnier",
     line2: ""
   },
   {
     src: "img/beautypapers/01/06.webp",
     title: "BEAUTY PAPERS",
-    line1: "",
+    line1: "Jérémie Monnier",
     line2: ""
   },
     {
     src: "img/beautypapers/01/07.webp",
     title: "BEAUTY PAPERS",
-    line1: "",
+    line1: "Jérémie Monnier",
     line2: ""
   }
-],
-
-lucierox: [
-  {
-    src: "img/untitled/01/01.webp",
-    title: "Lucie Rox",
-    line1: "",
-    line2: ""
-  },
-  {
-    src: "img/untitled/01/02.webp",
-    title: "Lucie Rox",
-    line1: "",
-    line2: ""
-  },
-  {
-    src: "img/untitled/01/03.webp",
-    title: "Lucie Rox",
-    line1: "",
-    line2: ""
-  },
-    {
-    src: "img/untitled/01/04.webp",
-    title: "Lucie Rox",
-    line1: "",
-    line2: ""
-  },
-  {
-    src: "img/untitled/01/05.webp",
-    title: "Lucie Rox",
-    line1: "",
-    line2: ""
-  },
-  {
-    src: "img/untitled/01/06.webp",
-    title: "Lucie Rox",
-    line1: "",
-    line2: ""
-  },
-    {
-    src: "img/untitled/01/07.webp",
-    title: "Lucie Rox",
-    line1: "",
-    line2: ""
-  }
-],
-
-
-numeroswitzerlandhomme: [
-  {
-    src: "img/numeroswitzerlandhomme/issue_01/01.webp",
-    title: "NUMERO SWITZERLAND HOMME",
-    line1: "Jonathan Wolpert",
-    line2: ""
-  },
-  {
-    src: "img/numeroswitzerlandhomme/issue_01/02.webp",
-    title: "NUMERO SWITZERLAND HOMME",
-    line1: "Jonathan Wolpert",
-    line2: ""
-  },
-  {
-    src: "img/numeroswitzerlandhomme/issue_01/03.webp",
-    title: "NUMERO SWITZERLAND HOMME",
-    line1: "Jonathan Wolpert",
-    line2: ""
-  }
-
-
 ]
-
 
 };
 
