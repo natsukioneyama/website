@@ -204,12 +204,6 @@ numeroberlin: [
     title: "NUMERO BERLIN",
     line1: "Boris Ovini",
     line2: ""
-  },
-  {
-    src: "img/numeroberlin/visionary/08.webp",
-    title: "NUMERO BERLIN",
-    line1: "Boris Ovini",
-    line2: ""
   }
 ],
 
