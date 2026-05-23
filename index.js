@@ -45,6 +45,7 @@
 
 
 const PROJECTS = {
+
   carldiner: [
     {
       src: "img/pp/carldiner_01/01.webp",
@@ -52,20 +53,29 @@ const PROJECTS = {
       line1: "",
       line2: ""
     },
+
     {
       src: "img/pp/carldiner_01/02.webp",
       title: "Carl Diner",
       line1: "",
       line2: ""
     },
+
     {
       src: "img/pp/carldiner_01/03.webp",
       title: "Carl Diner",
       line1: "",
       line2: ""
     },
-        {
+
+    {
       src: "img/pp/carldiner_01/04.webp",
+      title: "Carl Diner",
+      line1: "",
+      line2: ""
+    },
+      {
+      src: "img/pp/carldiner_01/05.webp",
       title: "Carl Diner",
       line1: "",
       line2: ""
@@ -76,19 +86,19 @@ const PROJECTS = {
   {
     src: "img/sanstitle/001/01.webp",
     title: "Tess Petronio",
-    line1: "Suzanne Koller",
+    line1: "",
     line2: ""
   },
   {
     src: "img/sanstitle/001/02.webp",
     title: "Tess Petronio",
-    line1: "Suzanne Koller",
+    line1: "",
     line2: ""
   },
   {
     src: "img/sanstitle/001/03.webp",
     title: "Tess Petronio",
-    line1: "Suzanne Koller",
+    line1: "",
     line2: ""
   }
 ],
@@ -210,23 +220,38 @@ numeroberlin: [
 costume: [
   {
     src: "img/costume/saschaoda/01/01.webp",
-    title: "COSTUME",
+    title: "",
     line1: "Sascha Oda",
     line2: ""
   },
   {
     src: "img/costume/saschaoda/01/02.webp",
-    title: "COSTUME",
+    title: "",
     line1: "Sascha Oda",
     line2: ""
   },
   {
     src: "img/costume/saschaoda/01/03.webp",
-    title: "COSTUME",
+    title: "",
     line1: "Sascha Oda",
     line2: ""
   }
 ],
+
+  beauty: [
+  {
+    src: "img/beauty/beauty01//01.webp",
+    title: "BEAUTY",
+    line1: "",
+    line2: ""
+  },
+  {
+    src: "img/beauty/beauty01//02.webp",
+    title: "BEAUTY",
+    line1: "",
+    line2: ""
+  }
+  ],
 
 flair: [
   {
@@ -264,18 +289,6 @@ numeroswitzerland: [
   },
   {
     src: "img/numeroswitzerland/issue_01/03.webp",
-    title: "NUMERO SWITZERLAND",
-    line1: "Antoine & Charlie",
-    line2: ""
-  },
-    {
-    src: "img/numeroswitzerland/issue_01/04.webp",
-    title: "NUMERO SWITZERLAND",
-    line1: "Antoine & Charlie",
-    line2: ""
-  },
-  {
-    src: "img/numeroswitzerland/issue_01/05.webp",
     title: "NUMERO SWITZERLAND",
     line1: "Antoine & Charlie",
     line2: ""
@@ -326,6 +339,7 @@ beautypapers: [
     line1: "Jérémie Monnier",
     line2: ""
   }
+
 ]
 
 };

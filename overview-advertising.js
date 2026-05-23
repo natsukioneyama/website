@@ -19,8 +19,8 @@
     const w = window.innerWidth;
     if (w <= 480) return 180;   // iPhone
     if (w <= 768) return 160;   // tablet small
-    if (w <= 1200) return 170;  // laptop
-    return 180;                 // desktop
+    if (w <= 1200) return 210;  // laptop
+    return 210;                 // desktop
   }
 
   function getBoxSpacing() {

@@ -13,7 +13,7 @@
   function computeLayout(items, config) {
     const defaults = {
       containerWidth: 1060,
-      targetRowHeight: 320,
+      targetRowHeight: 380,
       boxSpacing: 10,
     };
     const opt = Object.assign({}, defaults, config);
