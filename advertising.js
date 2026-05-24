@@ -489,15 +489,33 @@ items.forEach((item) => {
   }
 }
 
-function openPrevImageOrProject() {
+ function openPrevImageOrProject() {
   const activeItems = getActiveItems();
 
   if (currentIndex > 0) {
     openAt(currentIndex - 1);
   } else {
-    openPrevProject();
+    openPrevProjectLastImage();
   }
 }
+
+function openPrevProjectLastImage() {
+  if (!lastTappedItem) return;
+
+  const allThumbs = items.filter(item => item.dataset.project);
+  const thumbIndex = allThumbs.indexOf(lastTappedItem);
+
+  if (thumbIndex === -1) return;
+
+  const prevThumb =
+    allThumbs[(thumbIndex - 1 + allThumbs.length) % allThumbs.length];
+
+  setClusterFromThumb(prevThumb, 0);
+
+  const activeItems = getActiveItems();
+  openAt(activeItems.length - 1);
+}
+
 
   function closeModal() {
     gm.setAttribute('aria-hidden', 'true');
@@ -633,21 +651,22 @@ if (gmPrevProject) {
 
   gmBg.addEventListener('click', () => closeModal());
 
-  window.addEventListener('keydown', (e) => {
-    if (gm.getAttribute('aria-hidden') === 'true') return;
+window.addEventListener('keydown', (e) => {
+  if (gm.getAttribute('aria-hidden') === 'true') return;
 
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      closeModal();
-    } else if (e.key === 'ArrowRight') {
+  if (e.key === 'Escape') {
+    e.preventDefault();
+    closeModal();
+
+  } else if (e.key === 'ArrowRight') {
     e.preventDefault();
     openNextImageOrProject();
-    } else if (e.key === 'ArrowLeft') {
+
+  } else if (e.key === 'ArrowLeft') {
     e.preventDefault();
     openPrevImageOrProject();
-   }
+  }
 });
-
 
 
 

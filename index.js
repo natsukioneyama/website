@@ -82,6 +82,119 @@ const PROJECTS = {
     }
   ],
 
+  beautypapers: [
+  {
+    src: "img/beautypapers/01/01.webp",
+    title: "BEAUTY PAPERS",
+    line1: "Jérémie Monnier",
+    line2: ""
+  },
+  {
+    src: "img/beautypapers/01/02.webp",
+    title: "BEAUTY PAPERS",
+    line1: "Jérémie Monnier",
+    line2: ""
+  },
+  {
+    src: "img/beautypapers/01/03.webp",
+    title: "BEAUTY PAPERS",
+    line1: "Jérémie Monnier",
+    line2: ""
+  },
+    {
+    src: "img/beautypapers/01/04.webp",
+    title: "BEAUTY PAPERS",
+    line1: "Jérémie Monnier",
+    line2: ""
+  },
+  {
+    src: "img/beautypapers/01/05.webp",
+    title: "BEAUTY PAPERS",
+    line1: "Jérémie Monnier",
+    line2: ""
+  }
+
+  ],
+
+beauty: [
+  {
+    src: "img/beauty/beauty01/01.webp",
+    title: "BEAUTY",
+    line1: "",
+    line2: ""
+  },
+  {
+    src: "img/beauty/beauty01/02.webp",
+    title: "BEAUTY",
+    line1: "",
+    line2: ""
+  }
+],
+
+  costume: [
+  {
+    src: "img/costume/saschaoda/01/01.webp",
+    title: "",
+    line1: "Sascha Oda",
+    line2: ""
+  },
+  {
+    src: "img/costume/saschaoda/01/02.webp",
+    title: "",
+    line1: "Sascha Oda",
+    line2: ""
+  },
+  {
+    src: "img/costume/saschaoda/01/03.webp",
+    title: "",
+    line1: "Sascha Oda",
+    line2: ""
+  }
+],
+
+  numerochina: [
+  {
+    src: "img/numerochina/01/01.webp",
+    title: "NUMERO CHINA",
+    line1: "Carla Rossi",
+    line2: ""
+  },
+  {
+    src: "img/numerochina/01/02.webp",
+    title: "NUMERO CHINA",
+    line1: "Carla Rossi",
+    line2: ""
+  },
+  {
+    src: "img/numerochina/01/03.webp",
+    title: "NUMERO CHINA",
+    line1: "Carla Rossi",
+    line2: ""
+  }
+],
+
+
+numeroswitzerland: [
+  {
+    src: "img/numeroswitzerland/issue_01/01.webp",
+    title: "NUMERO SWITZERLAND",
+    line1: "Antoine & Charlie",
+    line2: ""
+  },
+  {
+    src: "img/numeroswitzerland/issue_01/02.webp",
+    title: "NUMERO SWITZERLAND",
+    line1: "Antoine & Charlie",
+    line2: ""
+  },
+  {
+    src: "img/numeroswitzerland/issue_01/03.webp",
+    title: "NUMERO SWITZERLAND",
+    line1: "Antoine & Charlie",
+    line2: ""
+  }
+],
+
   sanstitle: [
   {
     src: "img/sanstitle/001/01.webp",
@@ -103,26 +216,6 @@ const PROJECTS = {
   }
 ],
 
-numerochina: [
-  {
-    src: "img/numerochina/01/01.webp",
-    title: "NUMERO CHINA",
-    line1: "Carla Rossi",
-    line2: ""
-  },
-  {
-    src: "img/numerochina/01/02.webp",
-    title: "NUMERO CHINA",
-    line1: "Carla Rossi",
-    line2: ""
-  },
-  {
-    src: "img/numerochina/01/03.webp",
-    title: "NUMERO CHINA",
-    line1: "Carla Rossi",
-    line2: ""
-  }
-],
 
 voguemexico: [
   {
@@ -217,129 +310,26 @@ numeroberlin: [
   }
 ],
 
-costume: [
-  {
-    src: "img/costume/saschaoda/01/01.webp",
-    title: "",
-    line1: "Sascha Oda",
-    line2: ""
-  },
-  {
-    src: "img/costume/saschaoda/01/02.webp",
-    title: "",
-    line1: "Sascha Oda",
-    line2: ""
-  },
-  {
-    src: "img/costume/saschaoda/01/03.webp",
-    title: "",
-    line1: "Sascha Oda",
-    line2: ""
-  }
-],
-
-  beauty: [
-  {
-    src: "img/beauty/beauty01//01.webp",
-    title: "BEAUTY",
-    line1: "",
-    line2: ""
-  },
-  {
-    src: "img/beauty/beauty01//02.webp",
-    title: "BEAUTY",
-    line1: "",
-    line2: ""
-  }
-  ],
 
 flair: [
   {
     src: "img/flair/01.webp",
-    title: "FLAIR X SPECIAL CHANEL",
+    title: "",
     line1: "Eric Asamoh",
     line2: ""
   },
   {
     src: "img/flair/02.webp",
-    title: "FLAIR X SPECIAL CHANEL",
+    title: "",
     line1: "Eric Asamoh",
     line2: ""
   },
   {
     src: "img/flair/03.webp",
-    title: "FLAIR X SPECIAL CHANEL",
+    title: "",
     line1: "Eric Asamoh",
     line2: ""
   }
-],
-
-numeroswitzerland: [
-  {
-    src: "img/numeroswitzerland/issue_01/01.webp",
-    title: "NUMERO SWITZERLAND",
-    line1: "Antoine & Charlie",
-    line2: ""
-  },
-  {
-    src: "img/numeroswitzerland/issue_01/02.webp",
-    title: "NUMERO SWITZERLAND",
-    line1: "Antoine & Charlie",
-    line2: ""
-  },
-  {
-    src: "img/numeroswitzerland/issue_01/03.webp",
-    title: "NUMERO SWITZERLAND",
-    line1: "Antoine & Charlie",
-    line2: ""
-  }
-],
-
-
-beautypapers: [
-  {
-    src: "img/beautypapers/01/01.webp",
-    title: "BEAUTY PAPERS",
-    line1: "Jérémie Monnier",
-    line2: ""
-  },
-  {
-    src: "img/beautypapers/01/02.webp",
-    title: "BEAUTY PAPERS",
-    line1: "Jérémie Monnier",
-    line2: ""
-  },
-  {
-    src: "img/beautypapers/01/03.webp",
-    title: "BEAUTY PAPERS",
-    line1: "Jérémie Monnier",
-    line2: ""
-  },
-    {
-    src: "img/beautypapers/01/04.webp",
-    title: "BEAUTY PAPERS",
-    line1: "Jérémie Monnier",
-    line2: ""
-  },
-  {
-    src: "img/beautypapers/01/05.webp",
-    title: "BEAUTY PAPERS",
-    line1: "Jérémie Monnier",
-    line2: ""
-  },
-  {
-    src: "img/beautypapers/01/06.webp",
-    title: "BEAUTY PAPERS",
-    line1: "Jérémie Monnier",
-    line2: ""
-  },
-    {
-    src: "img/beautypapers/01/07.webp",
-    title: "BEAUTY PAPERS",
-    line1: "Jérémie Monnier",
-    line2: ""
-  }
-
 ]
 
 };
@@ -683,8 +673,25 @@ function openPrevImageOrProject() {
   if (currentIndex > 0) {
     openAt(currentIndex - 1);
   } else {
-    openPrevProject();
+    openPrevProjectLastImage();
   }
+}
+
+function openPrevProjectLastImage() {
+  if (!lastTappedItem) return;
+
+  const allThumbs = items.filter(item => item.dataset.project);
+  const thumbIndex = allThumbs.indexOf(lastTappedItem);
+
+  if (thumbIndex === -1) return;
+
+  const prevThumb =
+    allThumbs[(thumbIndex - 1 + allThumbs.length) % allThumbs.length];
+
+  setClusterFromThumb(prevThumb, 0);
+
+  const activeItems = getActiveItems();
+  openAt(activeItems.length - 1);
 }
 
 
@@ -826,19 +833,21 @@ if (gmPrevProject) {
   gmBg.addEventListener('click', () => closeModal());
 
   window.addEventListener('keydown', (e) => {
-    if (gm.getAttribute('aria-hidden') === 'true') return;
+  if (gm.getAttribute('aria-hidden') === 'true') return;
 
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      closeModal();
-    } else if (e.key === 'ArrowRight') {
-     e.preventDefault();
-     openNextImageOrProject();
-     } else if (e.key === 'ArrowLeft') {
-     e.preventDefault();
+  if (e.key === 'Escape') {
+    e.preventDefault();
+    closeModal();
+
+  } else if (e.key === 'ArrowRight') {
+    e.preventDefault();
+    openNextImageOrProject();
+
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault();
     openPrevImageOrProject();
-     }
-  });
+  }
+});
 
 
   // swipe (mobile)
