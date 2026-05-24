@@ -897,12 +897,16 @@ if (gmPrevProject) {
 
     const controls = gm.querySelector('.sv-controls');
 
-    if (Math.abs(dx) > minDist && Math.abs(dy) < maxVert) {
-      e.preventDefault();
-      if (controls) controls.classList.remove('is-visible');
-      if (dx < 0) openAt(currentIndex + 1);
-      else openAt(currentIndex - 1);
-    }
+   if (Math.abs(dx) > minDist && Math.abs(dy) < maxVert) {
+  e.preventDefault();
+  if (controls) controls.classList.remove('is-visible');
+
+  if (dx < 0) {
+    openNextImageOrProject();
+  } else {
+    openPrevImageOrProject();
+  }
+}
   }, { passive: false });
 
 
