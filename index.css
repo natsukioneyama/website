@@ -940,6 +940,12 @@ width: 100%;
   text-decoration: none;
 }
 
+.commercial-note {
+  font-weight: 500;
+  font-size: 1.15em;
+  font-style: italic;
+}
+
 .info .copyright{
  color: #11111182;
   margin-top: 50px;
