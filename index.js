@@ -314,19 +314,19 @@ numeroberlin: [
 flair: [
   {
     src: "img/flair/01.webp",
-    title: "",
+    title: "CHANEL",
     line1: "Eric Asamoh",
     line2: ""
   },
   {
     src: "img/flair/02.webp",
-    title: "",
+    title: "CHANEL",
     line1: "Eric Asamoh",
     line2: ""
   },
   {
     src: "img/flair/03.webp",
-    title: "",
+    title: "CHANEL",
     line1: "Eric Asamoh",
     line2: ""
   }
