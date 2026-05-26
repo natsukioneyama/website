@@ -174,26 +174,7 @@ beauty: [
 ],
 
 
-numeroswitzerland: [
-  {
-    src: "img/numeroswitzerland/issue_01/01.webp",
-    title: "NUMERO SWITZERLAND",
-    line1: "Antoine & Charlie",
-    line2: ""
-  },
-  {
-    src: "img/numeroswitzerland/issue_01/02.webp",
-    title: "NUMERO SWITZERLAND",
-    line1: "Antoine & Charlie",
-    line2: ""
-  },
-  {
-    src: "img/numeroswitzerland/issue_01/03.webp",
-    title: "NUMERO SWITZERLAND",
-    line1: "Antoine & Charlie",
-    line2: ""
-  }
-],
+
 
   sanstitle: [
   {
