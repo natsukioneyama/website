@@ -46,36 +46,46 @@
 
 const PROJECTS = {
 
+  krzysztofjan_01: [
+    {
+      src: "img/img/krzysztofjan_01/01.webp",
+      title: "Krzysztof Jan",
+      line1: "",
+      line2: ""
+    },
+
+    {
+      src: "img/img/krzysztofjan_01/02.webp",
+      title: "Krzysztof Jan",
+      line1: "",
+      line2: ""
+    }
+  ],
+
   carldiner: [
     {
-      src: "img/pp/carldiner_01/01.webp",
+      src: "img/img/carldiner_01/01.webp",
       title: "Carl Diner",
       line1: "",
       line2: ""
     },
 
     {
-      src: "img/pp/carldiner_01/02.webp",
+      src: "img/img/carldiner_01/02.webp",
       title: "Carl Diner",
       line1: "",
       line2: ""
     },
 
     {
-      src: "img/pp/carldiner_01/03.webp",
+      src: "img/img/carldiner_01/03.webp",
       title: "Carl Diner",
       line1: "",
       line2: ""
     },
 
     {
-      src: "img/pp/carldiner_01/04.webp",
-      title: "Carl Diner",
-      line1: "",
-      line2: ""
-    },
-      {
-      src: "img/pp/carldiner_01/05.webp",
+      src: "img/img/carldiner_01/04.webp",
       title: "Carl Diner",
       line1: "",
       line2: ""
@@ -116,20 +126,7 @@ const PROJECTS = {
 
   ],
 
-beauty: [
-  {
-    src: "img/beauty/beauty01/01.webp",
-    title: "BEAUTY",
-    line1: "",
-    line2: ""
-  },
-  {
-    src: "img/beauty/beauty01/02.webp",
-    title: "BEAUTY",
-    line1: "",
-    line2: ""
-  }
-],
+
 
   costume: [
   {
