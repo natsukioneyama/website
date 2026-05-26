@@ -289,30 +289,7 @@ numeroberlin: [
     line1: "Boris Ovini",
     line2: ""
   }
-],
-
-
-flair: [
-  {
-    src: "img/flair/01.webp",
-    title: "CHANEL",
-    line1: "Eric Asamoh",
-    line2: ""
-  },
-  {
-    src: "img/flair/02.webp",
-    title: "CHANEL",
-    line1: "Eric Asamoh",
-    line2: ""
-  },
-  {
-    src: "img/flair/03.webp",
-    title: "CHANEL",
-    line1: "Eric Asamoh",
-    line2: ""
-  }
 ]
-
 };
 
 /* =========================
