@@ -59,6 +59,24 @@ const PROJECTS = {
       title: "Krzysztof Jan",
       line1: "",
       line2: ""
+    },
+     {
+      src: "img/img/krzysztofjan_01/03.webp",
+      title: "Krzysztof Jan",
+      line1: "",
+      line2: ""
+    },
+      {
+      src: "img/img/krzysztofjan_01/04.webp",
+      title: "Krzysztof Jan",
+      line1: "",
+      line2: ""
+    },
+     {
+      src: "img/img/krzysztofjan_01/05.webp",
+      title: "Krzysztof Jan",
+      line1: "",
+      line2: ""
     }
   ],
 
@@ -199,19 +217,19 @@ voguemexico: [
   {
     src: "img/voguemexico/01/01.webp",
     title: "VOGUE MEXICO",
-    line1: "",
+    line1: "Ward Ivan Rafik",
     line2: ""
   },
   {
     src: "img/voguemexico/01/02.webp",
     title: "VOGUE MEXICO",
-    line1: "",
+    line1: "Ward Ivan Rafik",
     line2: ""
   },
   {
     src: "img/voguemexico/01/03.webp",
     title: "VOGUE MEXICO",
-    line1: "",
+    line1: "Ward Ivan Rafik",
     line2: ""
   }
 ],
