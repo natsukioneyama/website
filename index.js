@@ -46,6 +46,35 @@
 
 const PROJECTS = {
 
+
+  portmagazine: [
+    {
+      src: "img/portmagazine/isuue38/audelebarbey/01.webp",
+      title: "PORT MAGAZINE ISSUE 38",
+      line1: "Aude Le Barbey",
+      line2: ""
+    },
+      {
+      src: "img/portmagazine/isuue38/audelebarbey/02.webp",
+      title: "PORT MAGAZINE ISSUE 38",
+      line1: "Aude Le Barbey",
+      line2: ""
+    },
+      {
+      src: "img/portmagazine/isuue38/audelebarbey/03.webp",
+      title: "PORT MAGAZINE ISSUE 38",
+      line1: "Aude Le Barbey",
+      line2: ""
+    },
+      {
+      src: "img/portmagazine/isuue38/audelebarbey/04.webp",
+      title: "PORT MAGAZINE ISSUE 38",
+      line1: "Aude Le Barbey",
+      line2: ""
+    }
+    
+  ],
+
   krzysztofjan_01: [
     {
       src: "img/img/krzysztofjan_01/01.webp",
