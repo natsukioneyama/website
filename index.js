@@ -46,6 +46,28 @@
 
 const PROJECTS = {
 
+    beauty: [
+    {
+      src: "img/beauty/beauty01/01.webp",
+      title: "BEAUTY",
+      line1: "Antoine & Charlie",
+      line2: ""
+    },
+       {
+      src: "img/beauty/beauty01/02.webp",
+      title: "BEAUTY",
+      line1: "Antoine & Charlie",
+      line2: ""
+    },
+       {
+      src: "img/beauty/beauty01/03.webp",
+      title: "BEAUTY",
+      line1: "Antoine & Charlie",
+      line2: ""
+    },
+     
+    
+  ],
 
   portmagazine: [
     {
