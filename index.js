@@ -824,10 +824,10 @@ function openPrevProject() {
     });
   });  
 
-  gmPrev.addEventListener('click', (e) => {
-    e.stopPropagation();
-    openAt(currentIndex - 1);
-  });
+gmPrev.addEventListener('click', (e) => {
+  e.stopPropagation();
+  openPrevImageOrProject();
+});
 
  gmNext.addEventListener('click', (e) => {
   e.stopPropagation();
