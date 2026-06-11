@@ -706,8 +706,10 @@ width: 100%;
 
   .gm-close{
     right: 12px;
-    bottom: calc(15px + env(safe-area-inset-bottom));
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    font-size: .6rem;
   }
+
 }
 
 
