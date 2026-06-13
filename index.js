@@ -28,3 +28,24 @@ document.querySelectorAll('img').forEach(img => {
 
   img.setAttribute('draggable', 'false');
 });
+
+
+
+
+
+
+
+const topbar = document.querySelector('.topbar');
+const biography = document.querySelector('.biography');
+
+window.addEventListener('scroll', () => {
+  if (!topbar || !biography || window.innerWidth > 768) return;
+
+  const bioTop = biography.getBoundingClientRect().top;
+
+  if (bioTop < 80) {
+    topbar.classList.add('topbar-hidden');
+  } else {
+    topbar.classList.remove('topbar-hidden');
+  }
+});

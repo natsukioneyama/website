@@ -557,3 +557,17 @@ select,
     font-size: 18px;
   }
 }
+
+
+
+@media (max-width: 768px) {
+  .topbar {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .topbar.topbar-hidden {
+    opacity: 0;
+    transform: translateY(-100%);
+    pointer-events: none;
+  }
+}
