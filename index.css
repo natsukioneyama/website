@@ -499,7 +499,7 @@ img {
 /* Mobile portrait */
 @media (min-width: 391px) and (max-width: 699px) and (orientation: portrait) and (max-aspect-ratio: 3 / 4)  {
   .info-page {
-    padding-top: 80px;
+    padding-top: 50px;
   }
 
   .info-hero {
