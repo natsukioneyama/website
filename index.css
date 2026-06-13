@@ -447,6 +447,9 @@ img {
 ========================= */
 /* iPad portrait */
 @media (min-width: 900px) and (max-width: 1100px) and (orientation: portrait) and (max-aspect-ratio: 4 / 5) {
+  .info-page {
+  padding-top: 30px;
+  }
   .info-hero {
     width: 85%;
     max-width: 85%;
@@ -465,6 +468,9 @@ img {
 }
 
 @media (min-width: 700px) and (max-width: 899px) and (orientation: portrait) and (max-aspect-ratio: 4 / 5) {
+   .info-page {
+  padding-top: 30px;
+  }
   .info-hero {
     width: 100%;
     max-width: 90vw;
