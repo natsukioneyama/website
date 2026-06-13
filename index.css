@@ -61,6 +61,8 @@ body {
   max-width: none;
   margin: 0 auto;
   text-align: center;
+  padding-bottom: calc(120px + env(safe-area-inset-bottom));
+
 }
 
 .info-hero {
