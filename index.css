@@ -450,7 +450,7 @@ img {
   .info-hero {
     width: 85%;
     max-width: 85%;
-    margin: 30px auto 20px;
+    margin: 10px auto 20px;
   }
 
   .info-hero img,
@@ -468,7 +468,7 @@ img {
   .info-hero {
     width: 100%;
     max-width: 90vw;
-    margin: 30px auto 20px;
+    margin: 10px auto 20px;
   }
 
   .info-hero img,
