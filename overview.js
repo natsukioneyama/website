@@ -265,7 +265,7 @@ thumbItems.forEach((item) => {
 
     if (!full) return;
 
-    window.location.href = `index.html?full=${encodeURIComponent(full)}`;
+    window.location.href = `selected.html?full=${encodeURIComponent(full)}`;
   });
 });
 

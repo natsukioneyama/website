@@ -1,444 +1,97 @@
-/* index.css */
-
-/* ========================================
+/* =========================
    Base
-   ======================================== */
-* { box-sizing: border-box; }
-html, body { height: 100%; }
+========================= */
 
-body{
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
   margin: 0;
-  font-family: "acumin-pro", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  background: #f7f7f5;
+  padding: 0;
+}
+
+body {
   color: #111;
-}
-
-
-/* ========================================
-   Layout
-   ======================================== */
-.layout{
-  min-height: 100svh;
-  display: grid;
-  grid-template-columns: 1fr;
-}
-
-.main{
-  padding: 0 8px 8px;
-}
-
-/* PCだけ：ギャラリー上に余白 */
-@media (min-width: 861px){
-  .hero-portfolio{
-    margin-top: 8px;
-  }
-}
-
-/* PCだけ：サイドnav分だけ main を右に逃がす */
-@media (min-width: 861px){
-  .main{
-    padding-left: calc(180px + 24px);
-    transition: padding-left 0.25s ease;
-  }
+  font-family: "ivypresto-display", serif;
+  font-weight: 300;
+  font-style: normal;
 }
 
 
 
 
-
-
-
-
-
-
-
-
-/* ========================================
-   NAV (side / top responsive)
-   ======================================== */
-.nav{
-  transition: opacity 0.3s ease;
-  will-change: opacity;
-}
-
-.nav.is-faded{
-  opacity: 0;
+.topbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 24px 28px;
   pointer-events: none;
 }
 
-.nav-inner{ padding: 24px 18px; }
-
-.nav-top{
+.topnav {
   display: flex;
-  align-items: flex-start;
+  gap: 24px;
+  pointer-events: auto;
 }
 
-.brand{
-  display: inline-block;
+.topnav a {
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   text-decoration: none;
   color: #111;
-  font-size: 0.7rem;
-  line-height: 0.5;
-  letter-spacing: 0.02em;
 }
 
-.brand-sub{
-  font-size: 0.7rem;
-  line-height: 3;
-  letter-spacing: 0.02em;
-  color: #111;
-  text-decoration: none;
-}
-
-.nav-menu{
-  margin-top: 15px;
-  display: flex;
-  flex-direction: column;
-}
-
-.nav-link{
-  display: inline-block;
-  text-decoration: none;
-  color: #111;
-  font-size: 0.7rem;
-  padding: 2.5px 0;
-  opacity: 0.85;
-}
-
-
-
-.nav-link:hover{ opacity: 1; }
-
-.nav-link.is-active,
-.nav-link[aria-current="page"]{
+.topnav a:hover {
   text-decoration: underline;
-  opacity: 1;
 }
 
 
-@media (max-width: 376px){
-.brand,
-.brand-sub,
-.nav-menu,
-.nav-link
-{
-  font-size: 0.6rem;
-}
+.info-page {
+  padding-top: clamp(30px, 6svh, 80px);
 }
 
-
-@media (min-width: 861px){
-  .nav{
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 180px;
-    height: 100svh;
-    z-index: 1000;
-  }
-
-  .nav-inner{
-    height: 100svh;
-    overflow: auto;
-  }
-
-  .nav-top{
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .nav-menu .nav-link:last-child{
-   margin-top: 15px; 
-  }
-}
-
-@media (max-width: 860px){
-  .nav{
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-
-  .nav-inner{
-    display: flex;
-    flex-wrap: wrap;           /* ← これで「崩れる幅」を吸収 */
-    align-items: flex-start;   /* ← line-height問題の見た目も安定 */
-    justify-content: space-between;
-    gap: 10px 14px;
-    padding: 14px 16px;
-  }
-   
-  .nav-top{
-    display: flex;
-    flex-direction: column;    /* ← brand を2行で安定表示 */
-    align-items: flex-start;
-    gap: 2px;
-    min-width: 140px;          /* ← 左カラムの最低幅（好みで調整） */
-  }
-
-    .brand{
-    line-height: 1.15;         /* ← 0.5 をモバイルだけ正常化 */
-  }
-
-  .brand-sub{
-    line-height: 1.15;         /* ← 3 をモバイルだけ正常化 */
-  }
-
-  .nav-menu{
-    margin: 0;
-    padding: 0;
-    border: 0;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;           /* ← 右側は必要なら2段になる */
-    justify-content: flex-end; /* ← 右寄せ */
-    align-items: center;
-    gap: 6px 10px;
-    margin-left: auto;
-    max-width: 60vw;           /* ← 右側が長い時の安全弁 */
-  }
-
-    .nav-link{
-    white-space: nowrap;       /* ← “selected works” を途中で折らない */
-  }
- 
-}
-
-
-@media (max-width: 420px){
-  .nav-link{ font-size: 0.62rem; }
-  .brand, .brand-sub{ font-size: 0.62rem; }
-  .nav-menu{ gap: 6px 8px; max-width: 64vw; }
-}
-
-
-@media (min-width: 390px) and (max-width: 430px){
-  .nav-inner{
-    flex-wrap: nowrap;
-  }
-
-  .nav-menu{
-    flex-wrap: nowrap;
-    max-width: none;
-    gap: 0 8px;
-  }
-
-  .nav-link{
-    font-size: 0.62rem;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-/* ========================================
-   Info page
-   ======================================== */
-.info-page{
-  position: fixed;
-  inset: 0;
-  background: #f7f7f5;
-  display: none;
-  z-index: 1200;
-}
-body.info-open .info-page{ display: block; }
-body.info-open{ overflow: hidden; }
-
-.info-page__inner{
-  padding: 16px;
-  line-height: 1.5;
-  font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-}
-.hp-label,
-.hp-list,
-.hp-note{ margin: 0 0 26px; }
-.hp-copyright{
-  margin-top: 60px;
-  font-size: 0.6rem;
-  font-weight: 100;
-  letter-spacing: 0.06em;
-}
-.info-page a{ color: inherit; text-decoration: none; }
-.info-page a:hover{ opacity: 0.75; }
-
-.info-back{
-  display: inline-block;
-  margin-bottom: 32px;
-  font-size: 0.6rem;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-}
-.info-back:hover{ opacity: 0.7; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ========================================
-   Real Masonry (Masonry lib)
-   ======================================== */
-.hero-portfolio{
+.info-intro {
+  display: block;
   width: 100%;
-  padding: 0 0 40px;
+  max-width: none;
+  margin: 0 auto;
+  text-align: center;
 }
 
-/* Real Masonry (Masonry lib) */
-.masonry{
+.info-hero {
   width: 100%;
-  max-width: 1200px; /* 必要なら消してOK。見た目安定用 */
+  margin: clamp(20px, 3svh, 35px) auto clamp(24px, 4svh, 40px);
+}
+
+.info-hero img,
+.hero-slide {
+  width: min(90vw, 60svh, 880px);
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  display: block;
   margin: 0 auto;
 }
 
-.grid-sizer,
-.jl-item{
-width: calc((100% - 10px) / 2); /* 2列 + gutter10px */
-}
 
-.jl-item video{
-  width:100%;
-  height:auto;
-  display:block;
-  object-fit:cover;
-}
-
-@media (max-width: 360px){
-.grid-sizer,
-.jl-item{
-width: 100%;
-}
-}
-
-@media (min-width: 1092px){
-  .grid-sizer,
-  .jl-item{
-    width: calc((100% - 20px) / 3); /* 3列 + gutter10px x2 */
-  }
-}
-
-.jl-item{ margin: 0 0 10px; }
-.jl-item img{ width: 100%; height: auto; display: block; }
-
-
-
-
-/* Masonry_js caption */
-.jl-item{
-  position: relative;
-}
-
-/* キャプション（中央テキスト） */
-.jl-item .jl-caption{
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+.info-content {
   text-align: center;
-  padding: 0 14px;
-
-  opacity: 0;
-  transform: translateY(2px);
-  transition: opacity 180ms ease, transform 180ms ease;
-  pointer-events: none;
-
-  z-index: 2;
 }
 
-.jl-cap-title{
-  font-size: .7rem;
-  letter-spacing: 0.14em;
-  font-weight: 600;
-  color: #111;
-
+.info-content h1 {
+  font-size: 1.7rem;
+  font-weight: 400;
+  margin: 0 0 20px;
 }
 
-/* ========================================
-   Masonry caption — mobile tuning
-   ======================================== */
-@media (max-width: 768px){
-  .jl-cap-title{
-    font-size: .6rem;
-    letter-spacing: 0.12em;
-  }
-
-  .jl-caption{
-    padding: 0 10px;
-  }
-}
-
-@media (max-width: 480px){
-  .jl-cap-title{
-    font-size: .5rem;
-  }
-}
-
-
-
-.jl-cap-line{
-  margin-top: 6px;
-
-  font-size: .7rem;
-  letter-spacing: 0.14em;
-  font-weight: 600;
-  color: #111;
-
-  opacity: .85;
-
-  display:none;
-}
-
-/* フェード（画像を白っぽくする） */
-.jl-item::after{
-  content: "";
-  position: absolute;
-  inset: 0;
-
-  background: rgba(255,255,255,0.55);
-
-  opacity: 0;
-  transition: opacity 180ms ease;
-  pointer-events: none;
-
-  z-index: 1;
-}
-
-/* PC: hover で表示 */
-@media (hover:hover) and (pointer:fine){
-  .jl-item:hover::after{ opacity: 1; }
-  .jl-item:hover .jl-caption{
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Touch: 1回目タップで付くクラスで表示 */
-.jl-item.is-caption-visible::after{ opacity: 1; }
-.jl-item.is-caption-visible .jl-caption{
-  opacity: 1;
-  transform: translateY(0);
+.info-title {
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  margin: 0;
 }
 
 
@@ -447,455 +100,96 @@ width: 100%;
 
 
 
-
-
-
-
-
-
-
-
-
-
-/* =========================================
-   LIGHTBOX (gm) — FULL BLOCK FROM styles.css
-   ========================================= */
-
-/* hidden state */
-.gm[aria-hidden="true"] {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+.artist-highlights {
+  margin-top: 180px;
 }
 
-/* modal root */
-.gm {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: grid;
-  place-items: center;
-  --gm-footer-h: 120px;
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-@media (max-width: 767px){
-  .gm{ --gm-footer-h: 140px; }
-}
-
-@media (orientation: portrait) and (hover: none) and (pointer: coarse) and (min-width:768px){
-  .gm{ --gm-footer-h:180px; }
-}
-
-/* backdrop */
-.gm-backdrop{
-  position:absolute;
-  inset:0;
-  border:0;
-  padding:0;
-  margin:0;
-  background:#f7F7F5;
-}
-
-/* hidden switching */
-.gm-frame img[hidden],
-.gm-video-wrap[hidden]{
-  display:none !important;
-}
-
-/* frame */
-.gm-frame{
-  position:relative;
-  width:98vw;
-  height:calc(100svh - var(--gm-footer-h));
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-/* image */
-.gm-frame img{
-  max-width:100%;
-  max-height:100%;
-  object-fit:contain;
-  user-select:none;
-  -webkit-user-drag:none;
-}
-
-/* caption container */
-.gm-caption{
-  position:absolute;
-  left:10px;
-  bottom:10px;
-  z-index:20;
-  pointer-events:none;
-  text-align:left;
-  color:#000;
-}
-
-
-
-/* signature top-left */
-.gm-name{
-  position:fixed;
-  top:8px;
-  left:5px;
-  z-index:10000;
-  margin:0;
-  pointer-events:none;
-  line-height:0.5;
-}
-
-/* links */
-.gm-main{ text-decoration:none; color:inherit; cursor:pointer; }
-.gm-main:visited{ color:inherit; }
-
-.gm-name .gm-main{
-  font-size:.7rem;
-  letter-spacing:0.05em;
-  pointer-events:auto;
-}
-
-.gm-name .gm-subtitle{
-  font-size:.7rem;
-  letter-spacing:0.04em;
-}
-
-.gm-name .gm-main,
-.gm-name .gm-subtitle{
-  display:block;
-}
-
-/* caption text */
-.gm-ttl{
-  margin-bottom:1px;
-  font-size:.7rem;
-  letter-spacing:.06em;
-}
-
-.gm-sub{
-  margin:0;
-  font-size:.7rem;
-  letter-spacing:.04em;
-}
-
-/* counter */
-.gm-counter{
-  position:absolute;
-  right:15px;
-  bottom:30px;
-  color:#000;
-  font-size:.7rem;
-  letter-spacing:.04em;
-}
-
-/* close button */
-.gm-close{
-  position:absolute;
-  right:10px;
-  bottom:10px;
-  border:0;
-  background:transparent;
-  color:#000;
-  font-size:.6rem;
-  z-index:10;
-}
-
-.gm-project-nav{
-  position: absolute;
-  left: 50%;
-  bottom: 10px;
-  transform: translateX(-50%);
-  z-index: 10;
-
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  font-size: .6rem;
-  letter-spacing: .04em;
-}
-
-.gm-project-nav button {
-  border: 0;
-  background: transparent;
-  color: #000;
-  cursor: pointer;
-  font: inherit;
-  padding: 8px 6px;
-}
-
-.gm-project-nav span{
-  color: #000;
-}
-
-
-@media (max-width: 360px){
-.gm-name .gm-main,
-.gm-name .gm-subtitle,
-.gm-ttl,
-.gm-sub,
-.gm-counter,
-.gm-close
-
-{
-  font-size:.6rem;
-  letter-spacing:0.05em;
-}
-}
-
-
-/* click zones */
-.gm-hit{
-  position:absolute;
-  top:0;
-  bottom:0;
-  width:50vw;
-  height:100vh;
-  border:0;
-  background:transparent;
-  cursor:pointer;
-  z-index:5;
-}
-.gm-prev{ left:0; }
-.gm-next{ right:0; }
-
-/* tap highlight off */
-.gm-hit,
-.gm-close,
-.gm-backdrop{
-  -webkit-tap-highlight-color:transparent;
-  outline:none;
-  user-select:none;
-}
-
-/* open behaviour */
-.gm[aria-hidden="false"]{
-  overflow:hidden !important;
-  overscroll-behavior:contain !important;
-  touch-action:none !important;
-}
-
-/* safe area mobile */
-@media (max-width:768px){
-  .gm-caption{
-    left: 12px;
-    right: auto;
-    bottom: calc(38px + env(safe-area-inset-bottom));
-    text-align: left;
-    max-width: 68%;
-    pointer-events: none;
-  }
-
-  .gm-project-nav{
-    left: 6px;
-    right: auto;
-    transform: none;
-    bottom: calc(8px + env(safe-area-inset-bottom));
-    justify-content: flex-start;
-    font-size: .6rem;
-    gap: 8px;
-  }
-
-  .gm-counter{
-    right: 18px;
-    bottom: calc(38px + env(safe-area-inset-bottom));
-  }
-
-  .gm-close{
-    right: 12px;
-    bottom: calc(16px + env(safe-area-inset-bottom));
-    font-size: .6rem;
-  }
-
+.artsit-highlights h2 {
+  font-size: 34px;
+  font-weight: 400;
+  text-align: center;
+  margin: 0;
 }
 
 
 
 
-
-
-/* =========================================
-   LIGHTBOX (gm) — OVERVIEW TOGGLE
-   ========================================= */
-.gm-view-toggle{
-  position: fixed;
-  top: 7px;
-  right: 24px;
-  z-index: 10001;
-  display: flex;
-  gap: 10px;
-}
-
-.gm-view-btn{
-  width: 30px;
-  height: 30px;
-  color: #111;
-  font-size: 16px;
-  line-height: 1;
-  text-decoration: none;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border-radius: 6px;
-}
-
-.gm-view-btn.is-active{
-  background: rgba(0,0,0,0.08);
-}
-
-@media (max-width: 768px){
-  .gm-view-toggle{
-    top: 7px;
-    right: 16px;
-    gap: 8px;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ================= VIDEO (gm) ================= */
-
-/* wrapper: 基本形 + readyまで隠す */
-.gm-video-wrap{
+.artist-gallery {
   position: relative;
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 20;
-
-  opacity: 0;
-  transition: opacity .35s ease;
-
-  pointer-events: auto;
-
-  /* sizing: default */
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  min-height: 3300px;
+  margin-top: 180px;
 }
 
-.gm-video-wrap.is-ready{
-  opacity: 1;
-}
-
-/* video: default sizing */
-.gm-video-wrap video{
+.artist-gallery img {
   display: block;
-  width: auto;
   height: auto;
-  max-width: 90vw;
-  max-height: 90vh;
-  object-fit: contain;
 }
 
-/* controls */
-.sv-controls{
+
+
+
+.img-a {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 12px 14px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .25s ease;
-
-  z-index: 10;
-  background: linear-gradient(to top, rgba(0,0,0,.35), rgba(0,0,0,0));
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
 }
 
-.gm-video-wrap:hover .sv-controls{
-  opacity: 1;
-  pointer-events: auto;
+.img-b {
+  position: absolute;
+  top: 500px;
+  right: 150px;
+  width: 300px;
 }
 
-.sv-controls.is-visible{
-  opacity: 1;
-  pointer-events: auto;
+.img-c {
+  position: absolute;
+  top: 800px;
+  left: 30%;
+  transform: translateX(-50%);
+  width: 600px;
 }
 
-.sv-progress{
-  height: 6px;
-  background: rgba(0,0,0,.3);
-  cursor: pointer;
+.img-d {
+  position: absolute;
+  top: 1200px;
+  left: 40%;
+  transform: translateX(-50%);
+  width: 400px;
 }
 
-.sv-progress__bar{
-  width: 0;
-  height: 100%;
-  background: #fff;
+.img-e {
+  position: absolute;
+  top: 1400px;
+  left: 80%;
+  transform: translateX(-50%);
+  width: 300px;
 }
 
-.sv-nav{
-  display: flex;
-  justify-content: space-between;
+.img-f {
+  position: absolute;
+  top: 1900px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
 }
 
-.sv-btn{
-  border: none;
-  background: transparent;
-  color: #fff;
-  font-size: 11px;
-  letter-spacing: .06em;
-  cursor: pointer;
+.img-g {
+  position: absolute;
+  top: 2500px;
+  left: 37%;
+  transform: translateX(-50%);
+  width: 300px;
 }
 
-@media (max-width:480px){
-  .sv-controls{ padding: 8px 12px; }
-}
-
-/* ==========================================================================
-   FIX — mobile PORTRAIT only
-   ========================================================================== */
-
-@media (max-width: 768px) and (orientation: portrait) and (pointer: coarse){
-
-  .gm-frame{
-    height: calc(100svh - var(--gm-footer-h));
-  }
-
-  .gm-video-wrap{
-    max-height: 100%;
-    max-width: none;
-  }
-
-  .gm-video-wrap video{
-    height: 100%;
-    width: auto;
-    max-height: 100%;
-    max-width: 100%;
-    object-fit: contain;
-  }
-
-  .gm.is-portrait-video .gm-video-wrap{
-    max-width: 72vw;
-    margin: 0 auto;
-  }
-
-  .gm.is-portrait-video{
-    --gm-footer-h: 190px;
-  }
+.img-h {
+  position: absolute;
+  top: 2700px;
+  left: 70%;
+  transform: translateX(-50%);
+  width: 400px;
 }
 
 
@@ -903,117 +197,348 @@ width: 100%;
 
 
 
-
-
-
-
-/* ============================
-  16) Info Layout
-   ============================ */
-
-
-   
-.info{
-  padding: 26px 22px 80px;
-}
-
-.infoGrid{
-  display: block; /* mobile default */
-}
-
-.info h2{
-  margin: 22px 0 10px;
-  font-size: .7rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.info p{
-  margin: 0 0 14px;
-  font-size: .7rem;
-  line-height: 1.9;
-  letter-spacing: 0.06em;
-  max-width: 72ch; /* mobile: 読みやすい行長 */
+.biography {
+  max-width: 1400px;
+  margin: 100px 0 0;
+  padding: 0 72px 120px;
 }
 
 
-.info a{
-  color: inherit;
-  text-decoration: none;
+.bio-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1.1fr 0.9fr 0.8fr;
+  gap: 64px;
+  align-items: start;
+  width: 90%;
+  margin: 0 auto;
 }
 
-.commercial-note {
-  font-weight: 500;
-  font-size: 1.15em;
-  font-style: italic;
-}
-
-.info .copyright{
- color: #11111182;
-  margin-top: 50px;
-}
-
-@media (min-width: 980px){
-
-  .info{
-    padding: 34px 42px 80px;
-  }
-
-  .infoGrid{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 140px;
-    align-items: start;
-  }
-
-  .infoLeft p{
-    max-width: 64ch; /* 左側本文は少し細め */
-  }
-
-  .infoRight p{
-    max-width: 56ch; /* 右側は羅列なのでさらに細めでもOK */
-  }
-
-  .infoRight .copyright{
-    margin-top: 22px;
-  }
-}
-
-/* Info page header */
-.page-info .topbar{
-  background: #f7f7f5;
-
-  display: flex;
-  align-items: flex-start;
-  padding: 20px 20px 0;
-}
-
-.page-info .brand{
-  display: flex;
-  flex-direction: column;
+.bio-column h3 {
+  font-size: 13px;
   line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 18px;
 }
 
-.page-info .brand-link{
-  display: flex;
-  flex-direction: column;
+.bio-column p {
+  font-size: 14px;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  margin: 0 0 16px;
+}
+
+.bio-column a {
   color: inherit;
   text-decoration: none;
 }
 
-.page-info .brand .artist,
-.page-info .brand .role{
-  font-size: .8rem;
-  letter-spacing: 0.02em;
-  color: #111;
+.bio-column a:hover {
+  text-decoration: underline;
 }
 
-@media (min-width: 980px){
-  .page-info .topbar{
-    padding: 34px 42px 0;
+
+
+
+
+
+
+
+
+
+
+
+@media (min-width: 700px) and (max-width: 1100px) {
+
+  .bio-grid {
+  grid-template-columns: 1.4fr 1.1fr 0.9fr 0.8fr;
+  gap: 36px;
+}
+
+  .artist-gallery {
+   min-height: 4600px;
+  }
+
+  .img-a {
+    width: 85%;
+    left: 50%;
+    top: 0;
+  }
+
+  .img-b {
+    width: 45%;
+    left: 50%;
+    top: 550px;
+    transform: translateX(-50%);
+  }
+
+  .img-c {
+    width: 85%;
+    left: 50%;
+    top: 1500px;
+  }
+
+  .img-d {
+    width: 42%;
+    left: 28%;
+    top: 2100px;
+  }
+
+  .img-e {
+    width: 35%;
+    left: 72%;
+    top: 2200px;
+  }
+
+  .img-f {
+    width: 85%;
+    left: 50%;
+    top: 2900px;
+  }
+
+  .img-g {
+    width: 42%;
+    left: 70%;
+    top: 3700px;
+  }
+
+  .img-h {
+    width: 35%;
+    left: 25%;
+    top: 4000px;
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 699px) {
+
+    .topbar {
+    padding: 20px 18px;
+  }
+
+  .topnav {
+    gap: 18px;
+  }
+
+  .topnav a {
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+
+  .artist-gallery {
+    overflow: hidden;
+  }
+
+  .artist-gallery img {
+    max-width: 100%;
+  }
+
+  .biography {
+    margin-top: 200px;
+    padding: 0 32px 100px;
+  }
+
+  .bio-grid {
+    grid-template-columns: 1fr;
+    gap: 52px;
+  }
+
+  .bio-column h3 {
+    font-size: 18px;
+    margin-bottom: 28px;
+  }
+
+  .bio-column p {
+    font-size: 18px;
+    line-height: 1.45;
+  }
+
+
+  .artist-gallery {
+    min-height: 2400px;
+  }
+
+  .img-a {
+    width: 95%;
+    left: 50%;
+    top: 0;
+  }
+
+  .img-b {
+    width: 50%;
+    right: auto;
+    left: 50%;
+    top: 250px;
+    transform: translateX(-50%);
+  }
+
+  .img-c {
+    width: 95%;
+    left: 50%;
+    top: 750px;
+  }
+
+  .img-d {
+    width: 50%;
+    left: 25%;
+    top: 1100px;
+  }
+
+  .img-e {
+    width: 40%;
+    left: 75%;
+    top: 1230px;
+  }
+
+  .img-f {
+    width: 95%;
+    left: 50%;
+    top: 1600px;
+  }
+
+  .img-g {
+    width: 50%;
+    left: 70%;
+    top: 2000px;
+  }
+
+  .img-h {
+    width: 40%;
+    left: 20%;
+    top: 2100px;
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================
+   Info Hero Responsive
+========================= */
+
+
+
+@media (min-width: 900px) and (max-width: 1100px) and (orientation: portrait) and (max-aspect-ratio: 4 / 5) {
+  .info-page {
+    padding-top: 40px;
+  }
+
+  .info-hero {
+    width: 85%;
+    max-width: 85%;
+    margin: 30px auto 35px;
+  }
+
+  .info-hero img,
+  .hero-slide
+  {
+    width: 100%;
+  }
+
+  .info-content {
+  padding-top: 40px;
+ }
+}
+
+
+
+
+@media (min-width: 700px) and (max-width: 899px) and (orientation: portrait) and (max-aspect-ratio: 4 / 5) {
+  .info-page {
+    padding-top: 40px;
+  }
+
+  .info-hero {
+    width: 100%;
+    max-width: 90vw;
+    margin: 30px auto 35px;
+  }
+
+  .info-hero img,
+   .hero-slide {
+    width: 100%;
+  }
+
+  .info-content {
+  padding-top: 30px;
+ }
+}
+
+
+
+/* Mobile portrait */
+@media (min-width: 391px) and (max-width: 699px) and (orientation: portrait) and (max-aspect-ratio: 3 / 4)  {
+  .info-page {
+    padding-top: 150px;
+  }
+
+  .info-hero {
+    width: 100%;
+    max-width: 100%;
+    margin: 20px auto 25px;
+  }
+
+.info-hero img,
+.hero-slide {
+  width: min(90vw, 60svh, 880px);
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+}
+
+  .info-content {
+    padding-top: 50px;
+  }
+
+  .info-content h1 {
+    font-size: 2rem;
+  }
+
+  .info-title {
+    font-size: 18px;
   }
 }
 
-.info .social-links{
-  line-height: 1.8;
+/* iPhone SE */
+@media (max-width: 390px) and (orientation: portrait) and (max-aspect-ratio: 4 / 5) {
+  .info-page {
+    padding-top: 40px;
+  }
+
+  .info-hero {
+    margin: 15px auto 20px;
+  }
+
+  .info-content {
+    padding-top: 30px;
+  }
+
+  .info-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .info-title {
+    font-size: 18px;
+  }
 }

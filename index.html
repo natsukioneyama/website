@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, viewport-fit=cover" />
   <meta name="format-detection" content="telephone=no, email=no, address=no, date=no" />
 
-  <title>NATSUKI ONEYAMA – PORTFOLIO</title>
+  <title>TOP – NATSUKI ONEYAMA</title>
 
- <meta name="description"
-        content="Selected beauty and fashion work by Paris-based MAKE-UP ARTIST Natsuki Oneyama." />
+  <meta name="description"
+        content="Selected editorial beauty and fashion work by Paris-based MAKE-UP ARTIST Natsuki Oneyama." />
 
-  <!-- Open Graph (SNS preview) -->
+  <!-- Open Graph -->
   <meta property="og:title" content="NATSUKI ONEYAMA – MAKE-UP ARTIST" />
   <meta property="og:description" content="Paris-based MAKE-UP ARTIST working across beauty, fashion and editorial." />
   <meta property="og:type" content="website" />
@@ -23,307 +22,148 @@
   <!-- CSS -->
   <link rel="stylesheet" href="./index.css" />
 
-  <!-- Masonry -->
-  <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js" defer></script>
-  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" defer></script>
-
-  <!-- JS -->
-  <script src="index.js" defer></script>
+  <!-- Scripts -->
+  <script src="./justified-layout.umd.js" defer></script>
 </head>
 
 
-<body>
-  <div class="layout">
+<body class="page-info">
 
-    <!-- NAV -->
-    <header class="nav" data-nav>
-      <div class="nav-inner">
-        <div class="nav-top">
-          <a class="brand" href="index.html" aria-label="Home">NATSUKI ONEYAMA</a>
-          <a class="brand-sub" href="index.html" aria-label="Home">MAKE-UP ARTIST</a>
-        </div>
-
-        <nav id="navMenu" class="nav-menu" aria-label="Primary">
-         <!-- <a class="nav-link" href="advertising.html">ADVERTISING</a> -->
-         <a class="nav-link" href="overview.html">OVERVIEW</a>
-         <a class="nav-link" href="info.html">INFO</a>
-         <a class="nav-link" href="mailto:natsukimua@gmail.com">CONTACT</a>
-
-        </nav>
-      </div>
-    </header>
+<header class="topbar">
+  <nav class="topnav" aria-label="Primary navigation">
+    <a href="selected.html">Selected Works</a>
+    <a href="overview.html">Overview</a>
+    <a href="mailto:natsukimua@gmail.com">Contact</a>
+  </nav>
+</header>
 
 
 
-    <!-- PAGE -->
-    <main class="main">
-      <section class="hero-portfolio" aria-label="Selected Works">
-        <div id="grid" class="masonry" aria-label="Masonry Grid">
-          <div class="grid-sizer" aria-hidden="true"></div>
 
-          <!-- ====== SAMPLE ITEMS (replace paths) ====== -->
+<main class="info-page">
 
-  
-   
-          <figure class="jl-item" data-project="beauty">
-            <img
-              src="img/beauty/beauty01/01.webp"
-              alt="beauty"
-              data-full="img/beutyO1/01"
-              data-title="Antoine & Charlie"
-              data-line1=""
-              data-line2=""
-            />
-          </figure>
+ <section class="info-intro">
 
-          <figure class="jl-item" data-project="portmagazine">
-            <img
-              src="img/portmagazine/isuue38/audelebarbey/01.webp"
-              alt="audelebarbey"
-              data-full="img/portmagazine/isuue38/audelebarbey/01.webp"
-              data-title="PORT MAGAZINE"
-              data-line1="Aude Le Barbey"
-              data-line2=""
-            />
-          </figure>
-
-          <figure class="jl-item" data-project="krzysztofjan_01">
-            <img
-              src="img/img/krzysztofjan_01/01.webp"
-              alt="krzysztofjan"
-              data-full="img/img/krzysztofjan_01/01.webp"
-              data-title="Krzysztof Jan"
-              data-line1=""
-              data-line2=""
-            />
-          </figure>
-
-
-          <figure class="jl-item" data-project="carldiner">
-            <img
-              src="img/img/carldiner_01/01.webp"
-              alt="carldinner"
-              data-full="img/img/carldiner_01/01.webp"
-              data-title="Carl Diner"
-              data-line1=""
-              data-line2=""
-            />
-          </figure>
-
-  
-            <figure class="jl-item" data-project="beautypapers">
-            <img
-              src="img/beautypapers/01/01.webp"
-              alt="beautypapers"
-              data-full="img/beautypapers/01/04.webp"
-              data-title="BEAUTY PAPERS"
-              data-line1=""
-              data-line2=""
-            />
-          </figure>
-
-     
-
-
-          <figure class="jl-item" data-project="costume">
-            <img
-              src="img/costume/saschaoda/01/01.webp"
-              alt="editorial"
-              data-full="img/costume/saschaoda/01/01.webp"
-              data-title="Sascha Oda"
-              data-line1=""
-              data-line2=""
-            />
-          </figure>
-
-     
-
-          <figure class="jl-item" data-project="numerochina">
-            <img
-              src="img/numerochina/01/01.webp"
-              alt="nemerochina"
-              data-full="img/numerochina/01/01.webp"
-              data-title="NUMERO CHINA"
-              data-line1=""
-              data-line2=""
-            />
-          </figure>
-
-    
-          <figure class="jl-item" data-project="sanstitle">
-            <img
-              src="img/sanstitle/001/01.webp"
-              alt="EDITORIAL"
-              data-full="img/sanstitle/001/01.webp"
-              data-title="Tess Petronio"
-              data-line1=""
-              data-line2=""
-            />
-          </figure>
-
-
-          <figure class="jl-item" data-project="voguemexico">
-            <img
-              src="img/voguemexico/01/01.webp"
-              alt="vogumexico"
-              data-full="img/voguemexico/01/01.webp"
-              data-title="VOGUE MEXICO"
-              data-line1="Ward Ivan Rafik"
-              data-line2=""
-            />
-          </figure>
-
-           <figure class="jl-item" data-project="replicaman">
-            <img
-              src="img/replicaman/ss24/03.webp"
-              alt="replicaman"
-              data-full="img/replicaman/ss24/03.webp"
-              data-title="REPLICA MAN"
-              data-line1="Pavel Golik"
-              data-line2=""
-            />
-          </figure>
-
-
-             <figure class="jl-item" data-project="numeroberlin">
-            <img
-              src="img/numeroberlin/visionary/01.webp"
-              alt="nemeroberlin"
-              data-full="img/numeroberlin/visionary/01.webp"
-              data-title="NUMERO BERLIN"
-              data-line1="Boris Ovini"
-              data-line2=""
-            />
-          </figure>
-
-    
-
-    
-
-          
-
-            
-
-
-          <!--  
-
-          <figure class="jl-item" data-project="lucierox">
-            <img
-              src="img/untitled/01/07.webp"
-              alt="BEAUTY"
-              data-full="img/untitled/01/07.webp"
-              data-title="Lucie Rox"
-              data-line1=""
-              data-line2=""
-            />
-          </figure>
-
-          <figure class="jl-item" data-project="numeroswitzerlandhomme">
-            <img
-              src="img/numeroswitzerlandhomme/issue_01/01.webp"
-              alt="BEAUTY"
-              data-full="img/numeroswitzerlandhomme/issue_01/01.webp"
-              data-title="NUMERO SWITZERLAND HOMME"
-              data-line1=""
-              data-line2=""
-            />
-          </figure>
-
-        
-          <figure class="jl-item is-video" data-w="1152" data-h="648">
-          <video
-          src="video/v02.mp4"
-          muted
-          loop
-          playsinline
-          autoplay
-          ></video>
-          <div class="lb-data"
-          data-type="video"
-          data-full="video/v02.mp4"
-          data-title="GIVENCHY HOMME"
-          data-line1=""
-          data-line2=""
-          ></div>
-          </figure>
-          -->
-
-          <!-- 
-          <figure class="jl-item is-video" data-w="1152" data-h="648">
-          <video
-          src="video/v06.mp4"
-          muted
-          loop
-          playsinline
-          autoplay
-          ></video>
-          <div class="lb-data"
-          data-type="video"
-          data-full="video/v06.mp4"
-          data-title="CLARINS"
-          data-line1=""
-          data-line2=""
-          ></div>
-          </figure>
-           -->
-
-
-
-        </div>
-      </section>
-    </main>
+  <div class="info-hero">
+   <img
+   class="hero-slide"
+   src="img/top/top01.jpg"
+   alt="Selected work by Natsuki Oneyama">
   </div>
 
-  <!-- ===== CUSTOM LIGHTBOX (gm) ===== -->
-  <div class="gm" aria-hidden="true" id="gm">
-    <button class="gm-backdrop" aria-hidden="true"></button>
-
-    <div class="gm-frame">
-      <img id="gmImage" class="gm-img" alt="">
-      <div class="gm-video-wrap" hidden>
-        <video id="gmVideo" playsinline muted></video>
-
-        <div class="sv-controls">
-          <div class="sv-progress">
-            <div class="sv-progress__bar"></div>
-          </div>
-
-          <div class="sv-nav">
-            <button type="button" class="sv-btn sv-btn--play">PAUSE</button>
-            <button type="button" class="sv-btn sv-btn--fs">FULL</button>
-          </div>
-        </div>
-      </div>
-
-      </div>
-
-      <div class="gm-caption">
-        <p class="gm-name">
-          <a href="index.html" class="gm-main">NATSUKI ONEYAMA</a><br>
-          <span class="gm-subtitle">MAKE-UP ARTIST</span>
-        </p>
-
-        <p class="gm-ttl"></p>
-        <p class="gm-sub"></p>
-      </div>
-
-      <div class="gm-counter"></div> 
-
-      <div class="gm-view-toggle">
-     <a class="gm-view-btn" href="overview.html" aria-label="Overview">⊞</a>
-      </div>
-
-       <div class="gm-project-nav">
-       <button class="gm-prev-project">PREVIOUS PROJECT</button>
-       <span>/</span>
-       <button class="gm-next-project">NEXT PROJECT</button>
-       </div>
-
-      <button class="gm-close">BACK</button>
-
-      <button class="gm-hit gm-prev" aria-label="Previous"></button>
-      <button class="gm-hit gm-next" aria-label="Next"></button>
-    </div>
+  <div class="info-content">
+    <h1>Natsuki Oneyama</h1>
+    <p class="info-title">Make-up Artist</p>
   </div>
+
+</section>
+
+  <section class="artist-highlights">
+
+    <section class="artist-gallery">
+      <img src="img/info/01.webp" class="img-a" alt="">
+      <img src="img/info/02.webp" class="img-b" alt="">
+      <img src="img/info/03.webp" class="img-c" alt="">
+      <img src="img/info/04.webp" class="img-d" alt="">
+      <img src="img/info/05.webp" class="img-e" alt="">
+      <img src="img/info/06.webp" class="img-f" alt="">
+      <img src="img/info/07.webp" class="img-g" alt="">
+      <img src="img/info/08.webp" class="img-h" alt="">
+    </section>
+
+  </section>
+
+
+  <section class="biography">
+
+<div class="bio-grid">
+
+  <div class="bio-column">
+    <h3>Natsuki Oneyama</h3>
+
+    <p>
+      Paris-based Makeup Artist.
+    </p>
+
+    <p>
+      Beauty rooted in clarity, restraint and image-making.
+    </p>
+  </div>
+
+  <div class="bio-column">
+    <h3>Selected Clients</h3>
+
+    <p>
+      GIVENCHY BEAUTY<br>
+      YSL BEAUTY<br>
+      CLARINS<br>
+      ADIDAS<br>
+      DELVAUX<br>
+      SWAROVSKI<br>
+      ARTHUS BERTRAND<br>
+      VOGUE MEXICO<br>
+      NUMERO CHINA<br>
+      NUMERO SWITZERLAND<br>
+      NUMERO BERLIN<br>
+      PORT MAGAZINE<br>
+      BEAUTY PAPERS<br>
+      REPLICA MAN<br>
+      10 MAGAZINE
+    </p>
+  </div>
+
+  <div class="bio-column">
+    <h3>Social</h3>
+
+    <p>
+      <a href="https://www.instagram.com/natsukimua/" target="_blank" rel="noopener">@natsukimua</a><br>
+      <a href="https://models.com/people/natsuki-oneyama" target="_blank" rel="noopener">models.com</a>
+    </p>
+  </div>
+
+    <div class="bio-column">
+    <h3>PDF</h3>
+
+    <p>
+      Commercial portfolio available upon request.
+    </p>
+  </div>
+
+</div>
+
+
+
+</section>
+
+</main>
+
+
+
+<script>
+  const heroImages = [
+    "slide/01.webp",
+    "slide/02.webp",
+    "slide/03.webp",
+    "slide/04.webp",
+    "slide/05.webp",
+    "slide/06.webp",
+    "slide/07.webp",
+    "slide/08.webp",
+    "slide/09.webp",
+    "slide/10.webp",
+    "slide/11.webp",
+    "slide/12.webp"
+
+  ];
+
+  const heroSlide = document.querySelector(".hero-slide");
+  let currentHeroIndex = 0;
+
+  setInterval(() => {
+    currentHeroIndex = (currentHeroIndex + 1) % heroImages.length;
+    heroSlide.src = heroImages[currentHeroIndex];
+  }, 800);
+</script>
 </body>
+
 </html>
