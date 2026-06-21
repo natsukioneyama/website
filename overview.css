@@ -46,11 +46,6 @@ body {
 
 
 
-
-
-
-
-
 /* ==========================================================================
    4) TOP BAR (Sticky + Responsive)
    - desktop/tablet: left brand / right nav
@@ -147,12 +142,6 @@ body {
     letter-spacing: 0.04em;
   }
 }
-
-
-
-
-
-
 
 
 /* ==========================================================================
@@ -497,3 +486,475 @@ body.jl-ready #grid {
   max-height: 90vh;
   object-fit: contain;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================
+   LIGHTBOX (gm)
+   ========================================= */
+
+/* hidden state */
+.gm[aria-hidden="true"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* modal root */
+.gm {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  --gm-footer-h: 120px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+@media (max-width: 767px){
+  .gm{ --gm-footer-h: 140px; }
+}
+
+@media (orientation: portrait) and (hover: none) and (pointer: coarse) and (min-width:768px){
+  .gm{ --gm-footer-h:180px; }
+}
+
+/* backdrop */
+.gm-backdrop{
+  position:absolute;
+  inset:0;
+  border:0;
+  padding:0;
+  margin:0;
+  background:#f7F7F5;
+}
+
+/* hidden switching */
+.gm-frame img[hidden],
+.gm-video-wrap[hidden]{
+  display:none !important;
+}
+
+/* frame */
+.gm-frame{
+  position:relative;
+  width:98vw;
+  height:calc(100svh - var(--gm-footer-h));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* image */
+.gm-frame img{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
+/* caption container */
+.gm-caption{
+  position:absolute;
+  left:10px;
+  bottom:10px;
+  z-index:20;
+  pointer-events:none;
+  text-align:left;
+  color:#000;
+}
+
+
+
+/* signature top-left */
+.gm-name{
+  position:fixed;
+  top:8px;
+  left:5px;
+  z-index:10000;
+  margin:0;
+  pointer-events:none;
+  line-height:0.5;
+}
+
+/* links */
+.gm-main{ text-decoration:none; color:inherit; cursor:pointer; }
+.gm-main:visited{ color:inherit; }
+
+.gm-name .gm-main{
+  font-size:.7rem;
+  letter-spacing:0.05em;
+  pointer-events:auto;
+}
+
+.gm-name .gm-subtitle{
+  font-size:.7rem;
+  letter-spacing:0.04em;
+}
+
+.gm-name .gm-main,
+.gm-name .gm-subtitle{
+  display:block;
+}
+
+/* caption text */
+.gm-ttl{
+  margin-bottom:1px;
+  font-size:.7rem;
+  letter-spacing:.06em;
+}
+
+.gm-sub{
+  margin:0;
+  font-size:.7rem;
+  letter-spacing:.04em;
+}
+
+/* counter */
+.gm-counter{
+  position:absolute;
+  right:15px;
+  bottom:30px;
+  color:#000;
+  font-size:.7rem;
+  letter-spacing:.04em;
+}
+
+/* close button */
+.gm-close{
+  position:absolute;
+  right:10px;
+  bottom:10px;
+  border:0;
+  background:transparent;
+  color:#000;
+  font-size:.6rem;
+  z-index:10;
+}
+
+.gm-project-nav{
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: .6rem;
+  letter-spacing: .04em;
+}
+
+.gm-project-nav button {
+  border: 0;
+  background: transparent;
+  color: #000;
+  cursor: pointer;
+  font: inherit;
+  padding: 8px 6px;
+}
+
+.gm-project-nav span{
+  color: #000;
+}
+
+
+@media (max-width: 360px){
+.gm-name .gm-main,
+.gm-name .gm-subtitle,
+.gm-ttl,
+.gm-sub,
+.gm-counter,
+.gm-close
+
+{
+  font-size:.6rem;
+  letter-spacing:0.05em;
+}
+}
+
+
+/* click zones */
+.gm-hit{
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:50vw;
+  height:100vh;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  z-index:5;
+}
+.gm-prev{ left:0; }
+.gm-next{ right:0; }
+
+/* tap highlight off */
+.gm-hit,
+.gm-close,
+.gm-backdrop{
+  -webkit-tap-highlight-color:transparent;
+  outline:none;
+  user-select:none;
+}
+
+/* open behaviour */
+.gm[aria-hidden="false"]{
+  overflow:hidden !important;
+  overscroll-behavior:contain !important;
+  touch-action:none !important;
+}
+
+/* safe area mobile */
+@media (max-width:768px){
+  .gm-caption{
+    left: 12px;
+    right: auto;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    text-align: left;
+    max-width: 68%;
+    pointer-events: none;
+  }
+
+  .gm-project-nav{
+    left: 6px;
+    right: auto;
+    transform: none;
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    justify-content: flex-start;
+    font-size: .6rem;
+    gap: 8px;
+  }
+
+  .gm-counter{
+    right: 18px;
+    bottom: calc(38px + env(safe-area-inset-bottom));
+  }
+
+  .gm-close{
+    right: 12px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    font-size: .6rem;
+  }
+
+}
+
+
+
+
+
+
+/* =========================================
+   LIGHTBOX (gm) — OVERVIEW TOGGLE
+   ========================================= */
+.gm-view-toggle{
+  position: fixed;
+  top: 7px;
+  right: 24px;
+  z-index: 10001;
+  display: flex;
+  gap: 10px;
+}
+
+.gm-view-btn{
+  width: 30px;
+  height: 30px;
+  color: #111;
+  font-size: 16px;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 6px;
+}
+
+.gm-view-btn.is-active{
+  background: rgba(0,0,0,0.08);
+}
+
+@media (max-width: 768px){
+  .gm-view-toggle{
+    top: 7px;
+    right: 16px;
+    gap: 8px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ================= VIDEO (gm) ================= */
+
+/* wrapper: 基本形 + readyまで隠す */
+.gm-video-wrap{
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+
+  opacity: 0;
+  transition: opacity .35s ease;
+
+  pointer-events: auto;
+
+  /* sizing: default */
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.gm-video-wrap.is-ready{
+  opacity: 1;
+}
+
+/* video: default sizing */
+.gm-video-wrap video{
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+/* controls */
+.sv-controls{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 12px 14px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+
+  z-index: 10;
+  background: linear-gradient(to top, rgba(0,0,0,.35), rgba(0,0,0,0));
+}
+
+.gm-video-wrap:hover .sv-controls{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sv-controls.is-visible{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sv-progress{
+  height: 6px;
+  background: rgba(0,0,0,.3);
+  cursor: pointer;
+}
+
+.sv-progress__bar{
+  width: 0;
+  height: 100%;
+  background: #fff;
+}
+
+.sv-nav{
+  display: flex;
+  justify-content: space-between;
+}
+
+.sv-btn{
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 11px;
+  letter-spacing: .06em;
+  cursor: pointer;
+}
+
+@media (max-width:480px){
+  .sv-controls{ padding: 8px 12px; }
+}
+
+/* ==========================================================================
+   FIX — mobile PORTRAIT only
+   ========================================================================== */
+
+@media (max-width: 768px) and (orientation: portrait) and (pointer: coarse){
+
+  .gm-frame{
+    height: calc(100svh - var(--gm-footer-h));
+  }
+
+  .gm-video-wrap{
+    max-height: 100%;
+    max-width: none;
+  }
+
+  .gm-video-wrap video{
+    height: 100%;
+    width: auto;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .gm.is-portrait-video .gm-video-wrap{
+    max-width: 72vw;
+    margin: 0 auto;
+  }
+
+  .gm.is-portrait-video{
+    --gm-footer-h: 190px;
+  }
+}
+
+
+
+
+
+
+
+
