@@ -161,39 +161,6 @@
     });
   }
 
-  /* =========================
-     6) Touch: 1回目タップでハイライト、2回目でLightboxへ
-     - capture=true で Lightbox の click より先に処理
-     ========================= */
-
-  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-
-  if (isTouchDevice) {
-    let armedItem = null;
-
-    container.addEventListener('click', (e) => {
-      const item = e.target.closest('.jl-item');
-      if (!item) return;
-
-      const key = item.dataset.groupKey;
-      if (!key) return;
-
-      // 1st tap: highlight only
-      if (armedItem !== item) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        armedItem = item;
-        item.classList.add('tap-armed');
-        setGroupHighlightByKey(key, 'tap');
-        return;
-      }
-
-      // 2nd tap: release highlight, then allow Lightbox handler to run
-      clearGroupHighlight();
-      armedItem = null;
-    }, true);
-  }
 
   /* =========================
      7) Justified Layout: render
@@ -371,6 +338,7 @@ items.forEach((item) => {
   const isTouch = (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
 
   let lastTappedItem = null;
+  let armedGroupKey = null;
 
   const closeAllCaptions = () => {
   items.forEach((el) => {
@@ -635,6 +603,8 @@ activeCluster = Array.from(document.querySelectorAll("#grid .jl-item")).map((thu
 
 
 
+let armedGroupKey = null;
+
 items.forEach((item, index) => {
   item.addEventListener('click', (e) => {
     // デスクトップは今まで通り
@@ -645,22 +615,17 @@ items.forEach((item, index) => {
     }
 
     const key = item.dataset.groupKey;
-
-    const isSameGroup =
-      key &&
-      lastTappedItem &&
-      lastTappedItem.dataset.groupKey === key;
+    if (!key) return;
 
     // 2回目タップ：同じクラスター内なら Lightbox を開く
-    if (isSameGroup) {
+    if (armedGroupKey === key) {
       e.preventDefault();
       e.stopPropagation();
 
       closeAllCaptions();
+      armedGroupKey = null;
 
       openAt(setClusterFromThumb(item, index));
-
-      lastTappedItem = null;
       return;
     }
 
@@ -679,7 +644,7 @@ items.forEach((item, index) => {
       );
     });
 
-    lastTappedItem = item;
+    armedGroupKey = key;
   });
 });
 
