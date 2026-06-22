@@ -107,11 +107,101 @@ INFO HERO
   margin: 0;
 } 
 
-.info-bio {
+
+
+.info-text-block {
+  width: calc(100% - 48px);
   max-width: 620px;
   margin: 40px auto 0;
-  line-height: 1.7;
+  padding: 0 28px;
+}
+
+.info-bio {
+  width: auto;
+  max-width: none;
+  margin: 0;
+  padding: 0;
   text-align: justify;
+}
+
+.clients-block {
+  width: auto;
+  max-width: none;
+  margin: 80px 0 0;
+  padding: 0;
+  text-align: justify;
+}
+
+.clients-title {
+  text-align: center;
+  margin: 0 0 20px;
+  font-size: 14px;
+
+}
+
+.clients-list {
+  margin: 0;
+  text-align: justify;
+}
+
+.info-bio,
+.clients-list {
+  font-size: 15px;
+  line-height: 1.6;
+  letter-spacing: 0.06em;
+}
+
+
+.info-links {
+  margin: 45px 0 0;
+  font-size: 15px;
+  line-height: 1.35;
+  letter-spacing: 0.06em;
+}
+
+.social-links {
+  text-align: center;
+  margin: 0 0 32px;
+}
+
+.social-links a {
+  padding: 2px;
+  display: block;
+  color: #111;
+  text-decoration: none;
+  -webkit-text-fill-color: #111;
+}
+
+.social-links a:first-child {
+  text-transform: uppercase;
+}
+
+.pdf-link {
+  margin-top: 0;
+  text-align: center;
+}
+
+.pdf-link span {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.pdf-link a {
+  color: #111;
+  text-decoration: none;
+}
+
+
+
+
+
+
+.copyright {
+  margin: 20px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  opacity: 0.6;
+  text-align: center;
 }
 
 /* =========================
@@ -342,7 +432,7 @@ FEATURED PROJECT AC
 
 /* =========================
 BIOGRAPHY
-========================= */
+========================= 
 .biography {
   max-width: 900px;
   margin: 100px auto 0;
@@ -383,13 +473,6 @@ BIOGRAPHY
   text-underline-offset: 3px;
 }
 
-.bio-clients-line {
-  max-width: 820px;
-}
-
-.bio-clients {
-  margin-top: 80px;
-}
 
 .bio-info strong,
 .bio-info span {
@@ -402,25 +485,12 @@ BIOGRAPHY
   width: 180px;
 }
 
-.bio-clients-line span {
-  display: inline-block;
-  margin-bottom: 20px;
-}
 
 .bio-info a {
   margin-right: 12px;
 }
 
-.copyright {
-  margin-top: 80px;
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  opacity: 0.6;
-  text-align: center;
-}
-
-
-
+*/
 
 
 
@@ -618,12 +688,6 @@ RESPONSIVE
   .topnav a {
     font-size: 15px;
   }
-
-.info-bio {
-  width: calc(100% - 48px);
-  max-width: 620px;
-  margin: 40px auto 0;
-}
 
 
  .selected-works-intro::before {
