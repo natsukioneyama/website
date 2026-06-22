@@ -64,11 +64,12 @@ document.querySelectorAll('img').forEach(img => {
 
 
 document.querySelectorAll(".featured-project").forEach((section) => {
+  const featuredSlider = section.querySelector(".featured-thumbs-slider");
   const featuredTrack = section.querySelector(".featured-thumbs-track");
   const featuredPrev = section.querySelector(".featured-prev");
   const featuredNext = section.querySelector(".featured-next");
 
-  if (!featuredTrack || !featuredPrev || !featuredNext) return;
+  if (!featuredTrack || !featuredPrev || !featuredNext || !featuredSlider) return;
 
   let featuredItems = Array.from(featuredTrack.querySelectorAll("img"));
 
@@ -145,13 +146,13 @@ document.querySelectorAll(".featured-project").forEach((section) => {
 let thumbTouchStartX = 0;
 let thumbTouchEndX = 0;
 
-featuredTrack.addEventListener("touchstart", (event) => {
-  if (window.innerWidth > 900) return;
+featuredSlider.addEventListener("touchstart", (event) => {
+if (window.innerWidth > 900) return;
 
   thumbTouchStartX = event.changedTouches[0].clientX;
 }, { passive: true });
 
-featuredTrack.addEventListener("touchend", (event) => {
+featuredSlider.addEventListener("touchend", (event) => {
   if (window.innerWidth > 900) return;
 
   thumbTouchEndX = event.changedTouches[0].clientX;
