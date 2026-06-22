@@ -210,7 +210,7 @@ SELECTED WORKS INTRO
 
 .selected-works-intro {
   width: min(92vw, 1500px);
-  margin: 180px auto 0;
+  margin: 50px auto 0;
   justify-content: flex-start;
   display: flex;
   position: sticky;
