@@ -371,11 +371,15 @@ items.forEach((item) => {
   const isTouch = (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
 
   let lastTappedItem = null;
-  let lastTapTime = 0;
 
   const closeAllCaptions = () => {
-    items.forEach((el) => el.classList.remove('is-caption-visible'));
-  };
+  items.forEach((el) => {
+    el.classList.remove('is-caption-visible');
+    el.classList.remove('is-in-group');
+  });
+
+  grid.classList.remove('is-group-tap');
+ };
 
   // 画面のどこかを触ったら閉じる（任意だが使いやすい）
   document.addEventListener('click', (e) => {
@@ -630,39 +634,57 @@ activeCluster = Array.from(document.querySelectorAll("#grid .jl-item")).map((thu
 
 
 
-  items.forEach((item, index) => {
-    item.addEventListener('click', (e) => {
-      // デスクトップは今まで通り（ホバーはCSS側）
-      if (!isTouch) {
-        e.preventDefault();
-        openAt(setClusterFromThumb(item, index));
-        return;
-      }
 
-      const now = Date.now();
-      const isSame = (lastTappedItem === item);
-      const isQuickSecondTap = (now - lastTapTime) < 800;
+items.forEach((item, index) => {
+  item.addEventListener('click', (e) => {
+    // デスクトップは今まで通り
+    if (!isTouch) {
+      e.preventDefault();
+      openAt(setClusterFromThumb(item, index));
+      return;
+    }
 
-      // 2回目タップなら lightbox を開く
-      if (item.classList.contains('is-caption-visible') && isSame && isQuickSecondTap) {
-        e.preventDefault();
-        openAt(setClusterFromThumb(item, index));
+    const key = item.dataset.groupKey;
 
-        lastTapTime = now;
-        return;
-      }
+    const isSameGroup =
+      key &&
+      lastTappedItem &&
+      lastTappedItem.dataset.groupKey === key;
 
-      // 1回目タップ：lightboxは開かずキャプションだけ
+    // 2回目タップ：同じクラスター内なら Lightbox を開く
+    if (isSameGroup) {
       e.preventDefault();
       e.stopPropagation();
 
       closeAllCaptions();
-      item.classList.add('is-caption-visible');
 
-      lastTappedItem = item;
-      lastTapTime = now;
+      openAt(setClusterFromThumb(item, index));
+
+      lastTappedItem = null;
+      return;
+    }
+
+    // 1回目タップ：同じクラスターのキャプション表示
+    e.preventDefault();
+    e.stopPropagation();
+
+    closeAllCaptions();
+
+    grid.classList.add('is-group-tap');
+
+    items.forEach((el) => {
+      el.classList.toggle(
+        'is-in-group',
+        el.dataset.groupKey === key
+      );
     });
-  });  
+
+    lastTappedItem = item;
+  });
+});
+
+
+
 
 gmPrev.addEventListener('click', (e) => {
   e.stopPropagation();
