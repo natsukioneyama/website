@@ -213,7 +213,7 @@ FEATURED PROJECT
 .featured-label {
   font-size: 11px;
   text-transform: uppercase;
-  margin: 0 0 24px;
+  margin: 0;
 }
 
 .featured-project h2 {
@@ -662,35 +662,44 @@ RESPONSIVE
     display: block;
   }
 
-  .featured-thumbs-window {
-    max-width: calc(100vw - 8px);
-  }
+
 
 
   .featured-thumbs-slider {
   touch-action: pan-y;
   -webkit-user-select: none;
   user-select: none;
-  margin: 40px auto 0;
-  gap: 8px;
-  }
-
-  .featured-thumbs-slider img {
-   -webkit-user-drag: none;
-   user-select: none;
-   pointer-events: none;
-  }
-
-  .featured-arrow {
-    margin: 0;
-  }
-
-    .featured-thumbs-track {
-    gap: 12px;
-  }
+  margin: 50px auto 0;
+  gap: 12px;
+  overflow: visible;
+  width: 100%;
+}
 
 
-  
+
+.featured-thumbs-window {
+  overflow: hidden;
+  width: 100%;
+  max-width: none;
+}
+
+.featured-thumbs-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.featured-thumbs-track img {
+  flex: 0 0 100%;
+  width: 100%;
+  height: auto;
+  max-height: 70svh;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+
+
   .featured-project-ac .featured-project-main {
     gap: 10px;
     align-items: flex-start;
