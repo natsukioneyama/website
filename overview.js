@@ -603,7 +603,6 @@ activeCluster = Array.from(document.querySelectorAll("#grid .jl-item")).map((thu
 
 
 
-let armedGroupKey = null;
 
 items.forEach((item, index) => {
   item.addEventListener('click', (e) => {
