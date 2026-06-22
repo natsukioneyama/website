@@ -111,6 +111,7 @@ INFO HERO
   max-width: 620px;
   margin: 40px auto 0;
   line-height: 1.7;
+  text-align: justify;
 }
 
 /* =========================
@@ -387,7 +388,7 @@ BIOGRAPHY
 }
 
 .bio-clients {
-  margin-top: 70px;
+  margin-top: 80px;
 }
 
 .bio-info strong,
@@ -398,9 +399,17 @@ BIOGRAPHY
 
 .bio-info span {
   display: inline-block;
-  width: 140px;
+  width: 180px;
 }
 
+.bio-clients-line span {
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.bio-info a {
+  margin-right: 12px;
+}
 
 .copyright {
   margin-top: 80px;
@@ -610,12 +619,16 @@ RESPONSIVE
     font-size: 15px;
   }
 
+.info-bio {
+  width: calc(100% - 48px);
+  max-width: 620px;
+  margin: 40px auto 0;
+}
+
 
  .selected-works-intro::before {
   width: 100%;
  }
-
-
 
   .selected-works-intro p {
     margin: 0;
