@@ -716,6 +716,10 @@ RESPONSIVE
     align-items: flex-start;
   }
 
+    .featured-thumbs-slider {
+    display: none;
+  }
+
   .featured-project-text {
     order: -1;
     margin: 0;
@@ -776,7 +780,6 @@ RESPONSIVE
   max-height: 70svh;
   object-fit: contain;
   display: block;
-  pointer-events: none;
 }
 
 
