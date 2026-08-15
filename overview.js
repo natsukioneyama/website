@@ -161,6 +161,39 @@
     });
   }
 
+  /* =========================
+     6) Touch: 1回目タップでハイライト、2回目でLightboxへ
+     - capture=true で Lightbox の click より先に処理
+     ========================= */
+
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+  if (isTouchDevice) {
+    let armedItem = null;
+
+    container.addEventListener('click', (e) => {
+      const item = e.target.closest('.jl-item');
+      if (!item) return;
+
+      const key = item.dataset.groupKey;
+      if (!key) return;
+
+      // 1st tap: highlight only
+      if (armedItem !== item) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        armedItem = item;
+        item.classList.add('tap-armed');
+        setGroupHighlightByKey(key, 'tap');
+        return;
+      }
+
+      // 2nd tap: release highlight, then allow Lightbox handler to run
+      clearGroupHighlight();
+      armedItem = null;
+    }, true);
+  }
 
   /* =========================
      7) Justified Layout: render
@@ -280,6 +313,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const gmNext  = gm.querySelector('.gm-next');
   const gmBg    = gm.querySelector('.gm-backdrop');
 
+  const gmNextProject = gm.querySelector('.gm-next-project');
+  const gmPrevProject = gm.querySelector('.gm-prev-project');
+
   const items = Array.from(document.querySelectorAll('#grid .jl-item'));
   if (!items.length) return;
 
@@ -335,16 +371,11 @@ items.forEach((item) => {
   const isTouch = (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
 
   let lastTappedItem = null;
-  let armedGroupKey = null;
+  let lastTapTime = 0;
 
   const closeAllCaptions = () => {
-  items.forEach((el) => {
-    el.classList.remove('is-caption-visible');
-    el.classList.remove('is-in-group');
-  });
-
-  grid.classList.remove('is-group-tap');
- };
+    items.forEach((el) => el.classList.remove('is-caption-visible'));
+  };
 
   // 画面のどこかを触ったら閉じる（任意だが使いやすい）
   document.addEventListener('click', (e) => {
@@ -493,12 +524,41 @@ items.forEach((item) => {
   }
 
 
-function openNextImageOrProject() {
-  openAt(currentIndex + 1);
+    function openNextImageOrProject() {
+  const activeItems = getActiveItems();
+
+  if (currentIndex < activeItems.length - 1) {
+    openAt(currentIndex + 1);
+  } else {
+    openNextProject();
+  }
 }
 
 function openPrevImageOrProject() {
-  openAt(currentIndex - 1);
+  const activeItems = getActiveItems();
+
+  if (currentIndex > 0) {
+    openAt(currentIndex - 1);
+  } else {
+    openPrevProjectLastImage();
+  }
+}
+
+function openPrevProjectLastImage() {
+  if (!lastTappedItem) return;
+
+  const allThumbs = items.filter(item => item.dataset.project);
+  const thumbIndex = allThumbs.indexOf(lastTappedItem);
+
+  if (thumbIndex === -1) return;
+
+  const prevThumb =
+    allThumbs[(thumbIndex - 1 + allThumbs.length) % allThumbs.length];
+
+  setClusterFromThumb(prevThumb, 0);
+
+  const activeItems = getActiveItems();
+  openAt(activeItems.length - 1);
 }
 
 
@@ -517,6 +577,33 @@ function openPrevImageOrProject() {
   }
 
 
+
+ function openNextProject() {
+  if (!lastTappedItem) return;
+
+  const allThumbs = items.filter(item => item.dataset.project);
+  const currentIndex = allThumbs.indexOf(lastTappedItem);
+
+  if (currentIndex === -1) return;
+
+  const nextThumb = allThumbs[(currentIndex + 1) % allThumbs.length];
+
+  openAt(setClusterFromThumb(nextThumb, 0));
+}
+
+function openPrevProject() {
+  if (!lastTappedItem) return;
+
+  const allThumbs = items.filter(item => item.dataset.project);
+  const currentIndex = allThumbs.indexOf(lastTappedItem);
+
+  if (currentIndex === -1) return;
+
+  const prevThumb =
+    allThumbs[(currentIndex - 1 + allThumbs.length) % allThumbs.length];
+
+  openAt(setClusterFromThumb(prevThumb, 0));
+}
 
 function setClusterFromThumb(item, fallbackIndex) {
   lastTappedItem = item;
@@ -543,53 +630,39 @@ activeCluster = Array.from(document.querySelectorAll("#grid .jl-item")).map((thu
 
 
 
+  items.forEach((item, index) => {
+    item.addEventListener('click', (e) => {
+      // デスクトップは今まで通り（ホバーはCSS側）
+      if (!isTouch) {
+        e.preventDefault();
+        openAt(setClusterFromThumb(item, index));
+        return;
+      }
 
+      const now = Date.now();
+      const isSame = (lastTappedItem === item);
+      const isQuickSecondTap = (now - lastTapTime) < 800;
 
-items.forEach((item, index) => {
-  item.addEventListener('click', (e) => {
-    // デスクトップは今まで通り
-    if (!isTouch) {
-      e.preventDefault();
-      openAt(setClusterFromThumb(item, index));
-      return;
-    }
+      // 2回目タップなら lightbox を開く
+      if (item.classList.contains('is-caption-visible') && isSame && isQuickSecondTap) {
+        e.preventDefault();
+        openAt(setClusterFromThumb(item, index));
 
-    const key = item.dataset.groupKey;
-    if (!key) return;
+        lastTapTime = now;
+        return;
+      }
 
-    // 2回目タップ：同じクラスター内なら Lightbox を開く
-    if (armedGroupKey === key) {
+      // 1回目タップ：lightboxは開かずキャプションだけ
       e.preventDefault();
       e.stopPropagation();
 
       closeAllCaptions();
-      armedGroupKey = null;
+      item.classList.add('is-caption-visible');
 
-      openAt(setClusterFromThumb(item, index));
-      return;
-    }
-
-    // 1回目タップ：同じクラスターのキャプション表示
-    e.preventDefault();
-    e.stopPropagation();
-
-    closeAllCaptions();
-
-    grid.classList.add('is-group-tap');
-
-    items.forEach((el) => {
-      el.classList.toggle(
-        'is-in-group',
-        el.dataset.groupKey === key
-      );
+      lastTappedItem = item;
+      lastTapTime = now;
     });
-
-    armedGroupKey = key;
-  });
-});
-
-
-
+  });  
 
 gmPrev.addEventListener('click', (e) => {
   e.stopPropagation();
@@ -605,6 +678,21 @@ gmPrev.addEventListener('click', (e) => {
     e.stopPropagation();
     closeModal();
   });
+
+  if (gmNextProject) {
+  gmNextProject.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openNextProject();
+  });
+}
+
+if (gmPrevProject) {
+  gmPrevProject.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openPrevProject();
+  });
+}
+
 
   gmBg.addEventListener('click', () => closeModal());
 
@@ -684,6 +772,55 @@ gmPrev.addEventListener('click', (e) => {
   }
 }
   }, { passive: false });
+
+
+
+  function openFromOverviewParam() {
+  const params = new URLSearchParams(window.location.search);
+  const full = params.get('full');
+  console.log(full);
+  console.log("full from URL:", full);
+
+  if (!full) return;
+
+  const cleanPath = full
+  .replace(window.location.origin, '')
+  .replace(/^\.?\//, '');
+
+  let targetProject = null;
+  let targetIndex = -1;
+
+  Object.entries(PROJECTS).some(([projectKey, projectItems]) => {
+    const foundIndex = projectItems.findIndex((entry) => {
+      return entry.src.replace(/^\.?\//, '') === cleanPath;
+    });
+
+    if (foundIndex !== -1) {
+      targetProject = projectKey;
+      targetIndex = foundIndex;
+      return true;
+    }
+
+    return false;
+  });
+
+  if (!targetProject || targetIndex === -1) {
+  console.log("NOT FOUND");
+  return;
+}
+
+  const targetThumb = items.find((item) => item.dataset.project === targetProject);
+  if (!targetThumb) return;
+
+  setClusterFromThumb(targetThumb, targetIndex);
+
+  setTimeout(() => {
+  openAt(targetIndex);
+  //history.replaceState({}, '', window.location.pathname);
+}, 100);
+}
+
+openFromOverviewParam();
 
 
 });

@@ -15,10 +15,10 @@ body {
 body {
   background: #f7f7f7;
   color: #111;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "ivypresto-display", serif;
   font-weight: 300;
   font-style: normal;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.08em;
 }
 
 img {
@@ -191,6 +191,11 @@ INFO HERO
   text-decoration: none;
 }
 
+
+
+
+
+
 .copyright {
   margin: 20px;
   font-size: 12px;
@@ -198,10 +203,6 @@ INFO HERO
   opacity: 0.6;
   text-align: center;
 }
-
-
-
-
 
 /* =========================
 SELECTED WORKS INTRO
@@ -218,6 +219,14 @@ SELECTED WORKS INTRO
   background: #f7f7f7;
 }
 
+.selected-works-intro::after {
+  content: "";
+  position: absolute;
+  inset: -15px 0;
+  background: #f7f7f7;
+  z-index: -1;
+}
+
 .selected-works-intro::before {
   content: "";
   position: absolute;
@@ -230,20 +239,12 @@ SELECTED WORKS INTRO
   background: #d9d9d9;
 }
 
-.selected-works-intro::after {
-  content: "";
-  position: absolute;
-  inset: -15px 0;
-  background: #3b1cda;
-  z-index: -1;
-}
-
 .selected-works-intro p {
   text-transform: uppercase;
   font-size: 0.9rem;
   letter-spacing: 0.08em;
   font-weight: 400;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "acumin-pro", sans-serif;
 }
 
 
@@ -323,14 +324,6 @@ FEATURED PROJECT
   grid-row: 1;
   width: 340px;
   justify-self: start;
-  border: 0;
-  margin: 0;
-  padding: 0;
-  background: none;
-  font: inherit;
-  appearance: none;
-  -webkit-appearance: none;
-  cursor: pointer;
 }
 
 .featured-main-image img {
@@ -668,21 +661,14 @@ RESPONSIVE
     pointer-events: none;
   }
 
-  .selected-works-intro-inner,
-  .selected-works-intro::before,
-  .selected-works-intro::after {
+  .selected-works-intro {
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .selected-works-intro.selected-works-hidden {
-  pointer-events: none;
-}
-
-.selected-works-intro.selected-works-hidden .selected-works-intro-inner,
-.selected-works-intro.selected-works-hidden::before,
-.selected-works-intro.selected-works-hidden::after {
   opacity: 0;
   transform: translateY(-100%);
+  pointer-events: none;
 }
 }
 
@@ -707,11 +693,6 @@ RESPONSIVE
  .selected-works-intro::before {
   width: 100%;
  }
-
- .selected-works-intro::after {
-  top: calc(-15px - env(safe-area-inset-top, 0px));
- }
-
 
   .selected-works-intro p {
     margin: 0;
