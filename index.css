@@ -15,7 +15,7 @@ body {
 body {
   background: #f7f7f7;
   color: #111;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "ivypresto-display", serif;
   font-weight: 300;
   font-style: normal;
   letter-spacing: 0.08em;
@@ -105,112 +105,16 @@ INFO HERO
 .info-title {
   font-size: 14px;
   margin: 0;
-} 
-
-
-
-.info-text-block {
-  width: calc(100% - 48px);
-  max-width: 620px;
-  margin: 40px auto 0;
-  padding: 0 28px;
 }
 
-.info-bio {
-  width: auto;
-  max-width: none;
-  margin: 0;
-  padding: 0;
-  text-align: justify;
-}
-
-.clients-block {
-  width: auto;
-  max-width: none;
-  margin: 80px 0 0;
-  padding: 0;
-  text-align: justify;
-}
-
-.clients-title {
-  text-align: center;
-  margin: 0 0 20px;
-  font-size: 14px;
-
-}
-
-.clients-list {
-  margin: 0;
-  text-align: justify;
-}
-
-.info-bio,
-.clients-list {
-  font-size: 15px;
-  line-height: 1.6;
-  letter-spacing: 0.06em;
-}
-
-
-.info-links {
-  margin: 45px 0 0;
-  font-size: 15px;
-  line-height: 1.35;
-  letter-spacing: 0.06em;
-}
-
-.social-links {
-  text-align: center;
-  margin: 0 0 32px;
-}
-
-.social-links a {
-  padding: 2px;
-  display: block;
-  color: #111;
-  text-decoration: none;
-  -webkit-text-fill-color: #111;
-}
-
-.social-links a:first-child {
-  text-transform: uppercase;
-}
-
-.pdf-link {
-  margin-top: 0;
-  text-align: center;
-}
-
-.pdf-link span {
-  display: block;
-  margin-bottom: 8px;
-}
-
-.pdf-link a {
-  color: #111;
-  text-decoration: none;
-}
-
-
-
-
-
-
-.copyright {
-  margin: 20px;
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  opacity: 0.6;
-  text-align: center;
-}
 
 /* =========================
 SELECTED WORKS INTRO
 ========================= */
 
 .selected-works-intro {
-  width: min(92vw, 1500px);
-  margin: 50px auto 0;
+  width: min(88vw, 1280px);
+  margin: 180px auto 0;
   justify-content: flex-start;
   display: flex;
   position: sticky;
@@ -222,7 +126,7 @@ SELECTED WORKS INTRO
 .selected-works-intro::after {
   content: "";
   position: absolute;
-  inset: -15px 0;
+  inset: -20px 0 -24px;
   background: #f7f7f7;
   z-index: -1;
 }
@@ -230,11 +134,10 @@ SELECTED WORKS INTRO
 .selected-works-intro::before {
   content: "";
   position: absolute;
-  bottom: -15px;
+  bottom: -10px;
   left: 0;
   transform: none;
   width: 100%;
-  width: calc(100% + 15px);
   height: 1px;
   background: #d9d9d9;
 }
@@ -244,7 +147,7 @@ SELECTED WORKS INTRO
   font-size: 0.9rem;
   letter-spacing: 0.08em;
   font-weight: 400;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "acumin-pro", sans-serif;
 }
 
 
@@ -432,65 +335,64 @@ FEATURED PROJECT AC
 
 /* =========================
 BIOGRAPHY
-========================= 
+========================= */
+
 .biography {
-  max-width: 900px;
-  margin: 100px auto 0;
-  padding: 100px 40px 120px;
+  max-width: 1400px;
+  margin: 100px 0 0;
+  padding: 100px 72px 120px;
 }
 
-.bio-info {
-  font-size: 14px;
-  line-height: 1.45;
-  letter-spacing: 0.02em;
+.bio-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1.1fr 0.9fr 0.8fr;
+  gap: 64px;
+  align-items: start;
+  width: 90%;
+  margin: 0 auto;
 }
 
-.bio-info p {
-  margin: 0 0 34px;
-}
-
-.bio-info span {
-  font-weight: 400;
-  text-transform: uppercase;
-}
-
-.bio-info a {
-  color: #111;
-  text-decoration: none;
-  -webkit-text-fill-color: #111;
-}
-
-.bio-info a:visited,
-.bio-info a:active,
-.bio-info a:focus {
-  color: #111;
-  -webkit-text-fill-color: #111;
-  text-decoration: none;
-}
-
-.bio-info a:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-
-.bio-info strong,
-.bio-info span {
+.bio-column h3 {
   font-size: 13px;
-  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  margin: 0 0 18px;
 }
 
-.bio-info span {
-  display: inline-block;
-  width: 180px;
+.bio-column p {
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 0 0 16px;
+}
+
+.bio-column a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.bio-column a:hover {
+  text-decoration: underline;
 }
 
 
-.bio-info a {
-  margin-right: 12px;
-}
 
-*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -690,10 +592,28 @@ RESPONSIVE
   }
 
 
- .selected-works-intro::before {
-  width: 100%;
- }
+  .selected-works-intro {
+    width: min(88vw, 620px);
+    margin: 180px auto;
+  }
 
+  .selected-works-intro::before {
+    left: 0;
+    transform: none;
+    width: 100%;
+  }
+
+
+.selected-works-intro::before {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  transform: none;
+  width: 100%;
+  height: 1px;
+  background: #d9d9d9;
+}
   .selected-works-intro p {
     margin: 0;
     text-align: left;
@@ -714,10 +634,6 @@ RESPONSIVE
     flex-direction: column;
     gap: 10px;
     align-items: flex-start;
-  }
-
-    .featured-thumbs-slider {
-    display: none;
   }
 
   .featured-project-text {
@@ -780,6 +696,7 @@ RESPONSIVE
   max-height: 70svh;
   object-fit: contain;
   display: block;
+  pointer-events: none;
 }
 
 
