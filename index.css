@@ -222,10 +222,14 @@ SELECTED WORKS INTRO
 .selected-works-intro::after {
   content: "";
   position: absolute;
-  inset: -15px 0;
+  top: -80px;
+  right: 0;
+  bottom: -15px;
+  left: 0;
   background: #f7f7f7;
   z-index: -1;
 }
+
 
 .selected-works-intro::before {
   content: "";
