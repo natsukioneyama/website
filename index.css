@@ -709,6 +709,10 @@ RESPONSIVE
   width: 100%;
  }
 
+ .selected-works-intro::after {
+  top: calc(-15px - env(safe-area-inset-top, 0px));
+ }
+
   .selected-works-intro p {
     margin: 0;
     text-align: left;
