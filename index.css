@@ -669,14 +669,21 @@ RESPONSIVE
     pointer-events: none;
   }
 
-  .selected-works-intro {
+  .selected-works-intro-inner,
+  .selected-works-intro::before,
+  .selected-works-intro::after {
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .selected-works-intro.selected-works-hidden {
+  pointer-events: none;
+}
+
+.selected-works-intro.selected-works-hidden .selected-works-intro-inner,
+.selected-works-intro.selected-works-hidden::before,
+.selected-works-intro.selected-works-hidden::after {
   opacity: 0;
   transform: translateY(-100%);
-  pointer-events: none;
 }
 }
 
