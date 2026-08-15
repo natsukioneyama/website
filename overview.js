@@ -280,9 +280,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const gmNext  = gm.querySelector('.gm-next');
   const gmBg    = gm.querySelector('.gm-backdrop');
 
-  const gmNextProject = gm.querySelector('.gm-next-project');
-  const gmPrevProject = gm.querySelector('.gm-prev-project');
-
   const items = Array.from(document.querySelectorAll('#grid .jl-item'));
   if (!items.length) return;
 
@@ -496,41 +493,12 @@ items.forEach((item) => {
   }
 
 
-    function openNextImageOrProject() {
-  const activeItems = getActiveItems();
-
-  if (currentIndex < activeItems.length - 1) {
-    openAt(currentIndex + 1);
-  } else {
-    openNextProject();
-  }
+function openNextImageOrProject() {
+  openAt(currentIndex + 1);
 }
 
 function openPrevImageOrProject() {
-  const activeItems = getActiveItems();
-
-  if (currentIndex > 0) {
-    openAt(currentIndex - 1);
-  } else {
-    openPrevProjectLastImage();
-  }
-}
-
-function openPrevProjectLastImage() {
-  if (!lastTappedItem) return;
-
-  const allThumbs = items.filter(item => item.dataset.project);
-  const thumbIndex = allThumbs.indexOf(lastTappedItem);
-
-  if (thumbIndex === -1) return;
-
-  const prevThumb =
-    allThumbs[(thumbIndex - 1 + allThumbs.length) % allThumbs.length];
-
-  setClusterFromThumb(prevThumb, 0);
-
-  const activeItems = getActiveItems();
-  openAt(activeItems.length - 1);
+  openAt(currentIndex - 1);
 }
 
 
@@ -549,33 +517,6 @@ function openPrevProjectLastImage() {
   }
 
 
-
- function openNextProject() {
-  if (!lastTappedItem) return;
-
-  const allThumbs = items.filter(item => item.dataset.project);
-  const currentIndex = allThumbs.indexOf(lastTappedItem);
-
-  if (currentIndex === -1) return;
-
-  const nextThumb = allThumbs[(currentIndex + 1) % allThumbs.length];
-
-  openAt(setClusterFromThumb(nextThumb, 0));
-}
-
-function openPrevProject() {
-  if (!lastTappedItem) return;
-
-  const allThumbs = items.filter(item => item.dataset.project);
-  const currentIndex = allThumbs.indexOf(lastTappedItem);
-
-  if (currentIndex === -1) return;
-
-  const prevThumb =
-    allThumbs[(currentIndex - 1 + allThumbs.length) % allThumbs.length];
-
-  openAt(setClusterFromThumb(prevThumb, 0));
-}
 
 function setClusterFromThumb(item, fallbackIndex) {
   lastTappedItem = item;
@@ -665,21 +606,6 @@ gmPrev.addEventListener('click', (e) => {
     closeModal();
   });
 
-  if (gmNextProject) {
-  gmNextProject.addEventListener('click', (e) => {
-    e.stopPropagation();
-    openNextProject();
-  });
-}
-
-if (gmPrevProject) {
-  gmPrevProject.addEventListener('click', (e) => {
-    e.stopPropagation();
-    openPrevProject();
-  });
-}
-
-
   gmBg.addEventListener('click', () => closeModal());
 
   window.addEventListener('keydown', (e) => {
@@ -758,55 +684,6 @@ if (gmPrevProject) {
   }
 }
   }, { passive: false });
-
-
-
-  function openFromOverviewParam() {
-  const params = new URLSearchParams(window.location.search);
-  const full = params.get('full');
-  console.log(full);
-  console.log("full from URL:", full);
-
-  if (!full) return;
-
-  const cleanPath = full
-  .replace(window.location.origin, '')
-  .replace(/^\.?\//, '');
-
-  let targetProject = null;
-  let targetIndex = -1;
-
-  Object.entries(PROJECTS).some(([projectKey, projectItems]) => {
-    const foundIndex = projectItems.findIndex((entry) => {
-      return entry.src.replace(/^\.?\//, '') === cleanPath;
-    });
-
-    if (foundIndex !== -1) {
-      targetProject = projectKey;
-      targetIndex = foundIndex;
-      return true;
-    }
-
-    return false;
-  });
-
-  if (!targetProject || targetIndex === -1) {
-  console.log("NOT FOUND");
-  return;
-}
-
-  const targetThumb = items.find((item) => item.dataset.project === targetProject);
-  if (!targetThumb) return;
-
-  setClusterFromThumb(targetThumb, targetIndex);
-
-  setTimeout(() => {
-  openAt(targetIndex);
-  //history.replaceState({}, '', window.location.pathname);
-}, 100);
-}
-
-openFromOverviewParam();
 
 
 });
