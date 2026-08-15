@@ -10,8 +10,7 @@ const heroImages = [
   "slide/09.webp",
   "slide/10.webp",
   "slide/11.webp",
-  "slide/12.webp",
-  "slide/13.webp"
+  "slide/12.webp"
 ];
 
 const heroSlide = document.querySelector(".hero-slide");
@@ -148,13 +147,13 @@ let thumbTouchStartX = 0;
 let thumbTouchEndX = 0;
 
 featuredSlider.addEventListener("touchstart", (event) => {
-if (window.innerWidth <= 900) return;
+if (window.innerWidth > 900) return;
 
   thumbTouchStartX = event.changedTouches[0].clientX;
 }, { passive: true });
 
 featuredSlider.addEventListener("touchend", (event) => {
-  if (window.innerWidth <= 900) return;
+  if (window.innerWidth > 900) return;
 
   thumbTouchEndX = event.changedTouches[0].clientX;
 
