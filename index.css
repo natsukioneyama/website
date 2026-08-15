@@ -211,32 +211,18 @@ SELECTED WORKS INTRO
 .selected-works-intro {
   width: min(92vw, 1500px);
   margin: 50px auto 0;
-  justify-content: flex-start;
   display: flex;
-  position: sticky;
+  align-items: center;
+  gap: 15px;
   top: 13px;
   z-index: 100;
-  background: #f7f7f7;
 }
 
 .selected-works-intro::after {
   content: "";
-  position: absolute;
-  inset: -15px 0;
-  background: #f7f7f7;
-  z-index: -1;
-}
-
-.selected-works-intro::before {
-  content: "";
-  position: absolute;
-  bottom: -15px;
-  left: 0;
-  transform: none;
-  width: 100%;
-  width: calc(100% + 15px);
   height: 1px;
-
+  background: #999;
+  flex: 1;
 }
 
 .selected-works-intro p {
