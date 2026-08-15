@@ -161,39 +161,6 @@
     });
   }
 
-  /* =========================
-     6) Touch: 1回目タップでハイライト、2回目でLightboxへ
-     - capture=true で Lightbox の click より先に処理
-     ========================= */
-
-  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-
-  if (isTouchDevice) {
-    let armedItem = null;
-
-    container.addEventListener('click', (e) => {
-      const item = e.target.closest('.jl-item');
-      if (!item) return;
-
-      const key = item.dataset.groupKey;
-      if (!key) return;
-
-      // 1st tap: highlight only
-      if (armedItem !== item) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        armedItem = item;
-        item.classList.add('tap-armed');
-        setGroupHighlightByKey(key, 'tap');
-        return;
-      }
-
-      // 2nd tap: release highlight, then allow Lightbox handler to run
-      clearGroupHighlight();
-      armedItem = null;
-    }, true);
-  }
 
   /* =========================
      7) Justified Layout: render
@@ -371,11 +338,16 @@ items.forEach((item) => {
   const isTouch = (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
 
   let lastTappedItem = null;
-  let lastTapTime = 0;
+  let armedGroupKey = null;
 
   const closeAllCaptions = () => {
-    items.forEach((el) => el.classList.remove('is-caption-visible'));
-  };
+  items.forEach((el) => {
+    el.classList.remove('is-caption-visible');
+    el.classList.remove('is-in-group');
+  });
+
+  grid.classList.remove('is-group-tap');
+ };
 
   // 画面のどこかを触ったら閉じる（任意だが使いやすい）
   document.addEventListener('click', (e) => {
@@ -523,12 +495,25 @@ items.forEach((item) => {
     gm.setAttribute('aria-hidden', 'false');
   }
 
-function openNextImageOrProject() {
-  openAt(currentIndex + 1);
+
+    function openNextImageOrProject() {
+  const activeItems = getActiveItems();
+
+  if (currentIndex < activeItems.length - 1) {
+    openAt(currentIndex + 1);
+  } else {
+    openNextProject();
+  }
 }
 
 function openPrevImageOrProject() {
-  openAt(currentIndex - 1);
+  const activeItems = getActiveItems();
+
+  if (currentIndex > 0) {
+    openAt(currentIndex - 1);
+  } else {
+    openPrevProjectLastImage();
+  }
 }
 
 function openPrevProjectLastImage() {
@@ -617,39 +602,53 @@ activeCluster = Array.from(document.querySelectorAll("#grid .jl-item")).map((thu
 
 
 
-  items.forEach((item, index) => {
-    item.addEventListener('click', (e) => {
-      // デスクトップは今まで通り（ホバーはCSS側）
-      if (!isTouch) {
-        e.preventDefault();
-        openAt(setClusterFromThumb(item, index));
-        return;
-      }
 
-      const now = Date.now();
-      const isSame = (lastTappedItem === item);
-      const isQuickSecondTap = (now - lastTapTime) < 800;
 
-      // 2回目タップなら lightbox を開く
-      if (item.classList.contains('is-caption-visible') && isSame && isQuickSecondTap) {
-        e.preventDefault();
-        openAt(setClusterFromThumb(item, index));
+items.forEach((item, index) => {
+  item.addEventListener('click', (e) => {
+    // デスクトップは今まで通り
+    if (!isTouch) {
+      e.preventDefault();
+      openAt(setClusterFromThumb(item, index));
+      return;
+    }
 
-        lastTapTime = now;
-        return;
-      }
+    const key = item.dataset.groupKey;
+    if (!key) return;
 
-      // 1回目タップ：lightboxは開かずキャプションだけ
+    // 2回目タップ：同じクラスター内なら Lightbox を開く
+    if (armedGroupKey === key) {
       e.preventDefault();
       e.stopPropagation();
 
       closeAllCaptions();
-      item.classList.add('is-caption-visible');
+      armedGroupKey = null;
 
-      lastTappedItem = item;
-      lastTapTime = now;
+      openAt(setClusterFromThumb(item, index));
+      return;
+    }
+
+    // 1回目タップ：同じクラスターのキャプション表示
+    e.preventDefault();
+    e.stopPropagation();
+
+    closeAllCaptions();
+
+    grid.classList.add('is-group-tap');
+
+    items.forEach((el) => {
+      el.classList.toggle(
+        'is-in-group',
+        el.dataset.groupKey === key
+      );
     });
-  });  
+
+    armedGroupKey = key;
+  });
+});
+
+
+
 
 gmPrev.addEventListener('click', (e) => {
   e.stopPropagation();
@@ -765,7 +764,8 @@ if (gmPrevProject) {
   function openFromOverviewParam() {
   const params = new URLSearchParams(window.location.search);
   const full = params.get('full');
-
+  console.log(full);
+  console.log("full from URL:", full);
 
   if (!full) return;
 
@@ -791,6 +791,7 @@ if (gmPrevProject) {
   });
 
   if (!targetProject || targetIndex === -1) {
+  console.log("NOT FOUND");
   return;
 }
 
