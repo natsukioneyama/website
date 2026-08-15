@@ -523,25 +523,12 @@ items.forEach((item) => {
     gm.setAttribute('aria-hidden', 'false');
   }
 
-
-    function openNextImageOrProject() {
-  const activeItems = getActiveItems();
-
-  if (currentIndex < activeItems.length - 1) {
-    openAt(currentIndex + 1);
-  } else {
-    openNextProject();
-  }
+function openNextImageOrProject() {
+  openAt(currentIndex + 1);
 }
 
 function openPrevImageOrProject() {
-  const activeItems = getActiveItems();
-
-  if (currentIndex > 0) {
-    openAt(currentIndex - 1);
-  } else {
-    openPrevProjectLastImage();
-  }
+  openAt(currentIndex - 1);
 }
 
 function openPrevProjectLastImage() {
@@ -778,8 +765,7 @@ if (gmPrevProject) {
   function openFromOverviewParam() {
   const params = new URLSearchParams(window.location.search);
   const full = params.get('full');
-  console.log(full);
-  console.log("full from URL:", full);
+
 
   if (!full) return;
 
@@ -805,7 +791,6 @@ if (gmPrevProject) {
   });
 
   if (!targetProject || targetIndex === -1) {
-  console.log("NOT FOUND");
   return;
 }
 
