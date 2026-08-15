@@ -496,25 +496,15 @@ items.forEach((item) => {
   }
 
 
-    function openNextImageOrProject() {
-  const activeItems = getActiveItems();
-
-  if (currentIndex < activeItems.length - 1) {
-    openAt(currentIndex + 1);
-  } else {
-    openNextProject();
-  }
+function openNextImageOrProject() {
+  openAt(currentIndex + 1);
 }
 
 function openPrevImageOrProject() {
-  const activeItems = getActiveItems();
-
-  if (currentIndex > 0) {
-    openAt(currentIndex - 1);
-  } else {
-    openPrevProjectLastImage();
-  }
+  openAt(currentIndex - 1);
 }
+
+
 
 function openPrevProjectLastImage() {
   if (!lastTappedItem) return;

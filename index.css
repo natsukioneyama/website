@@ -15,10 +15,10 @@ body {
 body {
   background: #f7f7f7;
   color: #111;
-  font-family: "ivypresto-display", serif;
+  font-family: "Cormorant Garamond", serif;
   font-weight: 300;
   font-style: normal;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.02em;
 }
 
 img {
@@ -236,15 +236,15 @@ SELECTED WORKS INTRO
   width: 100%;
   width: calc(100% + 15px);
   height: 1px;
-  background: #d9d9d9;
+
 }
 
 .selected-works-intro p {
   text-transform: uppercase;
   font-size: 0.9rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.02em;
   font-weight: 400;
-  font-family: "acumin-pro", sans-serif;
+  font-family: "Cormorant Garamond", serif;
 }
 
 
