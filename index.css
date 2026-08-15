@@ -191,11 +191,6 @@ INFO HERO
   text-decoration: none;
 }
 
-
-
-
-
-
 .copyright {
   margin: 20px;
   font-size: 12px;
@@ -203,6 +198,10 @@ INFO HERO
   opacity: 0.6;
   text-align: center;
 }
+
+
+
+
 
 /* =========================
 SELECTED WORKS INTRO
@@ -715,6 +714,18 @@ RESPONSIVE
 
  .selected-works-intro::after {
   top: calc(-15px - env(safe-area-inset-top, 0px));
+ }
+
+ body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(env(safe-area-inset-top, 0px) + 28px);
+  background: #ff0000;
+  z-index: 90;
+  pointer-events: none;
  }
 
   .selected-works-intro p {
