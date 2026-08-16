@@ -283,6 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const gmNextProject = gm.querySelector('.gm-next-project');
   const gmPrevProject = gm.querySelector('.gm-prev-project');
 
+  const grid = document.getElementById('grid');
   const items = Array.from(document.querySelectorAll('#grid .jl-item'));
   if (!items.length) return;
 
@@ -754,8 +755,7 @@ if (gmPrevProject) {
   function openFromOverviewParam() {
   const params = new URLSearchParams(window.location.search);
   const full = params.get('full');
-  console.log(full);
-  console.log("full from URL:", full);
+
 
   if (!full) return;
 
@@ -763,35 +763,23 @@ if (gmPrevProject) {
   .replace(window.location.origin, '')
   .replace(/^\.?\//, '');
 
-  let targetProject = null;
-  let targetIndex = -1;
+  const targetIndex = items.findIndex((item) => {
+    const img = item.querySelector('img');
+    if (!img) return false;
 
-  Object.entries(PROJECTS).some(([projectKey, projectItems]) => {
-    const foundIndex = projectItems.findIndex((entry) => {
-      return entry.src.replace(/^\.?\//, '') === cleanPath;
-    });
+    const src = (img.dataset.full || img.src || '')
+      .replace(window.location.origin, '')
+      .replace(/^\.?\//, '');
 
-    if (foundIndex !== -1) {
-      targetProject = projectKey;
-      targetIndex = foundIndex;
-      return true;
-    }
-
-    return false;
+    return src === cleanPath;
   });
 
-  if (!targetProject || targetIndex === -1) {
-  console.log("NOT FOUND");
-  return;
-}
+  if (targetIndex === -1) return;
 
-  const targetThumb = items.find((item) => item.dataset.project === targetProject);
-  if (!targetThumb) return;
-
-  setClusterFromThumb(targetThumb, targetIndex);
+  const targetThumb = items[targetIndex];
 
   setTimeout(() => {
-  openAt(targetIndex);
+  openAt(setClusterFromThumb(targetThumb, targetIndex));
   //history.replaceState({}, '', window.location.pathname);
 }, 100);
 }

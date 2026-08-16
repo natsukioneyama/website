@@ -38,30 +38,7 @@ document.querySelectorAll('img').forEach(img => {
 
 
 
- const topbar = document.querySelector('.topbar');
- const biography = document.querySelector('.biography');
- const selectedWorksIntro = document.querySelector('.selected-works-intro');
- window.addEventListener('scroll', () => {
-  if (!topbar || !biography || window.innerWidth > 768) return;
-
-  const bioTop = biography.getBoundingClientRect().top;
-
-  if (bioTop < 80) {
-  topbar.classList.add('topbar-hidden');
-
-  if (selectedWorksIntro) {
-    selectedWorksIntro.classList.add('selected-works-hidden');
-  }
-
-} else {
-  topbar.classList.remove('topbar-hidden');
-
-  if (selectedWorksIntro) {
-    selectedWorksIntro.classList.remove('selected-works-hidden');
-  }
-}
-
-});
+ // ヘッダー非表示スクロール機能は .biography セクション削除に伴い廃止(2026-08)
 
 
 document.querySelectorAll(".featured-project").forEach((section) => {
@@ -222,7 +199,7 @@ function showFeaturedImage(index) {
 
 document.querySelectorAll(".featured-project").forEach((section) => {
  const imageItems = Array.from(
-  section.querySelectorAll("[data-featured-index]")
+  section.querySelectorAll("[data-featured-index]:not([aria-hidden='true'])")
 );
 
 const images = [];
@@ -236,11 +213,12 @@ imageItems.forEach((item) => {
   images[index] = img.src;
 });
 
-section.querySelectorAll("[data-featured-index]").forEach((item) => {
-  item.addEventListener("click", (event) => {
-    event.preventDefault();
-    openFeaturedLightbox(images, Number(item.dataset.featuredIndex));
-  });
+section.addEventListener("click", (event) => {
+  const item = event.target.closest("[data-featured-index]");
+  if (!item) return;
+
+  event.preventDefault();
+  openFeaturedLightbox(images, Number(item.dataset.featuredIndex));
 });
 
 });

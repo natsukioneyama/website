@@ -310,6 +310,15 @@ FEATURED PROJECT
   grid-row: 1;
   width: 340px;
   justify-self: start;
+
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
 }
 
 .featured-main-image img {
@@ -416,67 +425,6 @@ FEATURED PROJECT AC
 
 
 
-/* =========================
-BIOGRAPHY
-========================= 
-.biography {
-  max-width: 900px;
-  margin: 100px auto 0;
-  padding: 100px 40px 120px;
-}
-
-.bio-info {
-  font-size: 14px;
-  line-height: 1.45;
-  letter-spacing: 0.02em;
-}
-
-.bio-info p {
-  margin: 0 0 34px;
-}
-
-.bio-info span {
-  font-weight: 400;
-  text-transform: uppercase;
-}
-
-.bio-info a {
-  color: #111;
-  text-decoration: none;
-  -webkit-text-fill-color: #111;
-}
-
-.bio-info a:visited,
-.bio-info a:active,
-.bio-info a:focus {
-  color: #111;
-  -webkit-text-fill-color: #111;
-  text-decoration: none;
-}
-
-.bio-info a:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-
-.bio-info strong,
-.bio-info span {
-  font-size: 13px;
-  letter-spacing: 0.04em;
-}
-
-.bio-info span {
-  display: inline-block;
-  width: 180px;
-}
-
-
-.bio-info a {
-  margin-right: 12px;
-}
-
-*/
 
 
 
@@ -487,15 +435,6 @@ BIOGRAPHY
 /* =========================
 RESPONSIVE
 ========================= */
-
-/* Tablet biography */
-@media (min-width: 700px) and (max-width: 1100px) {
-  .bio-grid {
-    grid-template-columns: 1.4fr 1.1fr 0.9fr 0.8fr;
-    gap: 36px;
-  }
-}
-
 
 /* Mobile common */
 @media (max-width: 699px) {
@@ -510,26 +449,6 @@ RESPONSIVE
   .topnav a {
     font-size: 11px;
     letter-spacing: 0.04em;
-  }
-
-  .biography {
-    margin-top: 200px;
-    padding: 0 32px 100px;
-  }
-
-  .bio-grid {
-    grid-template-columns: 1fr;
-    gap: 52px;
-  }
-
-  .bio-column h3 {
-    font-size: 18px;
-    margin-bottom: 28px;
-  }
-
-  .bio-column p {
-    font-size: 18px;
-    line-height: 1.45;
   }
 }
 
@@ -632,30 +551,6 @@ RESPONSIVE
   .info-title {
     font-size: 18px;
   }
-}
-
-
-/* Topbar hidden state */
-@media (max-width: 768px) {
-  .topbar {
-    transition: opacity 0.3s ease, transform 0.3s ease;
-  }
-
-  .topbar.topbar-hidden {
-    opacity: 0;
-    transform: translateY(-100%);
-    pointer-events: none;
-  }
-
-  .selected-works-intro {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.selected-works-intro.selected-works-hidden {
-  opacity: 0;
-  transform: translateY(-100%);
-  pointer-events: none;
-}
 }
 
 
