@@ -20,7 +20,9 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
   <!-- CSS -->
   <link rel="stylesheet" href="./index.css" />
@@ -29,18 +31,28 @@
   <script src="./justified-layout.umd.js" defer></script>
 </head>
 
-
 <body class="page-info">
 
-<header class="topbar">
-  <nav class="topnav" aria-label="Primary navigation">
-    <a href="overview.html">Overview</a>
-    <a href="mailto:natsukimua@gmail.com">Contact</a>
-  </nav>
-</header>
+<button type="button" class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu">
+  <span class="menu-toggle-line"></span>
+  <span class="menu-toggle-line"></span>
+  <span class="menu-toggle-line"></span>
+</button>
 
-
-
+<div class="site-menu" id="site-menu" aria-hidden="true">
+  <div class="site-menu-inner">
+    <p class="site-menu-name">Natsuki Oneyama</p>
+    <p class="site-menu-name">MAKEUP ARTIST</p>
+    <h2 class="site-menu-title">Menu</h2>
+    <nav class="site-menu-nav" aria-label="Main menu">
+      <a href="overview.html">Overview</a>
+      <a href="mailto:natsukimua@gmail.com">Contact</a>
+      <a href="https://www.instagram.com/natsukimua/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://models.com/people/natsuki-oneyama" target="_blank" rel="noopener">MODELS.COM</a>
+      <a href="pdf-request.html">PDF</a>
+    </nav>
+  </div>
+</div>
 
 <main class="info-page">
 
@@ -75,86 +87,48 @@
   </p>
 </div>
 
-<div class="info-links">
-
-  <div class="social-links">
-    <a href="https://www.instagram.com/natsukimua/" target="_blank" rel="noopener">@NATSUKIMUA</a>
-    <a href="https://models.com/people/natsuki-oneyama" target="_blank" rel="noopener">Models.COM</a>
-  </div>
-
- <div class="pdf-link">
-  <span>PDF</span>
-  <a href="#">Commercial portfolio available upon request</a>
- </div>
-
-
-</div>
-
 </div>
 
 </section>
 
 
 
-<section class="selected-works-intro">
-  <p>SELECTED WORKS</p>
-</section>
-
-<section class="featured-project featured-project-officexkeen">
+<section class="featured-project featured-project-officexkeen" id="projects">
   <div class="featured-project-inner">
-    <div class="featured-project-main">
-  <div class="featured-project-text">
-      <p class="featured-label">Jesper Lund</p>
-      <h2>OFFICE X KEEN</h2>
-  </div>
-     <button type="button" class="featured-main-image" data-featured-index="0">
-      <img src="img/office/ofiicexkeen/01.webp" alt="" draggable="false">
-     </button>
-  </div>
-  <div class="featured-thumbs-slider">
-  <button class="featured-arrow featured-prev" type="button" aria-label="Previous image"></button>
-  <div class="featured-thumbs-window">
-  <div class="featured-thumbs-track">
-  <img src="img/office/ofiicexkeen/02.webp" alt="" data-featured-index="1">
-  <img src="img/office/ofiicexkeen/03.webp" alt="" data-featured-index="2">
-  <img src="img/office/ofiicexkeen/04.webp" alt="" data-featured-index="3">
-  <img src="img/office/ofiicexkeen/05.webp" alt="" data-featured-index="4">
-  <img src="img/office/ofiicexkeen/06.webp" alt="" data-featured-index="5">
-
-  </div>
-  </div>
-  <button class="featured-arrow featured-next" type="button" aria-label="Next image"></button>
-  </div>
-</section>
-
-<section class="featured-project featured-project-ac">
-
-  <div class="featured-project-inner">
-
-    <div class="featured-project-main">
-
-      <div class="featured-project-text">
-        <p class="featured-label">Antoine & Charlie</p>
-        <h2>BEAUTY</h2>
+  <div class="project-marquee-layout">
+    <p class="project-marquee-category">CAMPAIGN</p>
+    <div class="project-marquee-content">
+      <div class="project-marquee-header">
+        <div class="featured-project-text">
+              <h2>Jesper Lund</h2>
+              <p class="featured-label">OFFICE X KEEN</p>
+            </div>
       </div>
-
-      <button type="button" class="featured-main-image" data-featured-index="0">
-        <img src="img/beauty/beauty01/01.webp" alt="" draggable="false">
-      </button>
-
-      <div class="featured-ac-image featured-ac-image-left">
-        <img src="img/beauty/beauty01/02.webp" alt="" data-featured-index="1">
-      </div>
-
-      <div class="featured-ac-image featured-ac-image-right">
-        <img src="img/beauty/beauty01/03.webp" alt="" data-featured-index="2">
-      </div>
-
+      <div class="project-marquee">
+          <div class="project-marquee-track">
+            <div class="project-marquee-group">
+              <img class="project-marquee-item" src="img/office/ofiicexkeen/01.webp" width="960" height="1200" alt="" data-featured-index="0" draggable="false">
+              <img class="project-marquee-item" src="img/office/ofiicexkeen/02.webp" width="960" height="1200" alt="" data-featured-index="1" draggable="false">
+              <img class="project-marquee-item" src="img/office/ofiicexkeen/03.webp" width="960" height="1200" alt="" data-featured-index="2" draggable="false">
+              <img class="project-marquee-item" src="img/office/ofiicexkeen/04.webp" width="960" height="1200" alt="" data-featured-index="3" draggable="false">
+              <img class="project-marquee-item" src="img/office/ofiicexkeen/05.webp" width="960" height="1200" alt="" data-featured-index="4" draggable="false">
+              <img class="project-marquee-item" src="img/office/ofiicexkeen/06.webp" width="960" height="1200" alt="" data-featured-index="5" draggable="false">
+            </div>
+            <div class="project-marquee-group" aria-hidden="true">
+              <img class="project-marquee-item" src="img/office/ofiicexkeen/01.webp" width="960" height="1200" alt="" data-featured-index="0" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/office/ofiicexkeen/02.webp" width="960" height="1200" alt="" data-featured-index="1" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/office/ofiicexkeen/03.webp" width="960" height="1200" alt="" data-featured-index="2" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/office/ofiicexkeen/04.webp" width="960" height="1200" alt="" data-featured-index="3" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/office/ofiicexkeen/05.webp" width="960" height="1200" alt="" data-featured-index="4" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/office/ofiicexkeen/06.webp" width="960" height="1200" alt="" data-featured-index="5" draggable="false" aria-hidden="true">
+            </div>
+          </div>
+        </div>
     </div>
-
   </div>
-
+  </div>
 </section>
+
 
 
 
@@ -163,191 +137,209 @@
 
 <section class="featured-project featured-project-02">
   <div class="featured-project-inner">
-    <div class="featured-project-main">
-  <div class="featured-project-text">
-      <p class="featured-label">Jérémie Monnier</p>
-      <h2>BEAUTY PAPERS</h2>
+  <div class="project-marquee-layout">
+    <p class="project-marquee-category">EDITORIAL</p>
+    <div class="project-marquee-content">
+      <div class="project-marquee-header">
+        <div class="featured-project-text">
+              <h2>Jérémie Monnier</h2>
+              <p class="featured-label">BEAUTY PAPERS</p>
+            </div>
+      </div>
+      <div class="project-marquee">
+          <div class="project-marquee-track">
+            <div class="project-marquee-group">
+              <img class="project-marquee-item" src="img/beautypapers/01/01.webp" width="960" height="1200" alt="" data-featured-index="0" draggable="false">
+              <img class="project-marquee-item" src="img/beautypapers/01/02.webp" width="960" height="1200" alt="" data-featured-index="1" draggable="false">
+              <img class="project-marquee-item" src="img/beautypapers/01/03.webp" width="960" height="1200" alt="" data-featured-index="2" draggable="false">
+              <img class="project-marquee-item" src="img/beautypapers/01/04.webp" width="960" height="1200" alt="" data-featured-index="3" draggable="false">
+              <img class="project-marquee-item" src="img/beautypapers/01/05.webp" width="960" height="1200" alt="" data-featured-index="4" draggable="false">
+              <img class="project-marquee-item" src="img/beautypapers/01/11.webp" width="960" height="1200" alt="" data-featured-index="5" draggable="false">
+              <img class="project-marquee-item" src="img/beautypapers/01/12.webp" width="960" height="1200" alt="" data-featured-index="6" draggable="false">
+            </div>
+            <div class="project-marquee-group" aria-hidden="true">
+              <img class="project-marquee-item" src="img/beautypapers/01/01.webp" width="960" height="1200" alt="" data-featured-index="0" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/beautypapers/01/02.webp" width="960" height="1200" alt="" data-featured-index="1" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/beautypapers/01/03.webp" width="960" height="1200" alt="" data-featured-index="2" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/beautypapers/01/04.webp" width="960" height="1200" alt="" data-featured-index="3" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/beautypapers/01/05.webp" width="960" height="1200" alt="" data-featured-index="4" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/beautypapers/01/11.webp" width="960" height="1200" alt="" data-featured-index="5" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/beautypapers/01/12.webp" width="960" height="1200" alt="" data-featured-index="6" draggable="false" aria-hidden="true">
+            </div>
+          </div>
+        </div>
+    </div>
   </div>
-     <button type="button" class="featured-main-image" data-featured-index="0">
-      <img src="img/beautypapers/01/01.webp" alt="" draggable="false">
-     </button>
-  </div>
-  <div class="featured-thumbs-slider">
-  <button class="featured-arrow featured-prev" type="button" aria-label="Previous image"></button>
-  <div class="featured-thumbs-window">
-  <div class="featured-thumbs-track">
-  <img src="img/beautypapers/01/02.webp" alt="" data-featured-index="1">
-  <img src="img/beautypapers/01/03.webp" alt="" data-featured-index="2">
-  <img src="img/beautypapers/01/04.webp" alt="" data-featured-index="3">
-  <img src="img/beautypapers/01/05.webp" alt="" data-featured-index="4">
-  </div>
-  </div>
-  <button class="featured-arrow featured-next" type="button" aria-label="Next image"></button>
   </div>
 </section>
 
 
 <section class="featured-project featured-project-03">
   <div class="featured-project-inner">
-    <div class="featured-project-main">
-  <div class="featured-project-text">
-      <p class="featured-label">Jumbo Tsui</p>
-      <h2>MARRKNULL AW 26</h2>
+  <div class="project-marquee-layout">
+    <p class="project-marquee-category">CAMPAIGN</p>
+    <div class="project-marquee-content">
+      <div class="project-marquee-header">
+        <div class="featured-project-text">
+              <h2>Jumbo Tsui</h2>
+              <p class="featured-label">MARRKNULL AW 26</p>
+            </div>
+      </div>
+      <div class="project-marquee">
+          <div class="project-marquee-track">
+            <div class="project-marquee-group">
+              <img class="project-marquee-item" src="img/marrknull/AW26/01.webp" width="905" height="1200" alt="" data-featured-index="0" draggable="false">
+              <img class="project-marquee-item" src="img/marrknull/AW26/02.webp" width="907" height="1200" alt="" data-featured-index="1" draggable="false">
+              <img class="project-marquee-item" src="img/marrknull/AW26/03.webp" width="909" height="1200" alt="" data-featured-index="2" draggable="false">
+              <img class="project-marquee-item" src="img/marrknull/AW26/04.webp" width="918" height="1200" alt="" data-featured-index="3" draggable="false">
+              <img class="project-marquee-item" src="img/marrknull/AW26/05.webp" width="910" height="1200" alt="" data-featured-index="4" draggable="false">
+            </div>
+            <div class="project-marquee-group" aria-hidden="true">
+              <img class="project-marquee-item" src="img/marrknull/AW26/01.webp" width="905" height="1200" alt="" data-featured-index="0" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/marrknull/AW26/02.webp" width="907" height="1200" alt="" data-featured-index="1" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/marrknull/AW26/03.webp" width="909" height="1200" alt="" data-featured-index="2" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/marrknull/AW26/04.webp" width="918" height="1200" alt="" data-featured-index="3" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/marrknull/AW26/05.webp" width="910" height="1200" alt="" data-featured-index="4" draggable="false" aria-hidden="true">
+            </div>
+          </div>
+        </div>
+    </div>
   </div>
-     <button type="button" class="featured-main-image" data-featured-index="0">
-      <img src="img/marrknull/AW26/01.webp" alt="" draggable="false">
-     </button>
-  </div>
-  <div class="featured-thumbs-slider">
-  <button class="featured-arrow featured-prev" type="button" aria-label="Previous image"></button>
-  <div class="featured-thumbs-window">
-  <div class="featured-thumbs-track">
-  <img src="img/marrknull/AW26/02.webp" alt="" data-featured-index="1">
-  <img src="img/marrknull/AW26/03.webp" alt="" data-featured-index="2">
-  <img src="img/marrknull/AW26/04.webp" alt="" data-featured-index="3">
-  <img src="img/marrknull/AW26/05.webp" alt="" data-featured-index="4">
-  </div>
-  </div>
-  <button class="featured-arrow featured-next" type="button" aria-label="Next image"></button>
-  </div>
-</section>
-
-<section class="featured-project featured-project-06">
-  <div class="featured-project-inner">
-    <div class="featured-project-main">
-  <div class="featured-project-text">
-      <p class="featured-label">KRZYSTOF JAN</p>
-      <h2>Field Study, Madeira</h2>
-  </div>
-     <button type="button" class="featured-main-image" data-featured-index="0">
-      <img src="img/img/krzysztofjan_01/01.webp" alt="" draggable="false">
-     </button>
-  </div>
-  <div class="featured-thumbs-slider">
-  <button class="featured-arrow featured-prev" type="button" aria-label="Previous image"></button>
-  <div class="featured-thumbs-window">
-  <div class="featured-thumbs-track">
-  <img src="img/img/krzysztofjan_01/02.webp" alt="" data-featured-index="1">
-  <img src="img/img/krzysztofjan_01/03.webp" alt="" data-featured-index="2">
-  <img src="img/img/krzysztofjan_01/04.webp" alt="" data-featured-index="3">
-  <img src="img/img/krzysztofjan_01/05.webp" alt="" data-featured-index="4">
-  </div>
-  </div>
-  <button class="featured-arrow featured-next" type="button" aria-label="Next image"></button>
   </div>
 </section>
 
 <section class="featured-project featured-project-04">
   <div class="featured-project-inner">
-    <div class="featured-project-main">
-  <div class="featured-project-text">
-      <p class="featured-label">Aude Le Barbey</p>
-      <h2>PORT MAGAZINE</h2>
+  <div class="project-marquee-layout">
+    <p class="project-marquee-category">PERSONAL PROJECT</p>
+    <div class="project-marquee-content">
+      <div class="project-marquee-header">
+        <div class="featured-project-text">
+              <h2>KRZYSTOF JAN</h2>
+              <p class="featured-label">Field Study, Madeira</p>
+            </div>
+      </div>
+      <div class="project-marquee">
+          <div class="project-marquee-track">
+            <div class="project-marquee-group">
+              <img class="project-marquee-item" src="img/img/krzysztofjan_01/01.webp" width="960" height="1200" alt="" data-featured-index="0" draggable="false">
+              <img class="project-marquee-item" src="img/img/krzysztofjan_01/02.webp" width="960" height="1200" alt="" data-featured-index="1" draggable="false">
+              <img class="project-marquee-item" src="img/img/krzysztofjan_01/03.webp" width="960" height="1200" alt="" data-featured-index="2" draggable="false">
+              <img class="project-marquee-item" src="img/img/krzysztofjan_01/04.webp" width="960" height="1200" alt="" data-featured-index="3" draggable="false">
+              <img class="project-marquee-item" src="img/img/krzysztofjan_01/05.webp" width="960" height="1200" alt="" data-featured-index="4" draggable="false">
+            </div>
+            <div class="project-marquee-group" aria-hidden="true">
+              <img class="project-marquee-item" src="img/img/krzysztofjan_01/01.webp" width="960" height="1200" alt="" data-featured-index="0" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/img/krzysztofjan_01/02.webp" width="960" height="1200" alt="" data-featured-index="1" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/img/krzysztofjan_01/03.webp" width="960" height="1200" alt="" data-featured-index="2" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/img/krzysztofjan_01/04.webp" width="960" height="1200" alt="" data-featured-index="3" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/img/krzysztofjan_01/05.webp" width="960" height="1200" alt="" data-featured-index="4" draggable="false" aria-hidden="true">
+            </div>
+          </div>
+        </div>
+    </div>
   </div>
-     <button type="button" class="featured-main-image" data-featured-index="0">
-      <img src="img/portmagazine/isuue38/audelebarbey/01.webp" alt="" draggable="false">
-     </button>
-  </div>
-  <div class="featured-thumbs-slider">
-  <button class="featured-arrow featured-prev" type="button" aria-label="Previous image"></button>
-  <div class="featured-thumbs-window">
-  <div class="featured-thumbs-track">
-  <img src="img/portmagazine/isuue38/audelebarbey/02.webp" alt="" data-featured-index="1">
-  <img src="img/portmagazine/isuue38/audelebarbey/03.webp" alt="" data-featured-index="2">
-  <img src="img/portmagazine/isuue38/audelebarbey/04.webp" alt="" data-featured-index="3">
-  </div>
-  </div>
-  <button class="featured-arrow featured-next" type="button" aria-label="Next image"></button>
   </div>
 </section>
+
 
 <section class="featured-project featured-project-05">
   <div class="featured-project-inner">
-    <div class="featured-project-main">
-  <div class="featured-project-text">
-      <p class="featured-label">Ward Ivan Rafik</p>
-      <h2>VOGUE MEXICO</h2>
+  <div class="project-marquee-layout">
+    <p class="project-marquee-category">EDITORIAL</p>
+    <div class="project-marquee-content">
+      <div class="project-marquee-header">
+        <div class="featured-project-text">
+              <h2>CARLA ROSSI</h2>
+              <p class="featured-label">NUMéRO CHINA</p>
+            </div>
+      </div>
+      <div class="project-marquee">
+          <div class="project-marquee-track">
+            <div class="project-marquee-group">
+              <img class="project-marquee-item" src="img/numerochina/01/01.webp" width="925" height="1200" alt="" data-featured-index="0" draggable="false">
+              <img class="project-marquee-item" src="img/numerochina/01/02.webp" width="925" height="1200" alt="" data-featured-index="1" draggable="false">
+              <img class="project-marquee-item" src="img/numerochina/01/03.webp" width="925" height="1200" alt="" data-featured-index="2" draggable="false">
+              <img class="project-marquee-item" src="img/numerochina/01/04.webp" width="1200" height="779" alt="" data-featured-index="3" draggable="false">
+              <img class="project-marquee-item" src="img/numerochina/01/05.webp" width="1200" height="779" alt="" data-featured-index="4" draggable="false">
+            </div>
+            <div class="project-marquee-group" aria-hidden="true">
+              <img class="project-marquee-item" src="img/numerochina/01/01.webp" width="925" height="1200" alt="" data-featured-index="0" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/numerochina/01/02.webp" width="925" height="1200" alt="" data-featured-index="1" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/numerochina/01/03.webp" width="925" height="1200" alt="" data-featured-index="2" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/numerochina/01/04.webp" width="1200" height="779" alt="" data-featured-index="3" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/numerochina/01/05.webp" width="1200" height="779" alt="" data-featured-index="4" draggable="false" aria-hidden="true">
+            </div>
+          </div>
+        </div>
+    </div>
   </div>
-     <button type="button" class="featured-main-image" data-featured-index="0">
-      <img src="img/voguemexico/01/01.webp" alt="" draggable="false">
-     </button>
-  </div>
-  <div class="featured-thumbs-slider">
-  <button class="featured-arrow featured-prev" type="button" aria-label="Previous image"></button>
-  <div class="featured-thumbs-window">
-  <div class="featured-thumbs-track">
-  <img src="img/voguemexico/01/02.webp" alt="" data-featured-index="1">
-  <img src="img/voguemexico/01/03.webp" alt="" data-featured-index="2">
-  <img src="img/voguemexico/01/04.webp" alt="" data-featured-index="3">
-  </div>
-  </div>
-  <button class="featured-arrow featured-next" type="button" aria-label="Next image"></button>
   </div>
 </section>
 
 
-<section class="featured-project featured-project-07">
+<section class="featured-project featured-project-06">
   <div class="featured-project-inner">
-    <div class="featured-project-main">
-  <div class="featured-project-text">
-      <p class="featured-label">CARLA ROSSI</p>
-      <h2>NUMéRO CHINA</h2>
+  <div class="project-marquee-layout">
+    <p class="project-marquee-category">EDITORIAL</p>
+    <div class="project-marquee-content">
+      <div class="project-marquee-header">
+        <div class="featured-project-text">
+              <h2>PAVEL GOLIK</h2>
+              <p class="featured-label">REPLICA MAN</p>
+            </div>
+      </div>
+      <div class="project-marquee">
+          <div class="project-marquee-track">
+            <div class="project-marquee-group">
+              <img class="project-marquee-item" src="img/replicaman/ss24/01.webp" width="900" height="1200" alt="" data-featured-index="0" draggable="false">
+              <img class="project-marquee-item" src="img/replicaman/ss24/02.webp" width="1200" height="900" alt="" data-featured-index="1" draggable="false">
+              <img class="project-marquee-item" src="img/replicaman/ss24/03.webp" width="900" height="1200" alt="" data-featured-index="2" draggable="false">
+              <img class="project-marquee-item" src="img/replicaman/ss24/04.webp" width="600" height="480" alt="" data-featured-index="3" draggable="false">
+              <img class="project-marquee-item" src="img/replicaman/ss24/05.webp" width="900" height="1200" alt="" data-featured-index="4" draggable="false">
+              <img class="project-marquee-item" src="img/replicaman/ss24/23.webp" width="900" height="1200" alt="" data-featured-index="5" draggable="false">
+              <img class="project-marquee-item" src="img/replicaman/ss24/24.webp" width="900" height="1200" alt="" data-featured-index="6" draggable="false">
+              <img class="project-marquee-item" src="img/replicaman/ss24/25.webp" width="900" height="1200" alt="" data-featured-index="7" draggable="false">
+              <img class="project-marquee-item" src="img/replicaman/ss24/26.webp" width="1200" height="900" alt="" data-featured-index="8" draggable="false">
+            </div>
+            <div class="project-marquee-group" aria-hidden="true">
+              <img class="project-marquee-item" src="img/replicaman/ss24/01.webp" width="900" height="1200" alt="" data-featured-index="0" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/replicaman/ss24/02.webp" width="1200" height="900" alt="" data-featured-index="1" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/replicaman/ss24/03.webp" width="900" height="1200" alt="" data-featured-index="2" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/replicaman/ss24/04.webp" width="600" height="480" alt="" data-featured-index="3" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/replicaman/ss24/05.webp" width="900" height="1200" alt="" data-featured-index="4" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/replicaman/ss24/23.webp" width="900" height="1200" alt="" data-featured-index="5" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/replicaman/ss24/24.webp" width="900" height="1200" alt="" data-featured-index="6" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/replicaman/ss24/25.webp" width="900" height="1200" alt="" data-featured-index="7" draggable="false" aria-hidden="true">
+              <img class="project-marquee-item" src="img/replicaman/ss24/26.webp" width="1200" height="900" alt="" data-featured-index="8" draggable="false" aria-hidden="true">
+            </div>
+          </div>
+        </div>
+    </div>
   </div>
-     <button type="button" class="featured-main-image" data-featured-index="0">
-      <img src="img/numerochina/01/01.webp" alt="" draggable="false">
-     </button>
-  </div>
-  <div class="featured-thumbs-slider">
-  <button class="featured-arrow featured-prev" type="button" aria-label="Previous image"></button>
-  <div class="featured-thumbs-window">
-  <div class="featured-thumbs-track">
-  <img src="img/numerochina/01/02.webp" alt="" data-featured-index="1">
-  <img src="img/numerochina/01/03.webp" alt="" data-featured-index="2">
-  <img src="img/numerochina/01/04.webp" alt="" data-featured-index="3">
-  <img src="img/numerochina/01/05.webp" alt="" data-featured-index="4">
-  </div>
-  </div>
-  <button class="featured-arrow featured-next" type="button" aria-label="Next image"></button>
   </div>
 </section>
 
+<footer class="info-footer-grid">
 
-<section class="featured-project featured-project-08">
-  <div class="featured-project-inner">
-    <div class="featured-project-main">
-  <div class="featured-project-text">
-      <p class="featured-label">PAVEL GOLIK</p>
-      <h2>REPLICA MAN</h2>
+  <a class="info-grid-overview" href="overview.html">Overview</a>
+  <a class="info-grid-contact" href="mailto:natsukimua@gmail.com">Contact</a>
+
+  <div class="social-links">
+    <a href="https://www.instagram.com/natsukimua/" target="_blank" rel="noopener">INSTAGRAM</a>
+    <a href="https://models.com/people/natsuki-oneyama" target="_blank" rel="noopener">MODELS.COM</a>
   </div>
-     <button type="button" class="featured-main-image" data-featured-index="0">
-      <img src="img/replicaman/ss24/01.webp" alt="" draggable="false">
-     </button>
+
+  <div class="pdf-link">
+    <span>PDF</span>
+    <a href="pdf-request.html">Commercial portfolio available upon request</a>
   </div>
-  <div class="featured-thumbs-slider">
-  <button class="featured-arrow featured-prev" type="button" aria-label="Previous image"></button>
-  <div class="featured-thumbs-window">
-  <div class="featured-thumbs-track">
-  <img src="img/replicaman/ss24/02.webp" alt="" data-featured-index="1">
-  <img src="img/replicaman/ss24/03.webp" alt="" data-featured-index="2">
-  <img src="img/replicaman/ss24/04.webp" alt="" data-featured-index="3">
-  <img src="img/replicaman/ss24/05.webp" alt="" data-featured-index="4">
+
+</footer>
+
+  <div class="copyright">©2026 Natsuki Oneyama
+   <p> DESIGNED BY AOW</p>
   </div>
-  </div>
-  <button class="featured-arrow featured-next" type="button" aria-label="Next image"></button>
-  </div>
-</section>
-
-  <div class="copyright">©2026 Natsuki Oneyama</div>
-
-
-
-
-
-
-
-
-
-
 
 
 <div class="featured-lightbox" aria-hidden="true">

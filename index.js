@@ -281,3 +281,49 @@ document.addEventListener("keydown", (event) => {
     showFeaturedImage(featuredLightboxIndex + 1);
   }
 });
+
+
+
+
+const menuToggle = document.querySelector(".menu-toggle");
+const siteMenu = document.querySelector(".site-menu");
+
+if (menuToggle && siteMenu) {
+  function openSiteMenu() {
+    siteMenu.classList.add("is-open");
+    siteMenu.setAttribute("aria-hidden", "false");
+    menuToggle.classList.add("is-open");
+    menuToggle.setAttribute("aria-expanded", "true");
+    menuToggle.setAttribute("aria-label", "Close menu");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeSiteMenu() {
+    siteMenu.classList.remove("is-open");
+    siteMenu.setAttribute("aria-hidden", "true");
+    menuToggle.classList.remove("is-open");
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Open menu");
+    document.body.style.overflow = "";
+  }
+
+  menuToggle.addEventListener("click", () => {
+    if (siteMenu.classList.contains("is-open")) {
+      closeSiteMenu();
+    } else {
+      openSiteMenu();
+    }
+  });
+
+  siteMenu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", closeSiteMenu);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (!siteMenu.classList.contains("is-open")) return;
+
+    if (event.key === "Escape") {
+      closeSiteMenu();
+    }
+  });
+}
