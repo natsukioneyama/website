@@ -360,14 +360,6 @@ FEATURED PROJECT
   margin: 0 auto;
 }
 
-.featured-project-main {
-  display: grid;
-  grid-template-columns: 360px 360px;
-  column-gap: 160px;
-  align-items: center;
-  justify-content: center;
-}
-
 .featured-project-text {
   grid-column: 1;
   grid-row: 1;
@@ -391,82 +383,6 @@ FEATURED PROJECT
   font-weight: 400;
   margin: 0;
 }
-
-.featured-main-image {
-  grid-column: 2;
-  grid-row: 1;
-  width: 340px;
-  justify-self: start;
-
-  display: block;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  font: inherit;
-  text-align: inherit;
-  cursor: pointer;
-}
-
-.featured-main-image img {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  display: block;
-}
-
-
-/* Thumbnail slider */
-
-.featured-thumbs-slider {
-  position: relative;
-  margin: 70px auto 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 28px;
-}
-
-.featured-thumbs-window {
-  overflow: hidden;
-  width: 952px;
-  max-width: calc(100vw - 160px);
-}
-
-.featured-thumbs-track {
-  display: flex;
-  gap: 24px;
-  transition: transform 0.6s ease;
-}
-
-.featured-thumbs-track img {
-  height: 300px;
-  width: auto;
-  flex-shrink: 0;
-  display: block;
-}
-
-
-/* Slider arrows */
-
-.featured-arrow {
-  width: 8px;
-  height: 8px;
-  border: 0;
-  border-radius: 50%;
-  background: #0f0f0f;
-  padding: 0;
-  cursor: pointer;
-  flex: 0 0 auto;
-}
-
-.featured-arrow:hover {
-  background: #111;
-}
-
-
-
 
 /* =========================
 PROJECT MARQUEE — SHARED AUTO SCROLL HEADER + SLIDER
@@ -736,17 +652,6 @@ RESPONSIVE
     margin: 0 auto;
   }
 
-  .featured-project-main {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-start;
-  }
-
-    .featured-thumbs-slider {
-    display: none;
-  }
-
   .featured-project-text {
     order: -1;
     margin: 0;
@@ -762,52 +667,6 @@ RESPONSIVE
     line-height: 1;
     margin: 0;
   }
-
-  .featured-main-image {
-    width: 100%;
-    display: block;
-  }
-
-  .featured-main-image img {
-    width: 100%;
-    display: block;
-  }
-
-
-
-
-  .featured-thumbs-slider {
-  touch-action: pan-y;
-  -webkit-user-select: none;
-  user-select: none;
-  margin: 50px auto 0;
-  gap: 12px;
-  overflow: visible;
-  width: 100%;
-}
-
-
-
-.featured-thumbs-window {
-  overflow: hidden;
-  width: 100%;
-  max-width: none;
-}
-
-.featured-thumbs-track {
-  display: flex;
-  align-items: center;
-  gap: 0;
-}
-
-.featured-thumbs-track img {
-  flex: 0 0 100%;
-  width: 100%;
-  height: auto;
-  max-height: 70svh;
-  object-fit: contain;
-  display: block;
-}
 
 }
 
