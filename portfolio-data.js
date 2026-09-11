@@ -13,6 +13,19 @@
  */
 window.PORTFOLIO_PROJECTS = [
   {
+    id: "10-magazine",
+    category: "overview",
+    title: "10 MAGAZINE",
+    line1: "Ferry van der Nat",
+    line2: "",
+    media: [
+      { type: "image", thumb: "thmbs/10magazine/september_2026/01.webp", full: "img/10magazine/september_2026/01.webp", alt: "10magazine", width: 268, height: 350, dataW: 268, dataH: 350 },
+      { type: "image", thumb: "thmbs/10magazine/september_2026/02.webp", full: "img/10magazine/september_2026/02.webp", alt: "10magazine", width: 268, height: 350, dataW: 268, dataH: 350 },
+      { type: "image", thumb: "thmbs/10magazine/september_2026/03.webp", full: "img/10magazine/september_2026/03.webp", alt: "10magazine", width: 268, height: 350, dataW: 268, dataH: 350 },
+      { type: "image", thumb: "thmbs/10magazine/september_2026/04.webp", full: "img/10magazine/september_2026/04.webp", alt: "10magazine", width: 268, height: 350, dataW: 268, dataH: 350 }
+    ]
+  },
+  {
     id: "vogue-adria-danilo-pavlovic",
     category: "overview",
     title: "VOGUE ADRIA",
@@ -70,7 +83,6 @@ window.PORTFOLIO_PROJECTS = [
     line2: "",
     media: [
       { type: "image", thumb: "thmbs/replicaman/ss24/01.webp", full: "img/replicaman/ss24/01.webp", alt: "replicaman", width: 263, height: 350, dataW: 263, dataH: 350 },
-      { type: "image", thumb: "thmbs/replicaman/ss24/02.webp", full: "img/replicaman/ss24/02.webp", alt: "replicaman", width: 350, height: 263, dataW: 350, dataH: 263 },
       { type: "image", thumb: "thmbs/replicaman/ss24/03.webp", full: "img/replicaman/ss24/03.webp", alt: "replicaman", width: 263, height: 350, dataW: 263, dataH: 350 },
       { type: "image", thumb: "thmbs/replicaman/ss24/04.webp", full: "img/replicaman/ss24/04.webp", alt: "replicaman", width: 350, height: 280, dataW: 350, dataH: 280 },
       { type: "image", thumb: "thmbs/replicaman/ss24/05.webp", full: "img/replicaman/ss24/05.webp", alt: "replicaman", width: 263, height: 350, dataW: 263, dataH: 350 }
