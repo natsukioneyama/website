@@ -11,7 +11,8 @@ const heroImages = [
   "slide/10.webp",
   "slide/11.webp",
   "slide/12.webp",
-  "slide/13.webp"
+  "slide/13.webp",
+  "slide/14.webp"
 ];
 
 const heroSlide = document.querySelector(".hero-slide");
