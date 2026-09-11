@@ -367,6 +367,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let activeCluster = [];
 
+  // -------------------------
+  // Background scroll lock (iOS Safari-safe)
+  // -------------------------
+  let scrollLocked = false;
+  let savedScrollY = 0;
+
+  function lockPageScroll() {
+    if (scrollLocked) return;
+    scrollLocked = true;
+    savedScrollY = window.scrollY || window.pageYOffset || 0;
+
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${savedScrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function unlockPageScroll() {
+    if (!scrollLocked) return;
+    scrollLocked = false;
+
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    document.body.style.overflow = '';
+
+    window.scrollTo(0, savedScrollY);
+  }
+
   const gmImg   = gm.querySelector('#gmImage');
   const gmVWrap = gm.querySelector('.gm-video-wrap');
   const gmVideo = gm.querySelector('#gmVideo');
@@ -565,6 +598,8 @@ items.forEach((item) => {
   }
 
   function openAt(index) {
+  lockPageScroll();
+
   const activeItems = getActiveItems();
 
   currentIndex = (index + activeItems.length) % activeItems.length;
@@ -626,6 +661,8 @@ function openPrevProjectLastImage() {
 
 
   function closeModal() {
+    unlockPageScroll();
+
     gm.setAttribute('aria-hidden', 'true');
 
     gmImg.src = '';
