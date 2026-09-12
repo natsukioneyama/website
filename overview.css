@@ -284,53 +284,6 @@ body.jl-ready #grid {
 
 
 /* ==========================================================================
-   10) Fullscreen button (overview 側の動画用ボタン)
-   - .fs-btn はホバーで出す（PC）
-   - hover が無い環境では常時表示
-   ========================================================================== */
-.fs-btn {
-  position: absolute;
-  right: 6px;
-  bottom: 6px;
-  width: 22px;
-  height: 22px;
-  border: none;
-  background: rgba(0, 0, 0, 0.55);
-  border-radius: 4px;
-  cursor: pointer;
-  outline: none;
-
-  opacity: 0;                 /* 初期は非表示 */
-  transform: translateY(4px); /* 少し下げておく */
-  transition: opacity 0.15s ease, transform 0.15s ease;
-}
-
-.fs-btn::before {
-  content: "⤢"; /* fullscreen アイコン */
-  color: #fff;
-  font-size: .6rem;
-  line-height: 22px;
-  display: block;
-  text-align: center;
-  pointer-events: none;
-}
-
-/* PC: 動画アイテム hover 時だけ表示 */
-.jl-item.is-video:hover .fs-btn {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* hover が無い環境（タッチ）では常時表示 */
-@media (hover: none) {
-  .fs-btn {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-/* ==========================================================================
    11) Small screen tweaks (ヘッダー文字)
    ========================================================================== */
 @media (max-width: 480px) {

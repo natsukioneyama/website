@@ -642,22 +642,6 @@ function openPrevImageOrProject() {
 
 
 
-function openPrevProjectLastImage() {
-  if (!lastTappedItem) return;
-
-  const allThumbs = items.filter(item => item.dataset.project);
-  const thumbIndex = allThumbs.indexOf(lastTappedItem);
-
-  if (thumbIndex === -1) return;
-
-  const prevThumb =
-    allThumbs[(thumbIndex - 1 + allThumbs.length) % allThumbs.length];
-
-  setClusterFromThumb(prevThumb, 0);
-
-  const activeItems = getActiveItems();
-  openAt(activeItems.length - 1);
-}
 
 
   function closeModal() {
