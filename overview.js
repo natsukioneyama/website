@@ -692,20 +692,36 @@ function openPrevProject() {
 function setClusterFromThumb(item, fallbackIndex) {
   lastTappedItem = item;
 
-activeCluster = Array.from(document.querySelectorAll("#grid .jl-item")).map((thumb) => {    
+activeCluster = Array.from(document.querySelectorAll("#grid .jl-item")).map((thumb) => {
   const img = thumb.querySelector("img");
 
+    if (img) {
+      return {
+        img: {
+          src: img.dataset.full,
+          dataset: {
+            full: img.dataset.full,
+            title: img.dataset.title || "",
+            line1: img.dataset.line1 || "",
+            line2: img.dataset.line2 || ""
+          }
+        },
+        meta: null
+      };
+    }
+
+    const lbData = thumb.querySelector(".lb-data");
     return {
-      img: {
-        src: img.dataset.full,
+      img: null,
+      meta: {
         dataset: {
-          full: img.dataset.full,
-          title: img.dataset.title || "",
-          line1: img.dataset.line1 || "",
-          line2: img.dataset.line2 || ""
+          type: (lbData && lbData.dataset.type) || "video",
+          full: (lbData && lbData.dataset.full) || "",
+          title: (lbData && lbData.dataset.title) || "",
+          line1: (lbData && lbData.dataset.line1) || "",
+          line2: (lbData && lbData.dataset.line2) || ""
         }
-      },
-      meta: null
+      }
     };
   });
 
@@ -914,7 +930,7 @@ openFromOverviewParam();
 
 /* =========================
    gm video controls: progress + PLAY/FULL
-   ========================= 
+   ========================= */
 document.addEventListener('DOMContentLoaded', () => {
   const gm = document.getElementById('gm');
   if (!gm) return;
@@ -1077,4 +1093,3 @@ document.addEventListener('DOMContentLoaded', () => {
     controls.classList.remove('is-visible');
   }
 });
-*/
