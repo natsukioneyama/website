@@ -1,332 +1,67 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, viewport-fit=cover" />
-  <meta name="format-detection" content="telephone=no, email=no, address=no, date=no" />
-
-  <title>Info – NATSUKI ONEYAMA</title>
-
-  <meta name="description" 
-        content="Selected editorial beauty and fashion work by Paris-based MAKE-UP ARTIST Natsuki Oneyama." />
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="NATSUKI ONEYAMA – MAKE-UP ARTIST" />
-  <meta property="og:description" content="Paris-based MAKE-UP ARTIST working across beauty, fashion and editorial." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://natsukioneyama.com" />
-  <meta property="og:image" content="https://natsukioneyama.com/slide/01.webp" />
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="./index.css" />
-
-  <!-- Scripts -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>NATSUKI ONEYAMA — MAKEUP ARTIST</title>
+  <link rel="stylesheet" href="overview.css">
+  <link rel="stylesheet" href="index.css">
+  <script src="portfolio-data.js" defer></script>
+  <script src="index.js" defer></script>
 </head>
-
-<body class="page-info">
-
-<button type="button" class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu">
-  <span class="menu-toggle-line"></span>
-  <span class="menu-toggle-line"></span>
-  <span class="menu-toggle-line"></span>
-</button>
-
-<div class="site-menu" id="site-menu" aria-hidden="true">
-  <div class="site-menu-inner">
-    <p class="site-menu-name">Natsuki Oneyama</p>
-    <p class="site-menu-name">MAKEUP ARTIST</p>
-    <h2 class="site-menu-title">Menu</h2>
-    <nav class="site-menu-nav" aria-label="Main menu">
-      <a href="overview.html">Overview</a>
-      <a href="mailto:natsukioneyama@gmail.com">Contact</a>
-      <a href="https://www.instagram.com/natsukimua/" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://models.com/people/natsuki-oneyama" target="_blank" rel="noopener">MODELS.COM</a>
-      <a href="pdf-request.html">PDF</a>
-    </nav>
-  </div>
-</div>
-
-<main class="info-page">
-
- <section class="info-intro">
-
-  <div class="info-hero">
-   <img class="hero-slide" src="slide/01.webp" alt="">
-  </div>
-
-  <div class="info-content">
-    <h1>Natsuki Oneyama</h1>
-    <p class="info-title">MAKEUP ARTIST</p>
- </div>
-
-
- <div class="info-text-block">
-
-  <p class="info-bio">
-    Paris-based makeup artist creating refined beauty with a modern, image-driven sensibility.
-
-    Working across fashion, beauty and commercial projects, his approach combines precision, restraint and a strong understanding of how makeup functions within the broader visual narrative of an image.
-  </p>
-
-  <div class="clients-block">
-  <p class="clients-title">SELECTED CLIENTS /</p>
-
-  <p class="clients-list">
-    GIVENCHY BEAUTY / YSL BEAUTY / CLARINS / ADIDAS /
-    DELVAUX / SWAROVSKI / ARTHUS BERTRAND /
-    MORE OR LESS / BEAUTY PAPERS / MODERN WEEKLY CHINA / REPLICA MAN / 10 MAGAZINE / PORT MAGAZINE / OFFICE MAGAZINE / HUBE /
-    VOGUE MEXICO / VOGUE ADRIA / VOGUE CZ / NUMERO CHINA / NUMERO BERLIN / NUMERO SWITZERLAND
-  </p>
-</div>
-
-</div>
-
-</section>
-
-
-
-<section class="featured-project featured-project-10magazine" id="projects">
-  <div class="featured-project-inner">
-  <div class="project-marquee-layout">
-    <p class="project-marquee-category">EDITORIAL</p>
-    <div class="project-marquee-content">
-      <div class="project-marquee-header">
-        <div class="featured-project-text">
-              <h2>Ferry van der Nat</h2>
-              <p class="featured-label">10 MAGAZINE</p>
-            </div>
+<body>
+  <!-- Same look as before (position/blend-mode/bold are id/class rules that don't
+       care about the element's tag, and overview.css's global button reset already
+       makes a <button> look identical to plain text) - now a toggle for the
+       Information overlay below, exactly like overview.html's #info-toggle brand
+       button. -->
+  <button class="brand" id="index-brand" aria-expanded="false" aria-controls="index-info">NATSUKI ONEYAMA<br>MAKEUP ARTIST</button>
+  <!-- Header nav, all breakpoints (overlays the images, same fixed+mix-blend-mode
+       technique as #index-brand - see index.css). "PERSONAL" has no confirmed link
+       target anywhere in the current site, so it's plain text, not a link - see
+       report. -->
+  <nav class="index-header-nav" aria-label="Site">
+    <a href="overview.html">OVERVIEW</a>
+    <a href="mailto:natsukioneyama@gmail.com">CONTACT</a>
+  </nav>
+  <main id="index-main">
+    <!-- Desktop/Tablet only (hidden <=699px) - text project index, same 14-entry
+         sequence and same openProject() as the giant thumbnails below. -->
+    <nav class="index-project-nav" id="index-project-nav" aria-label="Project index"></nav>
+    <div class="index-visual" id="index-visual">
+      <!-- Independent sibling, not part of .index-first-ref - see report. -->
+      <div class="index-featured-label">[NEWEST FEATURED PROJECT]</div>
+      <!-- The only per-project reference text on the page - see report (#10). -->
+      <div class="index-first-ref">
+        <p>10 MAGAZINE</p>
+        <p>ISSUE 77  AUTUMN/WINTER 2026</p>
+        <p>PHOTOGRAPHER: Ferry van der Nat</p>
       </div>
-      <div class="project-marquee">
-          <div class="project-marquee-track">
-            <div class="project-marquee-group">
-              <img class="project-marquee-item" src="img/10magazine/september_2026/01.webp" width="920" height="1200" alt="" data-featured-index="0" draggable="false">
-              <img class="project-marquee-item" src="img/10magazine/september_2026/02.webp" width="920" height="1200" alt="" data-featured-index="1" draggable="false">
-              <img class="project-marquee-item" src="img/10magazine/september_2026/03.webp" width="920" height="1200" alt="" data-featured-index="2" draggable="false">
-              <img class="project-marquee-item" src="img/10magazine/september_2026/04.webp" width="920" height="1200" alt="" data-featured-index="3" draggable="false">
-            </div>
-            <div class="project-marquee-group" aria-hidden="true">
-              <img class="project-marquee-item" src="img/10magazine/september_2026/01.webp" width="920" height="1200" alt="" data-featured-index="0" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/10magazine/september_2026/02.webp" width="920" height="1200" alt="" data-featured-index="1" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/10magazine/september_2026/03.webp" width="920" height="1200" alt="" data-featured-index="2" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/10magazine/september_2026/04.webp" width="920" height="1200" alt="" data-featured-index="3" draggable="false" aria-hidden="true">
-            </div>
-          </div>
-        </div>
+      <!-- 14 giant thumbnails, one continuous sequence, injected by index.js. -->
     </div>
-  </div>
-  </div>
-</section>
-
-
-
-
-<section class="featured-project featured-project-vogueadria">
-  <div class="featured-project-inner">
-  <div class="project-marquee-layout">
-    <p class="project-marquee-category">EDITORIAL</p>
-    <div class="project-marquee-content">
-      <div class="project-marquee-header">
-        <div class="featured-project-text">
-              <h2>Danilo Pavlovic</h2>
-              <p class="featured-label">VOGUE ADRIA</p>
-            </div>
-      </div>
-      <div class="project-marquee">
-          <div class="project-marquee-track">
-            <div class="project-marquee-group">
-              <img class="project-marquee-item" src="img/vogueadria/summer2026/01.webp" width="942" height="1200" alt="" data-featured-index="0" draggable="false">
-              <img class="project-marquee-item" src="img/vogueadria/summer2026/02.webp" width="942" height="1200" alt="" data-featured-index="1" draggable="false">
-              <img class="project-marquee-item" src="img/vogueadria/summer2026/03.webp" width="1200" height="969" alt="" data-featured-index="2" draggable="false">
-            </div>
-            <div class="project-marquee-group" aria-hidden="true">
-              <img class="project-marquee-item" src="img/vogueadria/summer2026/01.webp" width="942" height="1200" alt="" data-featured-index="0" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/vogueadria/summer2026/02.webp" width="942" height="1200" alt="" data-featured-index="1" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/vogueadria/summer2026/03.webp" width="1200" height="969" alt="" data-featured-index="2" draggable="false" aria-hidden="true">
-            </div>
-          </div>
-        </div>
+  </main>
+  <footer class="index-footer">
+    <span>&copy;NATSUKI ONEYAMA</span>
+    <span>Designed by AOW</span>
+  </footer>
+  <section id="index-modal" class="overlay" role="dialog" aria-modal="true" aria-label="Project media viewer" tabindex="-1" hidden>
+    <div class="modal-brand" id="index-modal-header">
+      <strong>NATSUKI ONEYAMA<br>MAKEUP ARTIST</strong>
+      <div id="index-modal-caption" class="caption"></div>
     </div>
-  </div>
-  </div>
-</section>
-
-
-
-
-
-
-
-<section class="featured-project featured-project-beautypapers">
-  <div class="featured-project-inner">
-  <div class="project-marquee-layout">
-    <p class="project-marquee-category">EDITORIAL</p>
-    <div class="project-marquee-content">
-      <div class="project-marquee-header">
-        <div class="featured-project-text">
-              <h2>Jérémie Monnier</h2>
-              <p class="featured-label">BEAUTY PAPERS</p>
-            </div>
-      </div>
-      <div class="project-marquee">
-          <div class="project-marquee-track">
-            <div class="project-marquee-group">
-              <img class="project-marquee-item" src="img/beautypapers/01/01.webp" width="960" height="1200" alt="" data-featured-index="0" draggable="false">
-              <img class="project-marquee-item" src="img/beautypapers/01/02.webp" width="960" height="1200" alt="" data-featured-index="1" draggable="false">
-              <img class="project-marquee-item" src="img/beautypapers/01/03.webp" width="960" height="1200" alt="" data-featured-index="2" draggable="false">
-              <img class="project-marquee-item" src="img/beautypapers/01/04.webp" width="960" height="1200" alt="" data-featured-index="3" draggable="false">
-            </div>
-            <div class="project-marquee-group" aria-hidden="true">
-              <img class="project-marquee-item" src="img/beautypapers/01/01.webp" width="960" height="1200" alt="" data-featured-index="0" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/beautypapers/01/02.webp" width="960" height="1200" alt="" data-featured-index="1" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/beautypapers/01/03.webp" width="960" height="1200" alt="" data-featured-index="2" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/beautypapers/01/04.webp" width="960" height="1200" alt="" data-featured-index="3" draggable="false" aria-hidden="true">
-            </div>
-          </div>
-        </div>
+    <div id="index-stage"></div>
+  </section>
+  <!-- Same structure/content/classes as overview.html's #info (id prefixed index- to
+       avoid any collision) - see report for what's reused verbatim. -->
+  <section id="index-info" class="overlay info" role="dialog" aria-modal="true" aria-label="About Natsuki Oneyama" hidden>
+    <button id="index-info-close" class="info-brand" aria-label="Close information">NATSUKI ONEYAMA<br>MAKEUP ARTIST</button>
+    <div class="info-columns">
+      <p class="bio">Paris-based makeup artist creating refined beauty with a modern, image-driven sensibility. Working across fashion, beauty and commercial projects, his approach combines precision, restraint and a strong understanding of how makeup functions within the broader visual narrative of an image.</p>
+      <p class="clients">SELECTED CLIENTS /<br><br>GIVENCHY BEAUTY / YSL BEAUTY / CLARINS / ADIDAS / DELVAUX / SWAROVSKI / ARTHUS BERTRAND / MORE OR LESS / BEAUTY PAPERS / MODERN WEEKLY CHINA / REPLICA MAN / 10 MAGAZINE / PORT MAGAZINE / OFFICE MAGAZINE / HUBE / VOGUE MEXICO / VOGUE ADRIA / VOGUE CZ /</p>
+      <nav class="info-links" aria-label="Contact and profile"><a href="https://www.instagram.com/natsukimua/">@NATSUKIMUA</a><a href="https://models.com/people/natsuki-oneyama">MODELS.COM</a><a href="pdf-request.html">PDF</a><a href="mailto:natsukioneyama@gmail.com">CONTACT</a></nav>
+     <img class="info-image" src="info/info01.webp"  alt="">
     </div>
-  </div>
-  </div>
-</section>
-
-
-<section class="featured-project featured-project-krzysztofjan">
-  <div class="featured-project-inner">
-  <div class="project-marquee-layout">
-    <p class="project-marquee-category">PERSONAL PROJECT</p>
-    <div class="project-marquee-content">
-      <div class="project-marquee-header">
-        <div class="featured-project-text">
-              <h2>KRZYSTOF JAN</h2>
-              <p class="featured-label">Field Study, Madeira</p>
-            </div>
-      </div>
-      <div class="project-marquee">
-          <div class="project-marquee-track">
-            <div class="project-marquee-group">
-              <img class="project-marquee-item" src="img/img/krzysztofjan_01/01.webp" width="960" height="1200" alt="" data-featured-index="0" draggable="false">
-              <img class="project-marquee-item" src="img/img/krzysztofjan_01/02.webp" width="960" height="1200" alt="" data-featured-index="1" draggable="false">
-              <img class="project-marquee-item" src="img/img/krzysztofjan_01/03.webp" width="960" height="1200" alt="" data-featured-index="2" draggable="false">
-              <img class="project-marquee-item" src="img/img/krzysztofjan_01/05.webp" width="960" height="1200" alt="" data-featured-index="3" draggable="false">
-            </div>
-            <div class="project-marquee-group" aria-hidden="true">
-              <img class="project-marquee-item" src="img/img/krzysztofjan_01/01.webp" width="960" height="1200" alt="" data-featured-index="0" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/img/krzysztofjan_01/02.webp" width="960" height="1200" alt="" data-featured-index="1" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/img/krzysztofjan_01/03.webp" width="960" height="1200" alt="" data-featured-index="2" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/img/krzysztofjan_01/05.webp" width="960" height="1200" alt="" data-featured-index="3" draggable="false" aria-hidden="true">
-            </div>
-          </div>
-        </div>
-    </div>
-  </div>
-  </div>
-</section>
-
-
-<section class="featured-project featured-project-numerochina">
-  <div class="featured-project-inner">
-  <div class="project-marquee-layout">
-    <p class="project-marquee-category">EDITORIAL</p>
-    <div class="project-marquee-content">
-      <div class="project-marquee-header">
-        <div class="featured-project-text">
-              <h2>CARLA ROSSI</h2>
-              <p class="featured-label">NUMéRO CHINA</p>
-            </div>
-      </div>
-      <div class="project-marquee">
-          <div class="project-marquee-track">
-            <div class="project-marquee-group">
-              <img class="project-marquee-item" src="img/numerochina/01/01.webp" width="925" height="1200" alt="" data-featured-index="0" draggable="false">
-              <img class="project-marquee-item" src="img/numerochina/01/04.webp" width="1200" height="779" alt="" data-featured-index="1" draggable="false">
-              <img class="project-marquee-item" src="img/numerochina/01/05.webp" width="1200" height="779" alt="" data-featured-index="2" draggable="false">
-            </div>
-            <div class="project-marquee-group" aria-hidden="true">
-              <img class="project-marquee-item" src="img/numerochina/01/01.webp" width="925" height="1200" alt="" data-featured-index="0" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/numerochina/01/04.webp" width="1200" height="779" alt="" data-featured-index="1" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/numerochina/01/05.webp" width="1200" height="779" alt="" data-featured-index="2" draggable="false" aria-hidden="true">
-            </div>
-          </div>
-        </div>
-    </div>
-  </div>
-  </div>
-</section>
-
-
-<section class="featured-project featured-project-replicaman">
-  <div class="featured-project-inner">
-  <div class="project-marquee-layout">
-    <p class="project-marquee-category">EDITORIAL</p>
-    <div class="project-marquee-content">
-      <div class="project-marquee-header">
-        <div class="featured-project-text">
-              <h2>PAVEL GOLIK</h2>
-              <p class="featured-label">REPLICA MAN</p>
-            </div>
-      </div>
-      <div class="project-marquee">
-          <div class="project-marquee-track">
-            <div class="project-marquee-group">
-              <img class="project-marquee-item" src="img/replicaman/ss24/01.webp" width="900" height="1200" alt="" data-featured-index="0" draggable="false">
-              <img class="project-marquee-item" src="img/replicaman/ss24/03.webp" width="900" height="1200" alt="" data-featured-index="1" draggable="false">
-              <img class="project-marquee-item" src="img/replicaman/ss24/04.webp" width="600" height="480" alt="" data-featured-index="2" draggable="false">
-              <img class="project-marquee-item" src="img/replicaman/ss24/05.webp" width="900" height="1200" alt="" data-featured-index="3" draggable="false">
-            </div>
-            <div class="project-marquee-group" aria-hidden="true">
-              <img class="project-marquee-item" src="img/replicaman/ss24/01.webp" width="900" height="1200" alt="" data-featured-index="0" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/replicaman/ss24/03.webp" width="900" height="1200" alt="" data-featured-index="1" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/replicaman/ss24/04.webp" width="600" height="480" alt="" data-featured-index="2" draggable="false" aria-hidden="true">
-              <img class="project-marquee-item" src="img/replicaman/ss24/05.webp" width="900" height="1200" alt="" data-featured-index="3" draggable="false" aria-hidden="true">
-            </div>
-          </div>
-        </div>
-    </div>
-  </div>
-  </div>
-</section>
-
-<footer class="info-footer-grid">
-
-  <a class="info-grid-overview" href="overview.html">Overview</a>
-  <a class="info-grid-contact" href="mailto:natsukioneyama@gmail.com">Contact</a>
-
-  <div class="social-links">
-    <a href="https://www.instagram.com/natsukimua/" target="_blank" rel="noopener">INSTAGRAM</a>
-    <a href="https://models.com/people/natsuki-oneyama" target="_blank" rel="noopener">MODELS.COM</a>
-  </div>
-
-  <div class="pdf-link">
    
-    <a href="pdf-request.html">PDF</a>
-  </div>
-
-</footer>
-
-  <div class="copyright">©2026 Natsuki Oneyama
-   <p> DESIGNED BY AOW</p>
-  </div>
-
-
-<div class="featured-lightbox" aria-hidden="true">
-  <button class="featured-lightbox-close" type="button" aria-label="Close">×</button>
-
-  <button class="featured-lightbox-prev" type="button" aria-label="Previous image">•</button>
-
-  <img class="featured-lightbox-image" src="" alt="">
-
-  <button class="featured-lightbox-next" type="button" aria-label="Next image">•</button>
-</div>
-</main>
-
-
-<script src="index.js"></script>
+  </section>
 </body>
-
 </html>

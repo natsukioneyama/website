@@ -1,1016 +1,163 @@
-/* =========================
-BASE
-========================= */
+/* index.html: Selected Works top page. Shares base resets, .brand and .bottom-nav
+   positioning/sizing/responsive-behavior with overview.css (loaded first) - only
+   font-weight is overridden here, via id selectors, so overview.html is untouched.
 
-* {
-  box-sizing: border-box;
+   Layout: one continuous 1-column sequence of 14 giant project thumbnails, the same
+   DOM and CSS on every breakpoint (Stussy-style: no separate mobile/desktop grid).
+   <=1023px (Mobile/Tablet Portrait, incl. 820x1180 iPad) is the full-bleed single
+   column. >=1024px (Desktop/Large Tablet) additionally shows a text project index -
+   see the #index-main grid below for how the main visual stays viewport-centered
+   regardless of that index's width. */
+:root {
+  /* First-pass placeholder sizes - not final. Easy to retune from here. */
+  --index-visual-width: min(46vw, 620px); /* main visual column width, >=1024px only */
+  --index-nav-gap: 40px;                  /* space between the index and the visual column, >=1024px only */
+  --index-top-space: 140px;               /* whitespace above the first thumbnail (<=1023px default) */
+  --index-footer-space: 160px;            /* whitespace before the footer, after the last thumbnail */
+  --index-first-ref-gap: 24px;            /* space between the first-project reference text and its image */
+  --index-nav-top: 64px;                  /* fixed top offset of the >=1024px project index, just below the two-line brand */
+  --index-first-ref-line-gap: 20px;       /* vertical gap between its 2nd and 3rd lines, all breakpoints */
+  --index-featured-label-gap: 16px;       /* space between [ NEWEST FEATURED PROJECT ] and .index-first-ref below it */
+  --index-nav-top: 64px;
+  --index-top-space: var(--index-nav-top);
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: #f7f7f7;
-  color: #111;
-  font-family: "Instrument Sans", sans-serif;
-  font-weight: 300;
-  font-style: normal;
-  letter-spacing: 0.02em;
-}
-
-img {
-  -webkit-user-drag: none;
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
-}
-
-
-/* =========================
-SITE MENU
-========================= */
-
-.menu-toggle {
-  position: absolute;
-  top: clamp(16px, 2vw, 28px);
-  right: clamp(16px, 2vw, 28px);
-  z-index: 5000;
-  width: 44px;
-  height: 44px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  cursor: pointer;
-}
-
-.menu-toggle.is-open {
-  position: fixed;
-}
-
-.menu-toggle-line {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 26px;
-  height: 1px;
-  background: #111;
-  transform: translate(-50%, -50%);
-  transition: transform 0.15s ease, opacity 0.15s ease;
-}
-
-.menu-toggle-line:nth-child(1) {
-  margin-top: -5px;
-}
-
-.menu-toggle-line:nth-child(3) {
-  margin-top: 5px;
-}
-
-.menu-toggle.is-open .menu-toggle-line:nth-child(1) {
-  margin-top: 0;
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.menu-toggle.is-open .menu-toggle-line:nth-child(2) {
-  opacity: 0;
-}
-
-.menu-toggle.is-open .menu-toggle-line:nth-child(3) {
-  margin-top: 0;
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
-
-.site-menu {
-  position: fixed;
-  inset: 0;
-  z-index: 4000;
-  background: #fff;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.15s ease, visibility 0s linear 0.15s;
-}
-
-.site-menu.is-open {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.15s ease, visibility 0s linear 0s;
-}
-
-.site-menu-inner {
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  padding: 28px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-}
-
-.site-menu-name {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.site-menu-title {
-  margin: 16px 0 40px;
-  font-size: clamp(2.5rem, 8vw, 5rem);
-  font-weight: 400;
-  line-height: 1;
-}
-
-.site-menu-nav {
-  display: flex;
-  flex-direction: column;
-  border-top: 1px solid #d8d8d8;
-}
-
-.site-menu-nav a {
-  padding: 18px 4px;
-  border-bottom: 1px solid #d8d8d8;
-  color: #111;
-  text-decoration: none;
-  text-transform: uppercase;
-  font-size: 15px;
-  letter-spacing: 0.06em;
-}
-
-.site-menu-nav a:hover {
-  background: #f2f2f2;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .menu-toggle-line,
-  .site-menu {
-    transition: none;
+@media (min-width: 1024px) {
+  :root {
+    /* First-pass Desktop size, deliberately much larger than before (Stussy-style
+       giant editorial image) - still a CSS var so it's easy to retune after a look
+       on real devices. min(...) keeps it from ever exceeding the viewport. */
+    --index-visual-width: min(56vw, 900px);
   }
 }
 
-@media (max-width: 699px) {
-  .site-menu-title {
-    margin: 12px 0 28px;
+/* #index-brand no longer needs its own font-weight override: overview.css's shared
+   `.brand, .info-brand, .modal-brand` rule is bold now (see the report). */
+.index-thumb { display: block; }
+
+/* .index-header-nav itself now lives in overview.css (loaded before this file on
+   both index.html and overview.html), so the two pages' header nav can never drift
+   out of sync - see the report for why. */
+
+#index-main { padding-top: var(--index-top-space); }
+
+/* >=1024px (Desktop/Large Tablet): main visual column. A 3-track grid -
+   minmax(0,1fr) / auto / minmax(0,1fr) - centers the middle (visual) column on the
+   container: both outer tracks are the same "1fr", so they always end up equal, and
+   minmax(0, ...) stops any content from pulling that equality off (a bare 1fr
+   track's default minimum is its content size, not 0). Column 1 is left empty on
+   purpose (see .index-project-nav below) - it only exists to balance column 3, no
+   JS measurement, no absolute positioning. */
+@media (min-width: 1024px) {
+  #index-main { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); column-gap: var(--index-nav-gap); align-items: start; }
+  .index-visual { grid-column: 2; }
+  /* The project index is deliberately taken out of #index-main's grid flow (fixed
+     positioning, same left edge as .brand) so its vertical position tracks the
+     brand, not the main visual's or .index-first-ref's own document position - a
+     grid item would otherwise start at the row's top, i.e. wherever the visual
+     column happens to start. Being out-of-flow also means it takes zero grid track
+     space itself, so it can never affect the column-1/column-3 balance above. */
+  .index-project-nav {
+    position: fixed; z-index: 10;
+    left: max(var(--edge), env(safe-area-inset-left));
+    top: var(--index-nav-top);
+    display: flex; flex-direction: column; gap: 10px;
   }
-
-  .site-menu-nav a {
-    padding: 14px 4px;
-    font-size: 13px;
-  }
+  .index-project-nav button { text-align: left; white-space: nowrap; }
+}
+/* <=1023px (Mobile/Tablet Portrait, extends the former <=699px mobile presentation
+   up through 820x1180 iPad Portrait): no project index, visual column is the full
+   viewport width. */
+@media (max-width: 1023px) {
+  .index-project-nav { display: none; }
 }
 
-
-/* =========================
-INFO HERO
-========================= */
-
-.info-page {
-  padding-top: clamp(30px, 6svh, 80px);
+/* The one continuous, gap-0 sequence of giant thumbnails - same DOM and CSS at
+   every breakpoint. .index-visual's own width (set above per breakpoint, or simply
+   100% on <=1023px) is the only thing that changes; each thumbnail is always 100%
+   of that column, so this rule never needs a per-breakpoint override. */
+.index-visual { display: flex; flex-direction: column; gap: 0; width: 100%; max-width: var(--index-visual-width); }
+@media (max-width: 1023px) {
+  .index-visual { max-width: none; }
 }
+.index-thumb img { display: block; width: 100%; height: auto; }
 
-.info-intro {
-  display: block;
-  width: 100%;
-  max-width: none;
-  margin: 0 auto;
-  text-align: center;
-  padding-bottom: calc(120px + env(safe-area-inset-bottom));
-}
-
-.info-hero {
-  width: 100%;
-  margin: clamp(20px, 3svh, 35px) auto clamp(24px, 4svh, 40px);
-}
-
-.info-hero img,
-.hero-slide {
-  width: min(90vw, 60svh, 880px);
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  display: block;
-  margin: 0 auto;
-}
-
-.info-content {
-  text-align: center;
-}
-
-.info-content h1 {
-  font-size: 2.5rem;
-  font-weight: 400;
-  margin: 0 0 20px;
-}
-
-.info-title {
-  font-size: 14px;
-  margin: 0;
-} 
-
-.info-text-block {
-  width: calc(100% - 48px);
-  max-width: 620px;
-  margin: 40px auto 0;
-  padding: 0 28px;
-}
-
-.info-bio {
-  width: auto;
-  max-width: none;
-  margin: 0;
-  padding: 0;
-  text-align: left;
-  letter-spacing: 0.02em;
-}
-
-.clients-block {
-  width: auto;
-  max-width: none;
-  margin: 80px 0 0;
-  padding: 0;
-  text-align: justify;
-}
-
-.clients-title {
-  text-align: center;
-  margin: 0 0 20px;
-  font-size: 14px;
-
-}
-
-.clients-list {
-  margin: 0;
-  text-align: justify;
-}
-
-.info-bio,
-.clients-list {
-  font-size: 15px;
-  line-height: 1.6;
-  letter-spacing: 0.02em;
-}
-
-.info-footer-grid {
-  margin-top: 45px;
-  margin-bottom: 0;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-  width: 100vw;
-  font-size: 15px;
-  line-height: 1.35;
-  letter-spacing: 0.06em;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0;
-  border: 1px solid #d8d8d8;
-  text-align: center;
-}
-
-.info-footer-grid .social-links {
-  display: contents;
-}
-
-.info-footer-grid .social-links a {
-  -webkit-text-fill-color: #111;
-}
-
-.info-grid-overview,
-.info-grid-contact,
-.info-footer-grid .social-links a,
-.info-footer-grid .pdf-link {
-  margin: 0;
-  padding: 18px 16px;
-  color: #111;
-  text-decoration: none;
-  border-top: 1px solid #d8d8d8;
-  border-left: 1px solid #d8d8d8;
-}
-
-.info-grid-overview,
-.info-grid-contact {
-  border-top: 0;
-  text-transform: uppercase;
-}
-
-.info-grid-overview,
-.info-footer-grid .social-links a:first-child,
-.info-footer-grid .pdf-link {
-  border-left: 0;
-}
-
-.info-footer-grid .social-links a:first-child {
-  text-transform: uppercase;
-}
-
-.info-footer-grid .pdf-link {
-  grid-column: 1 / -1;
-}
-
-.info-footer-grid .pdf-link span {
-  display: block;
-  margin-bottom: 8px;
-}
-
-.info-footer-grid .pdf-link a {
-  color: #111;
-  text-decoration: none;
-}
-
-@media (max-width: 699px) {
-  .info-footer-grid {
-    font-size: 12px;
-  }
-
-  .info-grid-overview,
-  .info-grid-contact,
-  .info-footer-grid .social-links a,
-  .info-footer-grid .pdf-link {
-    padding: 12px 8px;
+/* Independent from .index-first-ref on purpose (own class, own rules, no shared
+   selector) so either can be retuned later without touching the other - deliberately
+   NOT reusing .index-first-ref's position:relative lift or its padding here. Plain
+   document flow: it just sits above .index-first-ref and pushes it (and the first
+   thumbnail after it) down by its own flow height, no manual offset to keep in sync. */
+.index-featured-label { font-weight: bold; margin-bottom: var(--index-featured-label-gap); }
+@media (max-width: 1023px) {
+  .index-featured-label {
+    padding-left: max(var(--edge), env(safe-area-inset-left));
+    padding-right: max(var(--edge), env(safe-area-inset-right));
   }
 }
 
-.copyright {
-  margin: 20px;
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  opacity: 0.6;
-  text-align: left;
-}
+/* The only per-project reference text on the page (see index.js/html) - sits
+   directly before the first thumbnail in normal document flow, so it lands in the
+   same place relative to the visual column on every breakpoint. */
+.index-first-ref { margin-bottom: var(--index-first-ref-gap); line-height: 1.3; font-weight: bold; }
+.index-first-ref p { margin: 0; }
+/* 2nd/3rd line gap, all breakpoints - the 1st/2nd lines stay tight (line-height only). */
+.index-first-ref p:last-child { margin-top: var(--index-first-ref-line-gap); }
 
-.copyright p {
-  margin: 6px 0 0;
-}
-
-
-/* =========================
-FEATURED PROJECT
-========================= */
-.featured-project {
-  margin: 0 auto 80px;
-  width: 100%;
-}
-
-.featured-project-inner {
-  width: min(88vw, 1280px);
-  margin: 0 auto;
-}
-
-.featured-project-text {
-  grid-column: 1;
-  grid-row: 1;
-  max-width: 520px;
-  white-space: nowrap;
-  margin: 0;
-  margin-left: 100px;
-  text-align: left;
-  justify-self: start;
-  text-transform: uppercase;
-}
-
-.featured-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  margin: 0;
-}
-
-.featured-project h2 {
-  font-size: 2rem;
-  font-weight: 400;
-  margin: 0;
-}
-
-/* =========================
-PROJECT MARQUEE — SHARED AUTO SCROLL HEADER + SLIDER
-========================= */
-.project-marquee-layout {
-  display: grid;
-  grid-template-columns: 72px 1fr;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-}
-
-.project-marquee-category {
-  grid-column: 1;
-  grid-row: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  margin: 0;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.project-marquee-content {
-  grid-column: 2;
-  min-width: 0;
-}
-
-.project-marquee-header {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.project-marquee-header .featured-project-text {
-  display: contents;
-}
-
-.project-marquee-header .featured-project-text .featured-label {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1;
-  margin: 0;
-}
-
-.project-marquee-header .featured-project-text h2 {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1;
-}
-
-@media (min-width: 700px) {
-  .project-marquee-header .featured-project-text .featured-label {
-    order: 1;
-  }
-
-  .project-marquee-header .featured-project-text h2 {
-    order: 2;
+/* <=1023px only: align its left/right edges with the header brand/nav's own edge
+   inset instead of sitting flush with the viewport edge like the giant thumbnails
+   below it do. padding (not margin) so this doesn't touch .index-visual's own
+   width/left edge - box-sizing:border-box (set globally in overview.css) keeps the
+   element at 100% width without overflowing. */
+@media (max-width: 1023px) {
+  .index-first-ref {
+    padding-left: max(var(--edge), env(safe-area-inset-left));
+    padding-right: max(var(--edge), env(safe-area-inset-right));
   }
 }
 
-.project-marquee {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  margin: 0;
+.index-project-nav { font-weight: bold; }
+
+.index-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: var(--index-footer-space);
+  padding: 0 var(--edge) 24px;
 }
 
-.project-marquee-track {
-  display: flex;
-  width: max-content;
-  animation: project-marquee-scroll 15s linear infinite;
-  will-change: transform;
+/* ============ Horizontal project modal ============ */
+#index-modal { touch-action: pan-x; overscroll-behavior-y: none; }
+#index-modal:focus-visible { outline: none; }
+/* Brand/caption overlay the image directly (transparent, fixed position) - clicking
+   either closes the modal (see index.js; clicking the media or the background
+   margin does not). z-index:1 (same value/reason as overview.css's own .info-brand)
+   is required now that #index-stage is full height and would otherwise paint over
+   it (later DOM sibling, same z-index:auto stacking level) - this is the one part
+   of this change that isn't pure sizing, but without it the header/caption would be
+   literally invisible behind the media. */
+/* index Horizontal Modal only - scoped to the #id, not the shared .modal-brand
+   class, so overview.html's own modal-brand and index.html's Information Overlay
+   (.info-brand) are unaffected. color:white is required for the blend to actually
+   invert against arbitrary image content (difference(near-black, X) leaves X almost
+   unchanged - same white+difference pairing already used by .brand/.index-header-nav
+   elsewhere on this page). */
+#index-modal-header { line-height: 1.2; cursor: pointer; z-index: 1; color: white; mix-blend-mode: difference; }
+#index-modal-caption { margin-top: 10px; font-weight: normal; }
+/* Each media's height = the viewport height, full-bleed top to bottom, on every
+   device - no reserved header/caption band, no vertical centering. 100vh first as a
+   fallback, then 100dvh overrides it where supported: 100dvh tracks the *current*
+   visible viewport as iOS Safari's address bar shows/hides, instead of 100vh's fixed
+   "largest possible" viewport, which is what caused the classic mobile Safari
+   overflow/clipping issue - no JS viewport measurement needed either way. */
+#index-stage {
+  position: absolute; left: 0; right: 0; top: 0;
+  height: 100vh;
+  height: 100dvh;
+  display: flex; gap: 0;
+  overflow-x: auto; overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
-
-.project-marquee-group {
-  display: flex;
-  flex-shrink: 0;
-}
-
-.project-marquee-item {
-  height: clamp(480px, 68svh, 760px);
-  width: auto;
-  flex-shrink: 0;
-  display: block;
-  margin-right: 0;
-  cursor: pointer;
-}
-
-@keyframes project-marquee-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .project-marquee-track {
-    animation: none;
-    transform: none;
-  }
-}
-
-@media (max-width: 900px) {
-  .project-marquee-item {
-    height: clamp(300px, 55svh, 520px);
-    margin-right: 0;
-  }
-}
-
-@media (max-width: 699px) {
-  .featured-project {
-    margin: 0 auto 60px;
-  }
-
-  .project-marquee-layout {
-    grid-template-columns: 40px 1fr;
-  }
-
-  .project-marquee-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-
-  .featured-label {
-    order: 1;
-  }
-
-  .featured-project-text h2 {
-    order: 2;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-/* =========================
-RESPONSIVE
-========================= */
-
-/* Info hero: iPad portrait */
-@media (min-width: 900px) and (max-width: 1100px) and (orientation: portrait) and (max-aspect-ratio: 4 / 5) {
-  .info-hero {
-    width: 85%;
-    max-width: 85%;
-    margin: 10px auto 20px;
-  }
-
-  .info-hero img,
-  .hero-slide {
-    width: 100%;
-  }
-
-  .info-content {
-    padding-top: 0;
-  }
-
-  .info-content h1 {
-    margin-bottom: 6px;
-  }
-
-  .info-title {
-    margin-top: 0;
-  }
-}
-
-
-/* Info hero: small tablet portrait */
-@media (min-width: 700px) and (max-width: 899px) and (orientation: portrait) and (max-aspect-ratio: 4 / 5) {
-  .info-hero {
-    width: 100%;
-    max-width: 90vw;
-    margin: 10px auto 20px;
-  }
-
-  .info-hero img,
-  .hero-slide {
-    width: 100%;
-  }
-
-  .info-content {
-    padding-top: 0;
-  }
-
-  .info-content h1 {
-    margin-bottom: 6px;
-  }
-
-  .info-title {
-    margin-top: 0;
-  }
-}
-
-
-/* Info hero: mobile portrait */
-@media (min-width: 391px) and (max-width: 699px) and (orientation: portrait) and (max-aspect-ratio: 3 / 4) {
-  .info-hero {
-    width: 100%;
-    max-width: 100%;
-    margin: 20px auto 25px;
-  }
-
-  .info-hero img,
-  .hero-slide {
-    width: min(90vw, 60svh, 880px);
-  }
-
-  .info-content {
-    padding-top: 10px;
-  }
-
-  .info-content h1 {
-    font-size: 2rem;
-  }
-
-  .info-title {
-    font-size: 18px;
-  }
-}
-
-
-/* Info hero: iPhone SE */
-@media (max-width: 390px) and (orientation: portrait) and (max-aspect-ratio: 4 / 5) {
-  .info-hero {
-    margin: 15px auto 20px;
-  }
-
-  .info-content {
-    padding-top: 10px;
-  }
-
-  .info-content h1 {
-    font-size: 1.5rem;
-  }
-
-  .info-title {
-    font-size: 18px;
-  }
-}
-
-
-/* Featured project: mobile / tablet */
-@media (max-width: 900px) {
-
-  .featured-project-inner {
-    width: min(88vw, 620px);
-    margin: 0 auto;
-  }
-
-  .featured-project-text {
-    order: -1;
-    margin: 0;
-    max-width: none;
-    text-align: left;
-  }
-
-  .featured-label {
-    margin: 0 0 8px;
-  }
-
-  .featured-project h2 {
-    line-height: 1;
-    margin: 0;
-  }
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* =========================
-FEATURED LIGHTBOX
-========================= */
-
-.featured-lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 3000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-}
-
-.featured-lightbox.is-open {
-  display: flex;
-}
-
-.featured-lightbox-image {
-  max-width: 82vw;
-  max-height: 82svh;
-  object-fit: contain;
-  display: block;
-}
-
-.featured-lightbox-close {
-  position: fixed;
-  top: 28px;
-  right: 32px;
-  border: 0;
-  background: none;
-  font-size: 22px;
-  line-height: 1;
-  cursor: pointer;
-  color: #111;
-}
-
-.featured-lightbox-prev,
-.featured-lightbox-next {
-  position: fixed;
-  top: 50%;
-  border: 0;
-  background: none;
-  padding: 0;
-  margin: 0;
-  width: auto;
-  height: auto;
-  font-size: 30px;
-  line-height: 1;
-  color: #111;
-  transform: translateY(-50%);
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-}
-
-.featured-lightbox-prev {
-  left: 12px;
-}
-
-.featured-lightbox-next {
-  right: 12px;
-}
-
-
-/* Featured lightbox: mobile / tablet */
-@media (max-width: 900px) {
-  .featured-lightbox-prev,
-  .featured-lightbox-next {
-    display: none;
-  }
-
-  .featured-lightbox-image {
-    max-width: 90vw;
-    max-height: 78svh;
-  }
-
-  .featured-lightbox-close {
-    top: 22px;
-    right: 22px;
-    font-size: 22px;
-  }
-}
-
-
-/* =========================
-PDF REQUEST PAGE
-========================= */
-
-body.page-pdf-request {
-  background: #fff;
-  color: #111;
-}
-
-.pdf-request-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 24px 28px;
-}
-
-.pdf-request-name {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.pdf-request-back {
-  display: inline-block;
-  margin: -8px;
-  padding: 8px;
-  color: #111;
-  text-decoration: none;
-  font-size: 24px;
-  line-height: 1;
-}
-
-.pdf-request-back:hover {
-  opacity: 0.6;
-}
-
-.pdf-request-back:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 2px;
-}
-
-.pdf-request-page {
-  padding: 20px 28px 80px;
-}
-
-.pdf-request-inner {
-  width: 100%;
-  max-width: 640px;
-  margin: 0 auto;
-}
-
-.pdf-request-title {
-  margin: 0 0 16px;
-  font-size: clamp(2.2rem, 6vw, 3.5rem);
-  font-weight: 400;
-  line-height: 1;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-}
-
-.pdf-request-intro {
-  margin: 0 0 40px;
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-.pdf-request-form {
-  border-top: 1px solid #d8d8d8;
-}
-
-.pdf-request-field {
-  padding: 20px 0;
-  border-bottom: 1px solid #d8d8d8;
-}
-
-.pdf-request-field label {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.pdf-request-field input[type="text"],
-.pdf-request-field input[type="email"],
-.pdf-request-field textarea {
-  display: block;
-  width: 100%;
-  margin: 0;
-  padding: 10px 0;
-  border: 0;
-  border-radius: 0;
-  border-bottom: 1px solid #d8d8d8;
-  background: transparent;
-  color: #111;
-  font-family: inherit;
-  font-size: 16px;
-}
-
-.pdf-request-field textarea {
-  resize: vertical;
-  min-height: 90px;
-}
-
-.pdf-request-field input[type="text"]:hover,
-.pdf-request-field input[type="email"]:hover,
-.pdf-request-field textarea:hover {
-  border-bottom-color: #999;
-}
-
-.pdf-request-field input[type="text"]:focus-visible,
-.pdf-request-field input[type="email"]:focus-visible,
-.pdf-request-field textarea:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 2px;
-}
-
-.pdf-request-fieldset {
-  margin: 0;
-  padding: 20px 0;
-  border: 0;
-  border-bottom: 1px solid #d8d8d8;
-}
-
-.pdf-request-fieldset legend {
-  padding: 0;
-  margin-bottom: 10px;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.pdf-request-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 4px;
-  border-top: 1px solid #d8d8d8;
-  cursor: pointer;
-}
-
-.pdf-request-checkbox:hover,
-.pdf-request-checkbox:focus-within {
-  background: #f2f2f2;
-}
-
-.pdf-request-checkbox input {
-  width: 16px;
-  height: 16px;
-  margin: 0;
-  flex-shrink: 0;
-  accent-color: #111;
-}
-
-.pdf-request-checkbox input:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 2px;
-}
-
-.pdf-request-checkbox span {
-  font-size: 15px;
-}
-
-.pdf-request-submit {
-  display: block;
-  width: 100%;
-  margin: 32px 0 0;
-  padding: 16px;
-  border: 1px solid #111;
-  border-radius: 0;
-  background: #fff;
-  color: #111;
-  font-family: inherit;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-}
-
-.pdf-request-submit:hover {
-  background: #111;
-  color: #fff;
-}
-
-.pdf-request-submit:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 4px;
-}
-
-.pdf-request-submit:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-.pdf-request-honeypot {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-}
-
-.pdf-request-status {
-  margin: 16px 0 0;
-  font-size: 14px;
-  min-height: 1.4em;
-}
-
-@media (max-width: 699px) {
-  .pdf-request-header {
-    padding: 18px 20px;
-  }
-
-  .pdf-request-page {
-    padding: 12px 20px 60px;
-  }
-
-  .pdf-request-title {
-    margin-bottom: 12px;
-  }
-
-  .pdf-request-intro {
-    margin-bottom: 28px;
-  }
+#index-stage::-webkit-scrollbar { display: none; }
+#index-stage img, #index-stage video {
+  height: 100%; width: auto; flex: 0 0 auto; display: block;
+  object-fit: contain; user-select: none; -webkit-user-select: none;
 }

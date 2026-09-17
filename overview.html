@@ -1,120 +1,40 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, viewport-fit=cover" />
-  <meta name="format-detection" content="telephone=no, email=no, address=no, date=no" />
-
-  <title>Overview – NATSUKI ONEYAMA</title>
-
-  <meta name="description"
-        content="Selected beauty and fashion work by Paris-based MAKE-UP ARTIST Natsuki Oneyama." />
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="NATSUKI ONEYAMA – MAKE-UP ARTIST" />
-  <meta property="og:description" content="Paris-based MAKE-UP ARTIST working across beauty, fashion and editorial." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://natsukioneyama.com/overview.html" />
-  <meta property="og:image" content="https://natsukioneyama.com/img/beauty/beauty01/01.webp" />
-
-  <!-- Fonts -->
- <link rel="preconnect" href="https://fonts.googleapis.com">
- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="./overview.css" />
-
-  <!-- Scripts -->
-  <script src="./justified-layout.umd.js" defer></script>
-  <script src="./portfolio-data.js" defer></script>
-  <script src="./overview.js" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Overview — NATSUKI ONEYAMA</title>
+  <link rel="stylesheet" href="overview.css">
+  <script src="justified-layout.umd.js" defer></script>
+  <script src="portfolio-data.js" defer></script>
+  <script src="overview.js" defer></script>
 </head>
-
-
 <body>
-<header class="topbar">
-
-  <div class="brand">
-   <a href="index.html" class="brand-link">
-    <span class="artist">NATSUKI ONEYAMA</span>
-    <span class="role">MAKE-UP ARTIST</span>
-  </a>
-  </div>
-
-  <nav class="toplinks js-site-nav" aria-label="Primary">
-  <a class="nav-link" href="index.html">INFO</a>
-  <a href="mailto:natsukioneyama@gmail.com">CONTACT</a>
+  <button class="brand" id="info-toggle" aria-expanded="false" aria-controls="info">NATSUKI ONEYAMA<br>MAKEUP ARTIST</button>
+  <!-- Same class/position/behavior as index.html's own header nav (shared rule
+       lives in overview.css) - inerted alongside #overview-nav/#info-toggle while
+       the modal or info overlay is open, see overview.js's lock()/close(). -->
+  <nav class="index-header-nav" aria-label="Site">
+    <a href="index.html">INDEX</a>
+    <a href="mailto:natsukioneyama@gmail.com">CONTACT</a>
   </nav>
-
-</header>
-
-
-
-  <main class="page">
-    <section id="overview" class="overview">
-      <div id="grid" data-view="overview"></div>
-
-
-    <!-- ===== CUSTOM LIGHTBOX (gm) ===== -->
-  <div class="gm" aria-hidden="true" id="gm">
-    <button class="gm-backdrop" aria-hidden="true"></button>
-
-    <div class="gm-frame">
-      <img id="gmImage" class="gm-img" alt="">
-      <div class="gm-video-wrap" hidden>
-        <video id="gmVideo" playsinline muted></video>
-
-        <div class="sv-controls">
-          <div class="sv-progress">
-            <div class="sv-progress__bar"></div>
-          </div>
-
-          <div class="sv-nav">
-            <button type="button" class="sv-btn sv-btn--play">PAUSE</button>
-            <button type="button" class="sv-btn sv-btn--fs">FULL</button>
-          </div>
-        </div>
-      </div>
-
-      </div>
-
-      <div class="gm-caption">
-        <p class="gm-name">
-          <a href="index.html" class="gm-main">NATSUKI ONEYAMA</a><br>
-          <span class="gm-subtitle">MAKE-UP ARTIST</span>
-        </p>
-
-        <p class="gm-ttl"></p>
-        <p class="gm-sub"></p>
-      </div>
-
-       <!--<div class="gm-counter"></div>   -->
-
-      <div class="gm-view-toggle">
-     <a class="gm-view-btn" href="overview.html" aria-label="Overview">⊞</a>
-      </div>
-      
-      <!--
-      <div class="gm-project-nav">
-      <button class="gm-prev-project">PREVIOUS PROJECT</button>
-      <span>/</span>
-      <button class="gm-next-project">NEXT PROJECT</button>
-      </div>
-      -->
-
-      <button class="gm-close">BACK</button>
-
-      <button class="gm-hit gm-prev" aria-label="Previous"></button>
-      <button class="gm-hit gm-next" aria-label="Next"></button>
+  <main id="overview"><div id="grid" aria-label="Selected portfolio"></div></main>
+  <footer class="bottom-nav" id="overview-nav">
+    <div class="caption" id="overview-caption" aria-live="polite"></div>
+  </footer>
+  <section id="modal" class="overlay" role="dialog" aria-modal="true" aria-label="Portfolio media viewer" hidden>
+    <div class="modal-brand">NATSUKI ONEYAMA<br>MAKEUP ARTIST</div>
+    <div id="stage" class="stage"></div>
+    <div class="modal-footer"><div id="modal-caption" class="caption" aria-live="polite"></div><button id="modal-close" aria-label="Close media viewer">×</button></div>
+  </section>
+  <section id="info" class="overlay info" role="dialog" aria-modal="true" aria-label="About Natsuki Oneyama" hidden>
+    <button id="info-close" class="info-brand" aria-label="Close information">NATSUKI ONEYAMA<br>MAKEUP ARTIST</button>
+        <div class="info-columns">
+      <p class="bio">Paris-based makeup artist creating refined beauty with a modern, image-driven sensibility. Working across fashion, beauty and commercial projects, his approach combines precision, restraint and a strong understanding of how makeup functions within the broader visual narrative of an image.</p>
+      <p class="clients">SELECTED CLIENTS /<br><br>GIVENCHY BEAUTY / YSL BEAUTY / CLARINS / ADIDAS / DELVAUX / SWAROVSKI / ARTHUS BERTRAND / MORE OR LESS / BEAUTY PAPERS / MODERN WEEKLY CHINA / REPLICA MAN / 10 MAGAZINE / PORT MAGAZINE / OFFICE MAGAZINE / HUBE / VOGUE MEXICO / VOGUE ADRIA / VOGUE CZ /</p>
+      <nav class="info-links" aria-label="Contact and profile"><a href="https://www.instagram.com/natsukimua/">@NATSUKIMUA</a><a href="https://models.com/people/natsuki-oneyama">MODELS.COM</a><a href="pdf-request.html">PDF</a><a href="mailto:natsukioneyama@gmail.com">CONTACT</a></nav>
+     <img class="info-image" src="info/info01.webp"  alt="">
     </div>
-  </div>
-</section>
-</main>
-
-
-
-
-  
+  </section>
 </body>
 </html>

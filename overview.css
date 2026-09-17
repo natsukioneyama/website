@@ -1,905 +1,101 @@
-/* ==========================================================================
-   AOW overview + lightbox (gm) template
-   ========================================================================== */
-
-
-/* ==========================================================================
-   1) Base / Reset
-   - すべての要素の box-sizing を統一
-   - html/body の余白をゼロにする
-   ========================================================================== */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+:root { font-family: Arial, Helvetica, sans-serif; color: #191919; background: #fff; font-size: 12px; --edge: 14px; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, a { color: inherit; font: inherit; -webkit-tap-highlight-color: transparent; }
+button { padding: 0; border: 0; background: none; cursor: pointer; appearance: none; -webkit-appearance: none; }
+a { text-decoration: none; }
+button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
+.no-ring:focus-visible { outline: none; }
+[hidden] { display: none !important; }
+.brand, .info-brand, .modal-brand { position: fixed; left: max(var(--edge), env(safe-area-inset-left)); top: max(12px, env(safe-area-inset-top)); text-align: left; line-height: 1.2; font-weight: bold; }
+.brand { z-index: 10; color: white; mix-blend-mode: difference; }
+/* Shared by index.html and overview.html (both load this file) so the two pages'
+   top-right nav can never drift apart - same overlay-on-image technique as .brand
+   (fixed + mix-blend-mode) rather than a white bar that separates it from the
+   visual, on every breakpoint. */
+.index-header-nav {
+  display: flex; gap: 10px;
+  position: fixed; z-index: 10; color: white; mix-blend-mode: difference;
+  right: max(var(--edge), env(safe-area-inset-right));
+  top: max(12px, env(safe-area-inset-top));
 }
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-
-/* ==========================================================================
-   2) CSS Variables (Design tokens)
-   - --bar-h   : トップバーの想定高さ
-   - --gutter  : 端の余白（デバイス幅に応じて可変）
-   ========================================================================== */
-:root {
-  --bar-h: 72px;
-  --gutter: clamp(3px, 2vw, 5px);
-}
-
-/* ==========================================================================
-   3) Body global
-   - フォント / 色 / 背景 / 横スクロール抑止
-   ========================================================================== */
-body {
-  font-family: "Instrument Sans", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  color: #111;
-  background: #f7F7F5; 
-  overflow-x: hidden;
-}
-
-
-
-
-/* ==========================================================================
-   4) TOP BAR (Sticky + Responsive)
-   - desktop/tablet: left brand / right nav
-   - mobile portrait: nav goes under artist (left)
-   ========================================================================== */
-
-/* Top bar: sticky header */
-.topbar{
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-
-  /* optional: keep text readable over images */
-  /* background: #f7F7F5; */
-
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 12px;
-  padding: 10px var(--gutter);
-  min-height: var(--bar-h);
-}
-
-/* Brand (artist/role) */
-.brand{
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-.brand .artist{
-  font-size: .7rem;
-  letter-spacing: 0.06em;
-  
-  color: inherit;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.brand-link{
-  display: flex;
-  flex-direction: column;
-  color: inherit;
-  text-decoration: none;
-}
-
-.brand .role{
-  font-size: .7rem;
-  letter-spacing: .05em;
-}
-
-/* Nav links */
-.toplinks{
-  display: flex;
-  gap: 8px;
-}
- 
-.toplinks a{
-  font-size: .7rem;
-  color: inherit;
-  text-decoration: none;
-}
-
-/* Current page underline */
-.toplinks a[aria-current="page"]{
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.toplinks a:hover{
-  opacity: .8;
-}
-
-/* Mobile portrait: stack nav under artist */
-@media (max-width: 370px) and (orientation: portrait){
-  .topbar{
-    grid-template-columns: 1fr;
-    align-items: start;
-    gap: 8px;
-    padding: 14px 5px 10px;
-    min-height: auto;
-  }
-
-
-
-  .toplinks{
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .toplinks a{
-    font-size: .7rem;
-    letter-spacing: 0.04em;
-  }
-}
-
-
-/* ==========================================================================
-   5) Page wrapper
-   - overview グリッド全体の外側余白
-   ========================================================================== */
-.page {
-  padding: 0 var(--gutter) var(--gutter);
-}
-
-/* ==========================================================================
-   6) Overview grid (justified-layout 用)
-   - #grid: JS によって絶対配置のアイテムが入るコンテナ
-   - 初期は非表示（opacity/pointer-events）→ .jl-ready で表示
-   ========================================================================== */
-#grid {
-  position: relative;
-  width: 100%;
-  margin: 8px 0 25px;
-
-  /* JS でレイアウトが確定するまで見せない（チラつき防止） */
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* ★ JS で body に .jl-ready が付いたら表示 */
-body.jl-ready #grid {
-  opacity: 1;
-  pointer-events: auto;
-  transition: opacity 0.25s ease;
-}
-
-/* ==========================================================================
-   7) Items (images & videos)
-   - .jl-item は JS が left/top/width/height を付ける前提で absolute
-   - 中身（img/video）は枠にフィットさせる
-   ========================================================================== */
-.jl-item {
-  position: absolute; /* justified-layout の結果を JS が反映 */
-  margin: 0;
-  overflow: hidden;   /* 枠外を切る（object-fit とセット） */
-}
-
-.jl-item img,
-.jl-item video {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* data-w/data-h と合っていればほぼトリミングなし */
-}
-
-
-/* ==========================================================================
-   8) Overview caption & group highlight (hover/tap)
-   - .ov-cap: 各グループの先頭サムネにだけ出すキャプション
-   - PC は hover、モバイルは tap 用クラスで制御
-   ========================================================================== */
-
-/* キャプション共通（初期は非表示） */
-.ov-cap {
-  position: absolute;
-  left: 4px;
-  top: 2px;
-  color: #000;
-  font-size: .5rem;
-
-  opacity: 0;          /* 初期は非表示 */
-  pointer-events: none;/* クリックを邪魔しない */
-  max-width: 80%;
-  line-height: 1.3;
-}
-
-/* 見出し系（強調） */
-.ov-cap em,
-.ov-cap i {
-  display: block;
-  opacity: 0.9;
-  font-style: normal;  /* 斜体オフ */
-}
-
-.ov-cap b,
-.ov-cap strong {
-  font-style: normal;
-  font-weight: 400;
-}
-
-/* PC: hover が使える環境のみ */
+#overview { padding: 40px var(--edge) 64px; }
+#grid { position: relative; }
+.jl-item { display: block; margin: 0; }
+/* transform-origin/transition live on the inner media, not this wrapper: the
+   wrapper is the absolutely-positioned, justifiedLayout-sized grid cell that
+   :hover/mouseenter/mouseleave hit-test against, so its own box must never resize -
+   only the visual (img/video) scales. That keeps the hover hit-box static and is
+   what stops the shrink-hover-out/grow-hover-in flicker loop at a thumbnail's edge. */
+.jl-item img, .jl-item video { width: 100%; height: 100%; object-fit: contain; display: block; transform-origin: center; transition: transform 180ms ease; }
+.jl-item:focus-visible { z-index: 2; }
+.jl-item:focus-visible img, .jl-item:focus-visible video { transform: scale(1.065); }
+.jl-item.selected { z-index: 2; }
+.jl-item.selected img, .jl-item.selected video { transform: scale(0.85); }
+/* .hover-group is toggled by overview.js on every thumbnail belonging to the
+   hovered one's project (not just the hovered element itself), replacing the old
+   bare `.jl-item:hover` rule - see the report for why. */
 @media (hover: hover) and (pointer: fine) {
-
-  /* グループに属するサムネだけ白オーバーレイ */
-  #grid.is-group-hover .jl-item.is-in-group::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(255, 255, 255, 0.763);
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  /* グループ先頭（data-head="1"）のサムネだけキャプション表示 */
-  #grid.is-group-hover .jl-item[data-head="1"].is-in-group .ov-cap {
-    opacity: 1;
-    z-index: 2; /* オーバーレイより前 */
-  }
+  .jl-item.hover-group { z-index: 2; }
+  .jl-item.hover-group img, .jl-item.hover-group video { transform: scale(0.85); }
+}
+.bottom-nav, .modal-footer { position: fixed; bottom: 0; left: 0; right: 0; padding: 9px max(var(--edge), env(safe-area-inset-right)) max(9px, env(safe-area-inset-bottom)) max(var(--edge), env(safe-area-inset-left)); min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.bottom-nav { z-index: 5; background: rgba(255,255,255,.55); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.bottom-nav[inert], .brand[inert] { visibility: hidden; }
+.caption { line-height: 1.25; min-height: 30px; }
+.caption span { display: block; }
+.overlay { position: fixed; inset: 0; z-index: 20; background: rgba(245,245,245,.72); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+/* Scoped to #modal only (not .overlay, which #info also uses and needs to scroll
+   vertically): the image viewer has no native scroll content of its own - horizontal
+   drag is fully JS-driven via pointer events - so no native vertical pan/overscroll
+   is needed here, and leaving it enabled is what lets a big downward drag reach
+   iOS Safari's native Pull-to-Refresh. */
+#modal { touch-action: none; overscroll-behavior-y: none; }
+.stage { position: absolute; inset: 48px 30px 54px; overflow: hidden; touch-action: none; }
+.modal-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; user-select: none; -webkit-user-select: none; }
+.modal-footer button { font-size: 22px; min-width: 44px; min-height: 44px; text-align: right; }
+.info { overflow-y: auto; overscroll-behavior: contain; }
+.info-brand { z-index: 1; }
+.info-columns {
+  display: grid;
+  grid-template-columns: 230px;
+  gap: 20px;
+  width: max-content;
+  margin: 60px auto 0;
 }
 
-/* モバイル: 1回タップ中（is-group-tap） */
-#grid.is-group-tap .jl-item[data-head="1"].is-in-group .ov-cap {
-  opacity: 1;
-  z-index: 2; /* オーバーレイより前 */
+.clients {
+  grid-row: auto;
 }
 
-#grid.is-group-tap .jl-item.is-in-group::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.763);
-  pointer-events: none;
-  z-index: 1;
+.info-columns p {
+  margin: 0;
+  text-align: justify;
 }
 
-/* キャプションを常にオーバーレイより前に */
-#grid .ov-cap {
-  position: absolute;
-  z-index: 2;
-}
-
-
-/* ==========================================================================
-   9) Video fullscreen behavior (overview 側)
-   - フルスクリーン時は contain でトリミングしない
-   ========================================================================== */
-.jl-item.is-video video:fullscreen,
-.jl-item.is-video video:-webkit-full-screen {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  background: #000;
-}
-
-
-/* ==========================================================================
-   11) Small screen tweaks (ヘッダー文字)
-   ========================================================================== */
-@media (max-width: 480px) {
-  .brand .artist {
-    font-size: .7rem;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ==========================================================================
-   15) Custom video controls (sv)
-   ========================================================================== */
-
-/* 動画のラッパー（sv-controls の基準） */
-.gm-video-wrap {
-  position: relative;
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 20;
-
-  opacity: 0;
-  transition: opacity .35s ease;
-
-  pointer-events: auto;
-}
-
-/* JS が付与：準備完了で表示 */
-.gm-video-wrap.is-ready {
-  opacity: 1;
-}
-
-/* コントロール本体（動画の下端に沿わせる） */
-.sv-controls {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 12px 14px;
-
+.info-links {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .25s ease;
-
-  z-index: 10;
-
-  background: linear-gradient(to top, rgba(0,0,0,0.35), rgba(0,0,0,0));
-  border-radius: 0 0 6px 6px;
+  gap: 12px;
 }
-
-/* PC：ホバーで表示 */
-.gm-video-wrap:hover .sv-controls {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* JS で付与：表示 */
-.sv-controls.is-visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* プログレスバー（クリックでシーク） */
-.sv-progress {
-  position: relative;
-  height: 6px;
-  background: rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-  cursor: pointer;
-}
-
-/* 進捗バー（JS で width を更新） */
-.sv-progress__bar {
-  width: 0;
-  height: 100%;
-  background: #fff;
-}
-
-/* ボタン行（左右配置） */
-.sv-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* ボタン共通（白文字） */
-.sv-btn {
-  border: none;
-  background: transparent;
-  color: #fff;
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  padding: 4px 0;
-  cursor: pointer;
-}
-
-/* モバイル用：コントロールの余白を少し減らす */
-@media (max-width: 480px) {
-  .sv-controls {
-    padding: 8px 12px;
-  }
-}
-
-/* hover なし（タッチ）：初期非表示、.is-visible で表示 */
-@media (hover: none) and (pointer: coarse) {
-  .gm-video-wrap .sv-controls {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .35s ease;
-  }
-
-  .gm-video-wrap .sv-controls.is-visible {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-
-
-/* ==========================================================================
-   Video sizing (default)
-   ========================================================================== */
-
-/* 動画本体（gm 内）: gm-frame の中に必ず収める */
-.gm-video-wrap{
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.gm-video-wrap video{
+.info-image {
   display: block;
-  width: auto;
+  width: 200px;
   height: auto;
-  max-width: 90vw;
-  max-height: 90vh;
-  object-fit: contain;
+  margin-top: 40px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* =========================================
-   LIGHTBOX (gm)
-   ========================================= */
-
-/* hidden state */
-.gm[aria-hidden="true"] {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-/* modal root */
-.gm {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
+@media (max-width: 767px) {
+  :root { --edge: 10px; font-size: 10px; }
+  #overview { padding-top: 40px; }
+  .stage { inset: 48px 0 64px; }
+  .bottom-nav { font-size: 12px; }
+  .info-links { font-size: 10px; }
+  .info-columns {
   display: grid;
-  place-items: center;
-  --gm-footer-h: 120px;
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-@media (max-width: 767px){
-  .gm{ --gm-footer-h: 140px; }
-}
-
-@media (orientation: portrait) and (hover: none) and (pointer: coarse) and (min-width:768px){
-  .gm{ --gm-footer-h:180px; }
-}
-
-/* backdrop */
-.gm-backdrop{
-  position:absolute;
-  inset:0;
-  border:0;
-  padding:0;
-  margin:0;
-  background:#f7F7F5;
-}
-
-/* hidden switching */
-.gm-frame img[hidden],
-.gm-video-wrap[hidden]{
-  display:none !important;
-}
-
-/* frame */
-.gm-frame{
-  position:relative;
-  width:98vw;
-  height:calc(100svh - var(--gm-footer-h));
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-/* image */
-.gm-frame img{
-  max-width:100%;
-  max-height:100%;
-  object-fit:contain;
-  user-select:none;
-  -webkit-user-drag:none;
-}
-
-/* caption container */
-.gm-caption{
-  position:absolute;
-  left:10px;
-  bottom:10px;
-  z-index:20;
-  pointer-events:none;
-  text-align:left;
-  color:#000;
-}
-
-
-
-/* signature top-left */
-.gm-name{
-  position:fixed;
-  top:8px;
-  left:5px;
-  z-index:10000;
-  margin:0;
-  pointer-events:none;
-  line-height:0.5;
-}
-
-/* links */
-.gm-main{ text-decoration:none; color:inherit; cursor:pointer; }
-.gm-main:visited{ color:inherit; }
-
-.gm-name .gm-main{
-  font-size:.7rem;
-  letter-spacing:0.05em;
-  pointer-events:auto;
-}
-
-.gm-name .gm-subtitle{
-  font-size:.7rem;
-  letter-spacing:0.04em;
-}
-
-.gm-name .gm-main,
-.gm-name .gm-subtitle{
-  display:block;
-}
-
-/* caption text */
-.gm-ttl{
-  margin-bottom:1px;
-  font-size:.7rem;
-  letter-spacing:.06em;
-}
-
-.gm-sub{
-  margin:0;
-  font-size:.7rem;
-  letter-spacing:.04em;
-}
-
-/* counter */
-.gm-counter{
-  position:absolute;
-  right:15px;
-  bottom:30px;
-  color:#000;
-  font-size:.7rem;
-  letter-spacing:.04em;
-}
-
-/* close button */
-.gm-close{
-  position:absolute;
-  right:10px;
-  bottom:10px;
-  border:0;
-  background:transparent;
-  color:#000;
-  font-size:.6rem;
-  z-index:10;
-}
-
-.gm-project-nav{
-  position: absolute;
-  left: 50%;
-  bottom: 10px;
-  transform: translateX(-50%);
-  z-index: 10;
-
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  font-size: .6rem;
-  letter-spacing: .04em;
-}
-
-.gm-project-nav button {
-  border: 0;
-  background: transparent;
-  color: #000;
-  cursor: pointer;
-  font: inherit;
-  padding: 8px 6px;
-}
-
-.gm-project-nav span{
-  color: #000;
-}
-
-
-@media (max-width: 360px){
-.gm-name .gm-main,
-.gm-name .gm-subtitle,
-.gm-ttl,
-.gm-sub,
-.gm-counter,
-.gm-close
-
-{
-  font-size:.6rem;
-  letter-spacing:0.05em;
+  grid-template-columns: min(280px, calc(100vw - 40px));
+  gap: 20px;
+  width: max-content;
+  margin: 60px auto 0;
 }
 }
-
-
-/* click zones */
-.gm-hit{
-  position:absolute;
-  top:0;
-  bottom:0;
-  width:50vw;
-  height:100vh;
-  border:0;
-  background:transparent;
-  cursor:pointer;
-  z-index:5;
-}
-.gm-prev{ left:0; }
-.gm-next{ right:0; }
-
-/* tap highlight off */
-.gm-hit,
-.gm-close,
-.gm-backdrop{
-  -webkit-tap-highlight-color:transparent;
-  outline:none;
-  user-select:none;
-}
-
-/* open behaviour */
-.gm[aria-hidden="false"]{
-  overflow:hidden !important;
-  overscroll-behavior:contain !important;
-  touch-action:none !important;
-}
-
-/* safe area mobile */
-@media (max-width:768px){
-  .gm-caption{
-    left: 12px;
-    right: auto;
-    bottom: calc(16px + env(safe-area-inset-bottom));
-    text-align: left;
-    max-width: 68%;
-    pointer-events: none;
-  }
-
-  .gm-project-nav{
-    left: 6px;
-    right: auto;
-    transform: none;
-    bottom: calc(8px + env(safe-area-inset-bottom));
-    justify-content: flex-start;
-    font-size: .6rem;
-    gap: 8px;
-  }
-
-  .gm-counter{
-    right: 18px;
-    bottom: calc(38px + env(safe-area-inset-bottom));
-  }
-
-  .gm-close{
-    right: 12px;
-    bottom: calc(16px + env(safe-area-inset-bottom));
-    font-size: .6rem;
-  }
-
-}
-
-
-
-
-
-
-/* =========================================
-   LIGHTBOX (gm) — OVERVIEW TOGGLE
-   ========================================= */
-.gm-view-toggle{
-  position: fixed;
-  top: 7px;
-  right: 24px;
-  z-index: 10001;
-  display: flex;
-  gap: 10px;
-}
-
-.gm-view-btn{
-  width: 30px;
-  height: 30px;
-  color: #111;
-  font-size: 16px;
-  line-height: 1;
-  text-decoration: none;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border-radius: 6px;
-}
-
-.gm-view-btn.is-active{
-  background: rgba(0,0,0,0.08);
-}
-
-@media (max-width: 768px){
-  .gm-view-toggle{
-    top: 7px;
-    right: 16px;
-    gap: 8px;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ================= VIDEO (gm) ================= */
-
-/* wrapper: 基本形 + readyまで隠す */
-.gm-video-wrap{
-  position: relative;
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 20;
-
-  opacity: 0;
-  transition: opacity .35s ease;
-
-  pointer-events: auto;
-
-  /* sizing: default */
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.gm-video-wrap.is-ready{
-  opacity: 1;
-}
-
-/* video: default sizing */
-.gm-video-wrap video{
-  display: block;
-  width: auto;
-  height: auto;
-  max-width: 90vw;
-  max-height: 90vh;
-  object-fit: contain;
-}
-
-/* controls */
-.sv-controls{
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 12px 14px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .25s ease;
-
-  z-index: 10;
-  background: linear-gradient(to top, rgba(0,0,0,.35), rgba(0,0,0,0));
-}
-
-.gm-video-wrap:hover .sv-controls{
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.sv-controls.is-visible{
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.sv-progress{
-  height: 6px;
-  background: rgba(0,0,0,.3);
-  cursor: pointer;
-}
-
-.sv-progress__bar{
-  width: 0;
-  height: 100%;
-  background: #fff;
-}
-
-.sv-nav{
-  display: flex;
-  justify-content: space-between;
-}
-
-.sv-btn{
-  border: none;
-  background: transparent;
-  color: #fff;
-  font-size: 11px;
-  letter-spacing: .06em;
-  cursor: pointer;
-}
-
-@media (max-width:480px){
-  .sv-controls{ padding: 8px 12px; }
-}
-
-/* ==========================================================================
-   FIX — mobile PORTRAIT only
-   ========================================================================== */
-
-@media (max-width: 768px) and (orientation: portrait) and (pointer: coarse){
-
-  .gm-frame{
-    height: calc(100svh - var(--gm-footer-h));
-  }
-
-  .gm-video-wrap{
-    max-height: 100%;
-    max-width: none;
-  }
-
-  .gm-video-wrap video{
-    height: 100%;
-    width: auto;
-    max-height: 100%;
-    max-width: 100%;
-    object-fit: contain;
-  }
-
-  .gm.is-portrait-video .gm-video-wrap{
-    max-width: 72vw;
-    margin: 0 auto;
-  }
-
-  .gm.is-portrait-video{
-    --gm-footer-h: 190px;
-  }
-}
+@media (prefers-reduced-motion: reduce) { .jl-item img, .jl-item video { transition: none; } }
