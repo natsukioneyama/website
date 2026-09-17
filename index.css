@@ -16,9 +16,9 @@
   --index-footer-space: 160px;            /* whitespace before the footer, after the last thumbnail */
 
   --index-nav-top: 100px;
-  --index-featured-label-gap: 30px;       /* space between [ NEWEST FEATURED PROJECT ] and .index-first-ref below it */
-  --index-first-ref-line-gap: 20px;       /* vertical gap between its 2nd and 3rd lines, all breakpoints */
-  --index-first-ref-gap: 50px;            /* space between the first-project reference text and its image */
+  --index-featured-label-gap: 15px;       /* space between [ NEWEST FEATURED PROJECT ] and .index-first-ref below it */
+  --index-first-ref-line-gap: 10px;       /* vertical gap between its 2nd and 3rd lines, all breakpoints */
+  --index-first-ref-gap: 20px;            /* space between the first-project reference text and its image */
   --index-top-space: var(--index-nav-top);
 }
 
@@ -37,8 +37,12 @@
 .index-thumb { display: block; }
 
 .brand, .info-brand, .modal-brand {
-  font-size: 16px;
+  font-size: 14px;
 }
+
+   #index-modal-caption {
+    font-size: 10px;
+  }
 
 @media (max-width: 699px) {
   .brand,
