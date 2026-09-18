@@ -7,7 +7,7 @@ a { text-decoration: none; }
 button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
 .no-ring:focus-visible { outline: none; }
 [hidden] { display: none !important; }
-.brand, .info-brand, .modal-brand { position: fixed; left: max(var(--edge), env(safe-area-inset-left)); top: max(12px, env(safe-area-inset-top)); text-align: left; line-height: 1.2; font-weight: bold; }
+.brand, .info-brand, .modal-brand { position: fixed; left: max(var(--edge), env(safe-area-inset-left)); top: max(12px, env(safe-area-inset-top)); text-align: left; line-height: 1.2; font-weight: bold; z-index: 10;}
 .brand { z-index: 10; color: var(--bg); mix-blend-mode: difference; }
 /* Shared by index.html and overview.html (both load this file) so the two pages'
    top-right nav can never drift apart - same overlay-on-image technique as .brand
@@ -26,7 +26,14 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
   top: max(12px, env(safe-area-inset-top));
   font-weight: bold;
 }
-#overview { padding: 70px var(--edge) 64px; }
+
+
+
+@media (max-width: 699px) {
+
+  .index-header-nav { font-size: 10px; }
+}
+#overview { padding: 100px var(--edge) 64px; }
 #grid { position: relative; }
 .jl-item { display: block; margin: 0; }
 /* transform-origin/transition live on the inner media, not this wrapper: the
@@ -46,11 +53,11 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
    must render there too, not only under (hover:hover) and (pointer:fine). */
 .jl-item.hover-group { z-index: 2; }
 .jl-item.hover-group img, .jl-item.hover-group video { transform: scale(0.85); }
-.bottom-nav, .modal-footer { position: fixed; bottom: 0; left: 0; right: 0; padding: 9px max(var(--edge), env(safe-area-inset-right)) max(9px, env(safe-area-inset-bottom)) max(var(--edge), env(safe-area-inset-left)); min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.bottom-nav, .modal-footer { position: fixed; bottom: 0; left: 0; right: 0; padding: 9px max(var(--edge), env(safe-area-inset-right)) max(9px, env(safe-area-inset-bottom)) max(var(--edge), env(safe-area-inset-left)); min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size:10px; }
 .bottom-nav { z-index: 5; background: #9d030363; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .bottom-nav[inert], .brand[inert] { visibility: hidden; }
 .caption { line-height: 1.25; min-height: 30px; }
-.caption span { display: block; }
+.caption span { display: block;  }
 
 .overlay { position: fixed; inset: 0; z-index: 20; background: rgba(245,245,245,.72); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
 /* Scoped to #modal only (not .overlay, which #info also uses and needs to scroll
@@ -96,28 +103,11 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
 }
 @media (max-width: 767px) {
   :root { --edge: 10px; font-size: 10px; }
-  #overview { padding-top: 70px; }
   .stage { inset: 48px 0 64px; }
-  .bottom-nav { font-size: 12px; }
-  .info-links { font-size: 10px; }
   .info-columns {
-  display: grid;
   grid-template-columns: min(280px, calc(100vw - 40px));
-  gap: 20px;
-  width: max-content;
-  margin: 70px auto 0;
+  margin: 150px auto 0;
 }
 }
-/* Real handheld phones only (index.html and overview.html share this file) - the
-   above <=767px block's 10px reads too small on an actual iPhone. Every text
-   element this needs to affect (.brand, .index-header-nav, .index-featured-label,
-   .index-first-ref) already just inherits :root's font-size with no per-element
-   override, so raising it back up here is enough on its own - no individual
-   overrides added. Deliberately its own breakpoint (699px, matching index.css's own
-   Mobile/Tablet Portrait split) rather than widening the 767px block above, so the
-   700-767px sliver (part of index.css's Tablet range) keeps its current, unrelated
-   10px behavior exactly as-is. */
-@media (max-width: 699px) {
-  :root { font-size: 16px; }
-}
+
 @media (prefers-reduced-motion: reduce) { .jl-item img, .jl-item video { transition: none; } }

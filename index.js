@@ -31,7 +31,7 @@
       lines: [
         '10 MAGAZINE',
         'ISSUE 77  AUTUMN/WINTER 2026',
-        'PHOTOGRAPHER: Ferry van der Nat'
+        'FERRY VAN DER NAT'
       ]
     },
       'vogue-adria-danilo-pavlovic': {
@@ -39,7 +39,7 @@
     lines: [
       'VOGUE ADRIA',
       'SUMMER 2026',
-      'PHOTOGRAPHER: Danilo Pavlovic'
+      'DANILO PAVLOVIC'
     ]
   }
   

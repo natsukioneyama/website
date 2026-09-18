@@ -12,13 +12,6 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
   padding: max(12px, env(safe-area-inset-top)) max(var(--edge), env(safe-area-inset-right)) 12px max(var(--edge), env(safe-area-inset-left));
 }
 
-.pdf-request-name {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.2;
-  text-transform: uppercase;
-}
-
 .pdf-request-back {
   display: inline-block;
   margin: -8px;
