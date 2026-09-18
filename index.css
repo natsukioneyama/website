@@ -82,7 +82,6 @@
     position: fixed; z-index: 10;
     left: max(var(--edge), env(safe-area-inset-left));
     top: var(--index-nav-top);
-    font-family: "Roboto", sans-serif;
     font-weight: 900;
     color:black
   }
@@ -111,7 +110,7 @@
      would render at its default static position, at the top of #index-main ahead
      of .index-visual, visibly shifting the mobile layout. */
   .index-caption { display: none;  }
-  .index-mobile-caption { font-family: "Roboto", sans-serif; font-size: 18px; }
+  .index-mobile-caption { font-family: "Noto Sans HK", sans-serif; font-size: 18px; }
 }
 
 /* The one continuous, gap-0 sequence of giant thumbnails - same DOM and CSS at
