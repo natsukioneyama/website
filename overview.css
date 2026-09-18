@@ -1,4 +1,4 @@
-:root { font-family: Arial, Helvetica, sans-serif; color: #191919; --bg: #9d0303; background: var(--bg); font-size: 12px; --edge: 14px; }
+:root { font-family: Arial, Helvetica, sans-serif; color: #191919; --bg: #9d0303; background: var(--bg); font-size: 14px; --edge: 14px; }
 * { box-sizing: border-box; }
 body { margin: 0; }
 button, a { color: inherit; font: inherit; -webkit-tap-highlight-color: transparent; }
@@ -17,7 +17,7 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
 .brand-initial {
   font-family: "UnifrakturMaguntia", serif;
   font-weight: 400;
-  font-size: 1.3em;
+  font-size: 2em;
 }
 .index-header-nav {
   display: flex; gap: 10px;
@@ -26,7 +26,7 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
   top: max(12px, env(safe-area-inset-top));
   font-weight: bold;
 }
-#overview { padding: 40px var(--edge) 64px; }
+#overview { padding: 70px var(--edge) 64px; }
 #grid { position: relative; }
 .jl-item { display: block; margin: 0; }
 /* transform-origin/transition live on the inner media, not this wrapper: the
@@ -96,7 +96,7 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
 }
 @media (max-width: 767px) {
   :root { --edge: 10px; font-size: 10px; }
-  #overview { padding-top: 40px; }
+  #overview { padding-top: 70px; }
   .stage { inset: 48px 0 64px; }
   .bottom-nav { font-size: 12px; }
   .info-links { font-size: 10px; }
@@ -118,6 +118,6 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
    700-767px sliver (part of index.css's Tablet range) keeps its current, unrelated
    10px behavior exactly as-is. */
 @media (max-width: 699px) {
-  :root { font-size: 14px; }
+  :root { font-size: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { .jl-item img, .jl-item video { transition: none; } }

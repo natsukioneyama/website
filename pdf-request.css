@@ -1,6 +1,6 @@
-:root { font-family: Arial, Helvetica, sans-serif; color: #191919; background: #fff; font-size: 12px; --edge: 14px; }
+:root { font-family: Arial, Helvetica, sans-serif; color: #191919; background: #9d0303; font-size: 12px; --edge: 14px; }
 * { box-sizing: border-box; }
-body { margin: 0; background: #fff; color: #191919; }
+body { margin: 0; background:  #9d0303; color: #191919; }
 button, a { color: inherit; font: inherit; }
 a { text-decoration: none; }
 button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
@@ -44,9 +44,9 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
 
 .pdf-request-intro { margin: 0 0 40px; font-size: 15px; line-height: 1.5; }
 
-.pdf-request-form { border-top: 1px solid #d8d8d8; }
+.pdf-request-form { border-top: 1px solid #191919;; }
 
-.pdf-request-field { padding: 20px 0; border-bottom: 1px solid #d8d8d8; }
+.pdf-request-field { padding: 20px 0; border-bottom: 1px solid #191919;; }
 
 .pdf-request-field label {
   display: block;
@@ -65,7 +65,7 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
   padding: 10px 0;
   border: 0;
   border-radius: 0;
-  border-bottom: 1px solid #d8d8d8;
+  border-bottom: 1px solid #191919;;
   background: transparent;
   color: #191919;
   font-family: inherit;
@@ -76,13 +76,12 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
 
 .pdf-request-field input[type="text"]:hover,
 .pdf-request-field input[type="email"]:hover,
-.pdf-request-field textarea:hover { border-bottom-color: #999; }
 
 .pdf-request-field input[type="text"]:focus-visible,
 .pdf-request-field input[type="email"]:focus-visible,
 .pdf-request-field textarea:focus-visible { outline: 2px solid #191919; outline-offset: 2px; }
 
-.pdf-request-fieldset { margin: 0; padding: 20px 0; border: 0; border-bottom: 1px solid #d8d8d8; }
+.pdf-request-fieldset { margin: 0; padding: 20px 0; border: 0; border-bottom: 1px solid #191919;; }
 
 .pdf-request-fieldset legend {
   padding: 0;
@@ -97,12 +96,11 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
   align-items: center;
   gap: 12px;
   padding: 12px 4px;
-  border-top: 1px solid #d8d8d8;
+  border-top: 1px solid #191919;;
   cursor: pointer;
 }
 
-.pdf-request-checkbox:hover,
-.pdf-request-checkbox:focus-within { background: #f2f2f2; }
+
 
 .pdf-request-checkbox input {
   width: 16px;
@@ -123,8 +121,8 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
   padding: 16px;
   border: 1px solid #191919;
   border-radius: 0;
-  background: #fff;
-  color: #191919;
+  background: #191919;
+  color: #fff;
   font-family: inherit;
   font-size: 14px;
   text-transform: uppercase;
@@ -132,7 +130,6 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
   cursor: pointer;
 }
 
-.pdf-request-submit:hover { background: #191919; color: #fff; }
 
 .pdf-request-submit:focus-visible { outline: 2px solid #191919; outline-offset: 4px; }
 
@@ -157,4 +154,11 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
   .pdf-request-page { padding: 12px var(--edge) 60px; }
   .pdf-request-title { margin-bottom: 12px; }
   .pdf-request-intro { margin-bottom: 28px; }
+}
+
+
+.brand-initial {
+  font-family: "UnifrakturMaguntia", serif;
+  font-weight: 400;
+  font-size: 2em;
 }
