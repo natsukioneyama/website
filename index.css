@@ -37,6 +37,7 @@
 
 .brand, .info-brand, .modal-brand {
   font-size: 14px;
+  padding-top:20px;
 }
 
    #index-modal-caption {
@@ -47,10 +48,10 @@
   .brand,
   .info-brand,
   .modal-brand {
-    font-size: 16px;
+    font-size: 12px;
   }
     #index-modal-caption {
-    font-size: 12px;
+    font-size: 10px;
   }
 }
 
