@@ -54,8 +54,6 @@
   }
 }
 
-
-
 /* .index-header-nav itself now lives in overview.css, shared by index.html (which
    loads overview.css then this file) and overview.html (which loads only
    overview.css) - so the two pages' header nav can never drift out of sync. */
@@ -111,7 +109,7 @@
   /* Left fixed-UI caption is PC-only (see .index-caption above) - without this it
      would render at its default static position, at the top of #index-main ahead
      of .index-visual, visibly shifting the mobile layout. */
-  .index-caption { display: none; }
+  .index-caption { display: none;  }
   .index-mobile-caption { font-family: "Roboto", sans-serif; font-size: 18px; }
 }
 
@@ -136,13 +134,16 @@
   .index-featured-label {
     padding-left: max(var(--edge), env(safe-area-inset-left));
     padding-right: max(var(--edge), env(safe-area-inset-right));
+    color:black;
   }
 }
+
+.index-caption { color:black; }
 
 /* The only per-project reference text on the page (see index.js/html) - see
    .index-featured-label above for the two caption contexts this is shared by. */
 .index-first-ref { margin-bottom: var(--index-first-ref-gap); line-height: 1.3; font-weight: 900; }
-.index-first-ref p { margin: 0; }
+.index-first-ref p { margin: 0; color:black; }
 /* 2nd/3rd line gap, all breakpoints - the 1st/2nd lines stay tight (line-height only). */
 .index-first-ref p:last-child { margin-top: var(--index-first-ref-line-gap); }
 
