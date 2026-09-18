@@ -85,6 +85,7 @@
     top: var(--index-nav-top);
     font-family: "Roboto", sans-serif;
     font-weight: 900;
+    color:black
   }
   /* Mobile/Tablet Portrait's static caption (see index.js) is PC-only's opposite -
      hidden here since >=1024px already has the dynamic .index-caption instead. */
