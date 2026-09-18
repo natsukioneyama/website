@@ -7,15 +7,15 @@ a { text-decoration: none; }
 button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
 .no-ring:focus-visible { outline: none; }
 [hidden] { display: none !important; }
-.brand, .info-brand, .modal-brand { position: fixed; left: max(var(--edge), env(safe-area-inset-left)); top: max(12px, env(safe-area-inset-top)); text-align: left; line-height: 1.2; font-weight: bold; z-index: 10; padding-top:20px;}
+.brand, .info-brand, .modal-brand { position: fixed; left: max(var(--edge), env(safe-area-inset-left)); top: max(12px, env(safe-area-inset-top)); text-align: left; line-height: 1.2; font-weight: bold; z-index: 10; font-size: 16px; padding-top:20px;}
 .brand { z-index: 10; color: var(--bg); mix-blend-mode: difference; }
 /* Shared by index.html and overview.html (both load this file) so the two pages'
    top-right nav can never drift apart - same overlay-on-image technique as .brand
    (fixed + mix-blend-mode) rather than a white bar that separates it from the
    visual, on every breakpoint. */
 
-.brand, .info-brand, .modal-brand {
-  font-size: 16px;
+.modal-brand {
+ padding-top:0;
 }
 .brand-initial {
   font-family: "UnifrakturMaguntia", serif;
