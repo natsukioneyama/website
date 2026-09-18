@@ -83,6 +83,8 @@
     position: fixed; z-index: 10;
     left: max(var(--edge), env(safe-area-inset-left));
     top: var(--index-nav-top);
+    font-family: "Roboto", sans-serif;
+    font-weight: 900;
   }
   /* Mobile/Tablet Portrait's static caption (see index.js) is PC-only's opposite -
      hidden here since >=1024px already has the dynamic .index-caption instead. */
@@ -109,6 +111,7 @@
      would render at its default static position, at the top of #index-main ahead
      of .index-visual, visibly shifting the mobile layout. */
   .index-caption { display: none; }
+  .index-mobile-caption { font-family: "Roboto", sans-serif; font-size: 18px; }
 }
 
 /* The one continuous, gap-0 sequence of giant thumbnails - same DOM and CSS at
@@ -127,7 +130,7 @@
    out of .index-visual's flow entirely) and the <=1023px static
    .index-mobile-caption (a plain .index-visual-preceding sibling, so here it does
    sit in normal flow directly above the first thumbnail). */
-.index-featured-label { font-weight: bold; margin-bottom: var(--index-featured-label-gap); }
+.index-featured-label { font-weight: 900; margin-bottom: var(--index-featured-label-gap); }
 @media (max-width: 1023px) {
   .index-featured-label {
     padding-left: max(var(--edge), env(safe-area-inset-left));
@@ -137,7 +140,7 @@
 
 /* The only per-project reference text on the page (see index.js/html) - see
    .index-featured-label above for the two caption contexts this is shared by. */
-.index-first-ref { margin-bottom: var(--index-first-ref-gap); line-height: 1.3; font-weight: bold; }
+.index-first-ref { margin-bottom: var(--index-first-ref-gap); line-height: 1.3; font-weight: 900; }
 .index-first-ref p { margin: 0; }
 /* 2nd/3rd line gap, all breakpoints - the 1st/2nd lines stay tight (line-height only). */
 .index-first-ref p:last-child { margin-top: var(--index-first-ref-line-gap); }
@@ -158,6 +161,7 @@
   display: flex; justify-content: space-between; align-items: center;
   margin-top: var(--index-footer-space);
   padding: 0 var(--edge) 24px;
+  font-size: 12px;
 }
 
 /* ============ Horizontal project modal ============ */
