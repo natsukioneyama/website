@@ -1,219 +1,380 @@
-const heroImages = [
-  "slide/01.webp",
-  "slide/02.webp",
-  "slide/03.webp",
-  "slide/04.webp",
-  "slide/05.webp",
-  "slide/06.webp",
-  "slide/07.webp",
-  "slide/08.webp",
-  "slide/09.webp",
-  "slide/10.webp",
-  "slide/11.webp",
-  "slide/12.webp",
-  "slide/13.webp",
-  "slide/14.webp"
-];
+/* index.html: Selected Works top page.
+ * One continuous 1-column sequence of giant project thumbnails, plus (Desktop/Tablet
+ * only) a fixed-left dynamic caption reflecting whichever thumbnail is currently
+ * centered (see the IntersectionObserver below) - both driven by the same SEQUENCE
+ * array and the same openProject() function, so there is exactly one navigation
+ * code path. Below that, a per-project horizontal filmstrip modal driven by native
+ * scroll (no external carousel library, no custom pointer-drag - touch gets native
+ * momentum for free).
+ */
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const main = $('index-main'), brand = $('index-brand');
+  const headerNav = document.querySelector('.index-header-nav');
+  const modal = $('index-modal'), stage = $('index-stage'), modalCaption = $('index-modal-caption');
+  const modalHeader = $('index-modal-header');
+  const info = $('index-info'), infoClose = $('index-info-close');
+  const projectsById = new Map(window.PORTFOLIO_PROJECTS.map(p => [p.id, p]));
 
-const heroSlide = document.querySelector(".hero-slide");
-let currentHeroIndex = 0;
+  // Left fixed-UI dynamic caption (PC only, >=1024px - see report), positioned via
+  // index.css relative to #index-brand, not in the central .index-visual. Hand-
+  // curated per-project caption content,
+  // deliberately kept out of portfolio-data.js: issue/publication metadata like
+  // this exists nowhere in that file (confirmed against the current file), and this
+  // is display-only copy for this one page's left UI, not portfolio data. Edit this
+  // object directly to add/change a project's label or lines - e.g. a future
+  // '[FEATURED PROJECT]' entry - nothing else needs to change.
+  const INDEX_CAPTIONS = {
+    '10-magazine': {
+      label: '[NEWEST FEATURED PROJECT]',
+      lines: [
+        '10 MAGAZINE',
+        'ISSUE 77  AUTUMN/WINTER 2026',
+        'PHOTOGRAPHER: Ferry van der Nat'
+      ]
+    },
+      'vogue-adria-danilo-pavlovic': {
+    label: '[FEATURED PROJECT]',
+    lines: [
+      'VOGUE ADRIA',
+      'SUMMER 2026',
+      'PHOTOGRAPHER: Danilo Pavlovic'
+    ]
+  }
+  
+  };
 
-setInterval(() => {
-  currentHeroIndex = (currentHeroIndex + 1) % heroImages.length;
-  heroSlide.src = heroImages[currentHeroIndex];
-}, 800);
+  // Built once, in place, rather than as per-project DOM - hover and scroll both
+  // just rewrite this same node's content (see updateCaption below).
+  const caption = document.createElement('div');
+  caption.className = 'index-caption';
+  const captionLabel = document.createElement('div');
+  captionLabel.className = 'index-featured-label';
+  const captionRef = document.createElement('div');
+  captionRef.className = 'index-first-ref';
+  caption.append(captionLabel, captionRef);
+  main.prepend(caption);
 
-document.querySelectorAll('img').forEach(img => {
-  img.addEventListener('contextmenu', e => {
-    e.preventDefault();
-  });
+  // Mobile/Tablet Portrait (<=1023px - see report) static caption: same
+  // INDEX_CAPTIONS data source as the PC dynamic caption above, just its first
+  // entry, rendered once at load and never updated by hover/scroll (unlike
+  // .index-caption). A plain block in normal document flow, not fixed/sticky, so it
+  // scrolls away with the page - inserted as #index-visual's own previous sibling
+  // (not a child of it) so it sits between the header and the first .index-thumb
+  // without joining the thumbnail sequence itself. Hidden >=1024px in index.css.
+  // Reuses .index-featured-label/.index-first-ref (and their existing <=1023px
+  // padding rules) rather than introducing new typography/spacing CSS.
+  const [, firstCaption] = Object.entries(INDEX_CAPTIONS)[0];
+  const mobileCaption = document.createElement('div');
+  mobileCaption.className = 'index-mobile-caption';
+  if (firstCaption.label) {
+    const mobileCaptionLabel = document.createElement('div');
+    mobileCaptionLabel.className = 'index-featured-label';
+    mobileCaptionLabel.textContent = firstCaption.label;
+    mobileCaption.append(mobileCaptionLabel);
+  }
+  const mobileCaptionRef = document.createElement('div');
+  mobileCaptionRef.className = 'index-first-ref';
+  mobileCaptionRef.append(...firstCaption.lines.map(text => {
+    const p = document.createElement('p');
+    p.textContent = text;
+    return p;
+  }));
+  mobileCaption.append(mobileCaptionRef);
+  main.insertBefore(mobileCaption, $('index-visual'));
 
-  img.setAttribute('draggable', 'false');
-});
-
-
-
-
-
-
-
-
-
- // ヘッダー非表示スクロール機能は .biography セクション削除に伴い廃止(2026-08)
-
-
-
-
-
-
-
-
-
-const featuredLightbox = document.querySelector(".featured-lightbox");
-const featuredLightboxImage = document.querySelector(".featured-lightbox-image");
-const featuredLightboxClose = document.querySelector(".featured-lightbox-close");
-const featuredLightboxPrev = document.querySelector(".featured-lightbox-prev");
-const featuredLightboxNext = document.querySelector(".featured-lightbox-next");
-
-let featuredImages = [];
-let featuredLightboxIndex = 0;
-
-function openFeaturedLightbox(images, index) {
-  featuredImages = images;
-  featuredLightboxIndex = index;
-
-  featuredLightboxImage.src = featuredImages[featuredLightboxIndex];
-  featuredLightbox.classList.add("is-open");
-  featuredLightbox.setAttribute("aria-hidden", "false");
-  document.body.style.overflow = "hidden";
-}
-
-function closeFeaturedLightbox() {
-  featuredLightbox.classList.remove("is-open");
-  featuredLightbox.setAttribute("aria-hidden", "true");
-  featuredLightboxImage.src = "";
-  document.body.style.overflow = "";
-}
-
-function showFeaturedImage(index) {
-  if (index < 0) {
-    featuredLightboxIndex = featuredImages.length - 1;
-  } else if (index >= featuredImages.length) {
-    featuredLightboxIndex = 0;
-  } else {
-    featuredLightboxIndex = index;
+  // The single source of truth for "what the caption currently shows" - called
+  // from the scroll-driven IntersectionObserver below (the only update path now
+  // that the left index is gone). Projects with no INDEX_CAPTIONS entry fall back
+  // to the same [title, line1] pairing the modal caption already uses (see
+  // openProject); the label line is simply omitted for those.
+  function updateCaption(project) {
+    const entry = INDEX_CAPTIONS[project.id];
+    captionLabel.textContent = entry?.label || '';
+    captionLabel.style.visibility = entry?.label ? '' : 'hidden';
+    const lines = entry ? entry.lines : [project.title, project.line1].filter(Boolean);
+    captionRef.replaceChildren(...lines.map(text => {
+      const p = document.createElement('p');
+      p.textContent = text;
+      return p;
+    }));
   }
 
-  featuredLightboxImage.src = featuredImages[featuredLightboxIndex];
-}
+  // The single 14-project sequence, in display order, for the giant-thumbnail
+  // visual column. Entries without mediaIndex use media[0] as the cover image.
+  // Verified against the current portfolio-data.js.
+  const SEQUENCE = [
+    {id: '10-magazine'},
+    {id: 'vogue-adria-danilo-pavlovic'},
+    {id: 'krzysztof-jan'},
+    {id: 'carl-diner'},
+    {id: 'beauty-antoine-charlie', mediaIndex: 0},
+    {id: 'replica-man-pavel-golik'},
+    {id: 'beauty-papers-jeremie-monnier'},
+    {id: 'port-magazine-aude-le-barbey'},
+    {id: 'office-jesper-lund'},
+    {id: 'vogue-mexico-ward-ivan-rafik'},
+    {id: 'numero-china-carla-rossi'},
+    {id: 'numero-berlin-boris-ovini'},
+    {id: 'sans-title-tess-petronio'}
+  ];
 
-document.querySelectorAll(".featured-project").forEach((section) => {
- const imageItems = Array.from(
-  section.querySelectorAll("[data-featured-index]:not([aria-hidden='true'])")
-);
-
-const images = [];
-
-imageItems.forEach((item) => {
-  const index = Number(item.dataset.featuredIndex);
-  const img = item.tagName === "IMG" ? item : item.querySelector("img");
-
-  if (!img) return;
-
-  images[index] = img.src;
-});
-
-section.addEventListener("click", (event) => {
-  const item = event.target.closest("[data-featured-index]");
-  if (!item) return;
-
-  event.preventDefault();
-  openFeaturedLightbox(images, Number(item.dataset.featuredIndex));
-});
-
-});
-
-
-
-
-
-featuredLightboxClose.addEventListener("click", closeFeaturedLightbox);
-
-featuredLightboxPrev.addEventListener("click", () => {
-  showFeaturedImage(featuredLightboxIndex - 1);
-});
-
-featuredLightboxNext.addEventListener("click", () => {
-  showFeaturedImage(featuredLightboxIndex + 1);
-});
-
-let lightboxTouchStartX = 0;
-let lightboxTouchEndX = 0;
-
-featuredLightbox.addEventListener("touchstart", (event) => {
-  lightboxTouchStartX = event.changedTouches[0].clientX;
-}, { passive: true });
-
-featuredLightbox.addEventListener("touchend", (event) => {
-  lightboxTouchEndX = event.changedTouches[0].clientX;
-
-  const swipeDistance = lightboxTouchEndX - lightboxTouchStartX;
-
-  if (Math.abs(swipeDistance) < 50) return;
-
-  if (swipeDistance < 0) {
-    showFeaturedImage(featuredLightboxIndex + 1);
-  } else {
-    showFeaturedImage(featuredLightboxIndex - 1);
+  function buildVisual(container, entries) {
+    entries.forEach(({id, mediaIndex = 0}) => {
+      const project = projectsById.get(id);
+      if (!project) { console.warn(`index.html: unknown project id "${id}"`); return; }
+      const media = project.media[mediaIndex];
+      const button = document.createElement('button');
+      button.type = 'button'; button.className = 'index-thumb';
+      button.dataset.projectId = id;
+      button.setAttribute('aria-label', `Open ${project.title || project.line1 || id}`);
+      const img = document.createElement('img');
+      // index.html displays these thumbnails large, so it uses the existing 1200px-class
+      // `full` asset instead of the ~350px `thumb` overview.html's own grid uses - no new
+      // images generated, portfolio-data.js unchanged. width/height stay the thumb-sized
+      // values already in the data (same aspect ratio either way) purely as the img
+      // element's intrinsic-size hint; loading="lazy" still keeps off-screen cost down.
+      img.src = media.full; img.alt = media.alt || project.title || '';
+      img.width = media.width; img.height = media.height;
+      img.loading = 'lazy'; img.decoding = 'async'; img.draggable = false;
+      button.append(img);
+      button.addEventListener('click', () => openProject(project));
+      container.append(button);
+    });
   }
-}, { passive: true });
+  buildVisual($('index-visual'), SEQUENCE);
 
+  // Initial state: whatever is actually first on screen at scroll position 0 -
+  // SEQUENCE[0], not a separate "newest" constant - so this can never disagree with
+  // what the IntersectionObserver below reports once it fires.
+  updateCaption(projectsById.get(SEQUENCE[0].id));
 
-
-featuredLightbox.addEventListener("click", (event) => {
-  if (event.target === featuredLightbox) {
-    closeFeaturedLightbox();
-  }
-});
-
-document.addEventListener("keydown", (event) => {
-  if (!featuredLightbox.classList.contains("is-open")) return;
-
-  if (event.key === "Escape") {
-    closeFeaturedLightbox();
+  // Keeps the caption in sync with plain scrolling: it always reflects whichever
+  // .index-thumb is currently centered in the viewport. rootMargin shrinks the
+  // intersection root to a thin band straddling the exact vertical center (49% in
+  // from top and bottom, not the full 50%, so the band has a hair of real height
+  // instead of collapsing to a single geometric line - avoids relying on browsers
+  // handling a zero-height root perfectly). Thumbnails are laid out edge-to-edge
+  // with no gap (index.css: `gap: 0`), so exactly one is ever under that band at a
+  // time. matchMedia is checked once, here, at load - not on resize - since this
+  // feature is PC-only and the instructions call for no resize listener;
+  // .index-thumb elements exist at every breakpoint (unlike .index-caption, which
+  // is hidden <=1023px via CSS), so without this check the observer would keep
+  // recomputing on mobile for no visible effect.
+  if (matchMedia('(min-width: 1024px)').matches) {
+    const thumbObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const project = projectsById.get(entry.target.dataset.projectId);
+        if (project) updateCaption(project);
+      });
+    }, {rootMargin: '-49% 0px -49% 0px', threshold: 0});
+    document.querySelectorAll('.index-thumb').forEach(thumb => thumbObserver.observe(thumb));
   }
 
-  if (event.key === "ArrowLeft") {
-    showFeaturedImage(featuredLightboxIndex - 1);
+  // Scroll lock/restore: same technique as overview.js's lock()/close() (fixed body,
+  // remember scrollY, inert the background, restore and refocus on close). main
+  // (thumbnails + caption) and header nav are inerted alongside brand since they're
+  // the interactive background elements while the modal is open.
+  let returnFocus = null, scrollY = 0;
+  function lock() {
+    returnFocus = document.activeElement; scrollY = window.scrollY;
+    Object.assign(document.body.style, {position: 'fixed', top: -scrollY + 'px', width: '100%'});
+    main.inert = true; headerNav.inert = true; brand.inert = true;
+  }
+  function unlock() {
+    main.inert = false; headerNav.inert = false; brand.inert = false;
+    Object.assign(document.body.style, {position: '', top: '', width: ''});
+    window.scrollTo(0, scrollY); returnFocus?.focus({preventScroll: true});
   }
 
-  if (event.key === "ArrowRight") {
-    showFeaturedImage(featuredLightboxIndex + 1);
-  }
-});
-
-
-
-
-const menuToggle = document.querySelector(".menu-toggle");
-const siteMenu = document.querySelector(".site-menu");
-
-if (menuToggle && siteMenu) {
-  function openSiteMenu() {
-    siteMenu.classList.add("is-open");
-    siteMenu.setAttribute("aria-hidden", "false");
-    menuToggle.classList.add("is-open");
-    menuToggle.setAttribute("aria-expanded", "true");
-    menuToggle.setAttribute("aria-label", "Close menu");
-    document.body.style.overflow = "hidden";
+  // Safari/WebKit resolves :focus-visible on a script-focused element as true even when
+  // the interaction that triggered it was a mouse click (see overview.js, which fixed
+  // the same bug on its own info-close button) - suppressed the same way here via the
+  // shared .no-ring class/CSS rule from overview.css.
+  function focusInitial(el, viaKeyboard) {
+    el.classList.toggle('no-ring', !viaKeyboard);
+    el.focus({preventScroll: true});
   }
 
-  function closeSiteMenu() {
-    siteMenu.classList.remove("is-open");
-    siteMenu.setAttribute("aria-hidden", "true");
-    menuToggle.classList.remove("is-open");
-    menuToggle.setAttribute("aria-expanded", "false");
-    menuToggle.setAttribute("aria-label", "Open menu");
-    document.body.style.overflow = "";
+  // Information overlay: same content/structure/close-by-button-or-Escape behavior as
+  // overview.html's #info, reusing this file's own lock()/unlock() (which don't
+  // reference the project modal at all, so they apply equally here).
+  function openInfo(viaKeyboard) {
+    lock();
+    info.hidden = false;
+    brand.setAttribute('aria-expanded', 'true');
+    focusInitial(infoClose, viaKeyboard);
   }
+  function closeInfo() {
+    if (info.hidden) return;
+    info.hidden = true;
+    brand.setAttribute('aria-expanded', 'false');
+    unlock();
+  }
+  brand.addEventListener('click', e => openInfo(e.detail === 0));
+  infoClose.addEventListener('click', closeInfo);
+  // Background-click close: e.target is the element the click actually landed on
+  // (unaffected by bubbling), so this only fires for a direct hit on #index-info
+  // itself, outside .info-columns and the close button - clicking any real content
+  // never closes it.
+  info.addEventListener('click', e => { if (e.target === info) closeInfo(); });
 
-  menuToggle.addEventListener("click", () => {
-    if (siteMenu.classList.contains("is-open")) {
-      closeSiteMenu();
+  function makeNode(m, project) {
+    const node = document.createElement(m.type === 'video' ? 'video' : 'img');
+    // Set the aspect ratio from portfolio-data.js's own dataW/dataH up front, so the
+    // strip's layout (offsetLeft/offsetWidth) is correct immediately - not dependent
+    // on the image finishing its network fetch/decode before we can position it.
+    node.style.aspectRatio = `${m.dataW} / ${m.dataH}`;
+    if (m.type === 'video') {
+      node.muted = true; node.loop = true; node.playsInline = true; node.controls = true; node.preload = 'auto';
+      node.src = m.src;
     } else {
-      openSiteMenu();
+      node.src = m.full; node.alt = m.alt || project.title || ''; node.decoding = 'async'; node.draggable = false;
+    }
+    return node;
+  }
+
+  // A project has a clear first and last image - one set only, no clones, no loop.
+  // Reaching either end simply stops the native scroll at its natural 0/max; closing
+  // on "one further push past the end" is handled separately below.
+  let stripEls = [];
+  function buildStrip(project) {
+    stage.replaceChildren();
+    stripEls = project.media.map(m => makeNode(m, project));
+    stripEls.forEach(el => stage.append(el));
+    stage.scrollLeft = 0;
+  }
+  function maxScroll() { return Math.max(0, stage.scrollWidth - stage.clientWidth); }
+
+  // Arrow-key navigation: continuous time-based scroll while a key is held, not a
+  // discrete per-image step. Speed is driven by elapsed time between animation
+  // frames, not by how many keydown-repeat events fire, so it advances at a constant
+  // rate regardless of the OS's repeat rate.
+  //
+  // Edge-close: reaching the last (or first) image must not close the modal by
+  // itself - only a further push past it should. Once continuous scroll is pinned
+  // at 0 or maxScroll (the browser clamps further attempts, so scrollLeft stops
+  // changing), an elapsed-time timer starts; the modal only closes once the key has
+  // stayed held at that pinned edge past EDGE_CLOSE_MS, not the instant it arrives.
+  const ARROW_SCROLL_SPEED = 700; // px/s, first pass - easy to retune
+  const EDGE_CLOSE_MS = 260; // first pass - a short, deliberate extra push, not instant
+  let heldArrowKey = null, arrowRafId = null, arrowLastT = null, edgeHoldStart = null;
+  function arrowFrame(t) {
+    if (heldArrowKey !== 'ArrowRight' && heldArrowKey !== 'ArrowLeft') { arrowRafId = null; arrowLastT = null; edgeHoldStart = null; return; }
+    if (arrowLastT == null) arrowLastT = t;
+    const dt = t - arrowLastT; arrowLastT = t;
+    const dir = heldArrowKey === 'ArrowRight' ? 1 : -1;
+    stage.scrollLeft += dir * ARROW_SCROLL_SPEED * (dt / 1000);
+    const atEdge = dir > 0 ? stage.scrollLeft >= maxScroll() - 0.5 : stage.scrollLeft <= 0.5;
+    if (atEdge) {
+      if (edgeHoldStart == null) edgeHoldStart = t;
+      else if (t - edgeHoldStart >= EDGE_CLOSE_MS) { closeProject(); return; }
+    } else {
+      edgeHoldStart = null;
+    }
+    arrowRafId = requestAnimationFrame(arrowFrame);
+  }
+  function startArrowScroll(key) {
+    if (heldArrowKey === key) return;
+    heldArrowKey = key; edgeHoldStart = null;
+    if (arrowRafId == null) { arrowLastT = null; arrowRafId = requestAnimationFrame(arrowFrame); }
+  }
+  function stopArrowScroll(key) {
+    if (heldArrowKey === key) { heldArrowKey = null; edgeHoldStart = null; }
+  }
+  function stopArrowScrollAll() {
+    heldArrowKey = null; edgeHoldStart = null;
+    if (arrowRafId != null) { cancelAnimationFrame(arrowRafId); arrowRafId = null; }
+    arrowLastT = null;
+  }
+  // Safety net: if focus leaves the window while a key is physically still held (e.g.
+  // switching apps), no keyup ever arrives - stop on blur so scrolling can't get stuck.
+  addEventListener('blur', stopArrowScrollAll);
+
+  // Touch: native horizontal scroll is unchanged (no custom pointer-drag). Detecting
+  // "swiped past the last/first image" from touch is inherently limited - once
+  // scrollLeft is clamped at 0/max, the DOM gives no signal for *how hard* the user
+  // kept dragging past it, only that a touch is still active. This tracks whether a
+  // touch is currently down and, once scrolling has settled (debounced, so it never
+  // fights the browser's own still-resolving momentum/rubber-band physics) pinned at
+  // an edge while that touch is still active, starts the same edge-hold timer as the
+  // keyboard path. This is a best-effort heuristic, not verified on real iOS Safari -
+  // see the report.
+  let touchActive = false, touchEdgeHoldStart = null;
+  stage.addEventListener('touchstart', () => { touchActive = true; touchEdgeHoldStart = null; }, {passive: true});
+  stage.addEventListener('touchend', () => { touchActive = false; touchEdgeHoldStart = null; }, {passive: true});
+  stage.addEventListener('touchcancel', () => { touchActive = false; touchEdgeHoldStart = null; }, {passive: true});
+  // A normal quick swipe past the edge lifts the finger (touchend, touchActive
+  // becomes false) well before the native momentum/rubber-band animation actually
+  // settles back at 0/maxScroll, so the debounced touchActive check below alone
+  // almost never fires on a real device - that's the reported iPhone bug. iOS's
+  // elastic overscroll genuinely reports scrollLeft outside [0, maxScroll] while
+  // bouncing (not just a visual effect - the DOM property itself briefly reads past
+  // the edge), so checking every raw scroll event for that excursion catches the
+  // "swiped past the edge" gesture directly, independent of whether the finger is
+  // still down. Kept as a small OVERSCROLL_PX tolerance, not a hard 0/max check, so
+  // normal clamped scrolling never triggers it by accident.
+  const OVERSCROLL_PX = 8;
+  let scrollSyncTimer = null;
+  stage.addEventListener('scroll', () => {
+    const max = maxScroll();
+    if (stage.scrollLeft < -OVERSCROLL_PX || stage.scrollLeft > max + OVERSCROLL_PX) { closeProject(); return; }
+    clearTimeout(scrollSyncTimer);
+    scrollSyncTimer = setTimeout(() => {
+      const atEdge = stage.scrollLeft <= 0.5 || stage.scrollLeft >= max - 0.5;
+      if (atEdge && touchActive) {
+        if (touchEdgeHoldStart == null) touchEdgeHoldStart = performance.now();
+        else if (performance.now() - touchEdgeHoldStart >= EDGE_CLOSE_MS) closeProject();
+      } else {
+        touchEdgeHoldStart = null;
+      }
+    }, 120);
+  }, {passive: true});
+
+  function openProject(project) {
+    lock();
+    modalCaption.textContent = [project.title, project.line1].filter(Boolean).join(' // ');
+    // Reveal before building the strip: setting scrollLeft on a [hidden] (display:none)
+    // subtree is a no-op in browsers, since a non-rendered element has no real scroll
+    // position to set. Both happen synchronously in the same turn, so nothing is ever
+    // painted at the wrong starting frame.
+    modal.hidden = false;
+    buildStrip(project);
+    modal.focus({preventScroll: true});
+  }
+  function closeProject() {
+    if (modal.hidden) return;
+    clearTimeout(scrollSyncTimer);
+    stopArrowScrollAll();
+    touchActive = false; touchEdgeHoldStart = null;
+    stage.replaceChildren(); stripEls = [];
+    modal.hidden = true;
+    unlock();
+  }
+
+  // Click/tap on the brand/caption overlay closes; clicking the background margin
+  // or an actual image does not.
+  modal.addEventListener('click', e => {
+    if (modalHeader.contains(e.target)) closeProject();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (!modal.hidden) { e.preventDefault(); closeProject(); }
+      else if (!info.hidden) { e.preventDefault(); closeInfo(); }
+      return;
+    }
+    if (modal.hidden) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      // Ignore the OS's own key-repeat events entirely - our own rAF loop (started
+      // once, on the initial non-repeat keydown) drives continuous motion from
+      // elapsed time, not from how many repeat events fire.
+      if (!e.repeat) startArrowScroll(e.key);
     }
   });
-
-  siteMenu.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", closeSiteMenu);
+  document.addEventListener('keyup', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') stopArrowScroll(e.key);
   });
-
-  document.addEventListener("keydown", (event) => {
-    if (!siteMenu.classList.contains("is-open")) return;
-
-    if (event.key === "Escape") {
-      closeSiteMenu();
-    }
-  });
-}
+})();

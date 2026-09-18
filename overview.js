@@ -1,1095 +1,324 @@
-  /* =========================================================
-  OVERVIEW SITE (PART 1/4)
-  0) Data -> DOM: portfolio-data.js の PORTFOLIO_PROJECTS から
-     #grid の data-view に応じた .jl-item を生成する
-  1) Justified Layout: items収集 / render / resize
-  2) Grouping + Caption: data-title 単位でグループ化して先頭にだけキャプション
-  3) Group Highlight: PC=hover / Touch=1st tap highlight, 2nd tap -> lightboxへ
-  ========================================================= */
+/* HTML13.00 Phase 1. JL engine and box placement retained from HTML12.02.
+ * One ordered data sequence; one current modal node; no large-image preload pool.
+ */
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const grid = $('grid'), modal = $('modal'), stage = $('stage'), info = $('info');
+  const headerNav = document.querySelector('.index-header-nav');
+  const sequence = window.PORTFOLIO_PROJECTS.flatMap(project => project.media.map(media => ({project, media})));
+  const fine = () => matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let selected = -1, current = -1, active = null, returnFocus, scrollY = 0;
+  let wheelSum = 0, wheelLast = 0, wheelCooldown = 0, gesture = null;
+  const videos = new Set(), visibleVideos = new Set();
+  // Two-node slide transition state: `liveNode` is the settled, currently-visible media
+  // element (the one drag/keyboard/wheel act on); `transitioning` locks out new navigation
+  // input for the duration of a committed slide so inputs never overlap animations.
+  let liveNode = null, transitioning = false, activeAnimations = [];
+  const SLIDE_MS = 280, SLIDE_EASING = 'ease-out';
+  // Neighbor preloading: warms the browser's network+decode cache for the media one step
+  // ahead/behind the current index (wrapping across the 51-item sequence), so by the time
+  // the user actually navigates there the image is already fetched/decoded. Never awaited
+  // by navigation itself, so it can never slow down the response to input.
+  const preloadedSrcs = new Set();
+  function preloadMedia(index) {
+    const m = sequence[index]?.media;
+    if (!m || m.type === 'video' || preloadedSrcs.has(m.full)) return;
+    preloadedSrcs.add(m.full);
+    const img = new Image();
+    img.src = m.full;
+    img.decode?.().catch(() => {});
+  }
+  function preloadNeighbors(index) {
+    const n = sequence.length;
+    preloadMedia((index + 1) % n);
+    preloadMedia((index - 1 + n) % n);
+  }
 
-  /* =========================
-     0) Portfolio data -> DOM 生成
-     - #grid の data-view (例: "overview") に応じて、
-       PORTFOLIO_PROJECTS から対象プロジェクトだけを抽出し、
-       プロジェクト配列順 → 各プロジェクトのmedia配列順のまま
-       .jl-item を生成して #grid に流し込む。
-     - 以降の Justified Layout / Grouping / Lightbox は、
-       ここで生成された要素だけを対象に動作する。
-     ========================= */
-
-  function buildPortfolioGrid(gridEl) {
-    const projects = window.PORTFOLIO_PROJECTS;
-    if (!Array.isArray(projects)) {
-      throw new Error(
-        'portfolio-data.js が読み込めていません（window.PORTFOLIO_PROJECTS が見つかりません）。' +
-        '<script src="portfolio-data.js"> が overview.js より前に読み込まれているか確認してください。'
-      );
-    }
-
-    // データ検証：重複ID / 不明な media type / サイズ欠落をコンソールに警告
-    const seenIds = new Set();
-    projects.forEach((project) => {
-      if (seenIds.has(project.id)) {
-        console.error(`[portfolio-data] project id が重複しています: "${project.id}"`);
-      }
-      seenIds.add(project.id);
-
-      (project.media || []).forEach((m, i) => {
-        if (m.type !== 'image' && m.type !== 'video') {
-          console.error(`[portfolio-data] project "${project.id}" media[${i}] の type が不明です: "${m.type}"`);
-        }
-        if (!m.dataW || !m.dataH) {
-          console.error(`[portfolio-data] project "${project.id}" media[${i}] に dataW/dataH がありません。`);
-        }
-      });
+  function caption(target, index) {
+    target.replaceChildren();
+    if (index < 0) return;
+    const p = sequence[index].project;
+    [p.title, p.line1, p.line2].filter(Boolean).forEach(text => {
+      const line = document.createElement('span'); line.textContent = text; target.append(line);
     });
-
-    const view = gridEl.dataset.view;
-    const knownCategories = Array.from(new Set(projects.map((p) => p.category)));
-
-    let targetProjects;
-    if (view === 'overview') {
-      targetProjects = projects;
-    } else if (knownCategories.includes(view)) {
-      targetProjects = projects.filter((p) => p.category === view);
+  }
+  function syncVideos() {
+    videos.forEach(v => {
+      if (!active && !document.hidden && visibleVideos.has(v)) v.play().catch(() => {});
+      else v.pause();
+    });
+    if (document.hidden) stage.querySelector('video')?.pause();
+  }
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => e.isIntersecting ? visibleVideos.add(e.target) : visibleVideos.delete(e.target));
+    syncVideos();
+  });
+  // Groups thumbnails by project.id (the existing stable identifier from
+  // portfolio-data.js, not a title string compare) so hovering any one of a
+  // project's thumbnails can highlight the whole project - built incrementally as
+  // each button is created below, since sequence.map() reuses the same `project`
+  // object reference for every media item of that project.
+  const buttonsByProject = new Map();
+  const buttons = sequence.map(({project, media: m}, index) => {
+    const button = document.createElement('button'); button.className = 'jl-item';
+    button.type = 'button'; button.setAttribute('aria-label', `${project.title}, image ${index + 1}: open media`);
+    button.dataset.w = m.dataW; button.dataset.h = m.dataH;
+    const node = document.createElement(m.type === 'video' ? 'video' : 'img');
+    if (m.type === 'video') {
+      node.muted = true; node.loop = true; node.playsInline = true; node.preload = 'metadata';
+      node.src = m.src; videos.add(node); observer.observe(node);
     } else {
-      throw new Error(
-        `#grid の data-view="${view}" は不正です。"overview" か、既存カテゴリ ` +
-        `(${knownCategories.join(', ')}) のいずれかを指定してください。`
-      );
+      node.src = m.thumb; node.alt = m.alt || project.title;
+      node.width = m.width; node.height = m.height; node.loading = 'lazy'; node.decoding = 'async';
     }
-
-    targetProjects.forEach((project) => {
-      (project.media || []).forEach((m) => {
-        const figure = document.createElement('figure');
-        figure.className = 'jl-item' + (m.type === 'video' ? ' is-video' : '');
-        figure.dataset.w = m.dataW;
-        figure.dataset.h = m.dataH;
-
-        if (m.type === 'image') {
-          const img = document.createElement('img');
-          img.src = m.thumb;
-          img.width = m.width;
-          img.height = m.height;
-          img.alt = m.alt || '';
-          img.dataset.full = m.full;
-          img.dataset.title = project.title;
-          img.dataset.line1 = project.line1;
-          img.dataset.line2 = project.line2;
-          img.dataset.group = project.id;
-          figure.appendChild(img);
-        } else {
-          const video = document.createElement('video');
-          video.setAttribute('src', m.src);
-          video.setAttribute('muted', '');
-          video.muted = true; // autoplayポリシー対策（属性だけでなくプロパティも設定）
-          video.setAttribute('loop', '');
-          video.setAttribute('playsinline', '');
-          video.setAttribute('autoplay', '');
-          figure.appendChild(video);
-
-          const meta = document.createElement('div');
-          meta.className = 'lb-data';
-          meta.dataset.type = 'video';
-          meta.dataset.full = m.src;
-          meta.dataset.title = project.title;
-          meta.dataset.line1 = project.line1;
-          meta.dataset.line2 = project.line2;
-          meta.dataset.group = project.id;
-          figure.appendChild(meta);
-        }
-
-        gridEl.appendChild(figure);
-      });
+    node.draggable = false; button.append(node); grid.append(button);
+    if (!buttonsByProject.has(project.id)) buttonsByProject.set(project.id, []);
+    buttonsByProject.get(project.id).push(button);
+    // Hovering scales this button's whole project (see .hover-group in
+    // overview.css), not just itself. Moving the pointer between two thumbnails of
+    // the same project fires this project's mouseleave and mouseenter back to back
+    // within the same synchronous pointer-move handling, before the next paint, so
+    // the group's highlight never visibly drops in between - no debounce needed.
+    button.addEventListener('mouseenter', () => {
+      if (!fine()) return;
+      caption($('overview-caption'), index);
+      buttonsByProject.get(project.id).forEach(b => b.classList.add('hover-group'));
     });
-  }
-
-  /* =========================
-  1) Justified Layout 設定（レスポンシブ）
-  - row height / box spacing を viewport 幅で可変にする
-  ========================= */
-
-(function () {
-  const container = document.getElementById('grid');
-  if (!container) return;
-
-  buildPortfolioGrid(container);
-
-  function getRowHeight() {
-    const w = window.innerWidth;
-    if (w <= 480) return 180;   // iPhone
-    if (w <= 768) return 160;   // tablet small
-    if (w <= 1200) return 210;  // laptop
-    return 210;                 // desktop
-  }
-
-  function getBoxSpacing() {
-    const w = window.innerWidth;
-    if (w <= 480) return 10;
-    if (w <= 768) return 9;
-    if (w <= 1200) return 8;
-    return 7;
-  }
-
-  /* =========================
-     2) Overview items 収集（.jl-item 想定）
-     - data-w / data-h から aspect ratio を作る
-     ========================= */
-
-  const itemElements = Array.from(container.children);
-
-  const items = itemElements.map((el) => {
-    const w = Number(el.dataset.w) || 1;
-    const h = Number(el.dataset.h) || 1;
-    return { el, aspectRatio: w / h };
-  });
-
-  /* =========================
-     3) Grouping + Caption 生成（data-title 単位）
-     - key = title + line1 でグループ化
-     - グループ先頭だけ figcaption(.ov-cap) を付与
-     - 先頭アイテムは data-head="1" を付ける
-     ========================= */
-
-  const groups = new Map(); // key -> { title, line1, line2, members[] }
-
-  itemElements.forEach((el) => {
-    // 画像 or 動画のメタ情報を取得（.lb-data があれば優先、なければ img）
-    const meta = el.querySelector('.lb-data, img');
-    if (!meta) return;
-
-    let title = meta.dataset.title || '';
-    const line1 = meta.dataset.line1 || '';
-    const line2 = meta.dataset.line2 || '';
-
-    // title が空なら line1 を仮タイトル扱い
-    if (!title && line1) title = line1;
-
-    // 両方空ならスキップ
-    if (!title) return;
-
-    const key = meta.dataset.group || `${title}|||${line1}`;
-
-    if (!groups.has(key)) {
-      groups.set(key, { title, line1, line2, members: [] });
-    }
-    groups.get(key).members.push(el);
-
-    // このアイテムが属するグループキーをDOMにも保存
-    el.dataset.groupKey = key;
-  });
-
-  // グループ先頭だけキャプションを付与
-  groups.forEach((group) => {
-    if (!group.members.length) return;
-
-    const headEl = group.members[0];
-    headEl.dataset.head = '1';
-
-    const cap = document.createElement('figcaption');
-    cap.className = 'ov-cap';
-
-    // title と line1 の関係で表示を分ける
-    if (group.title === group.line1) {
-      // data-title="" だった → line1 がタイトル扱い
-      const b = document.createElement('b');
-      b.textContent = group.line1;
-      cap.appendChild(b);
-    } else {
-      // 通常ケース：title がメイン、line1 がサブ
-      const b = document.createElement('b');
-      b.textContent = group.title;
-      cap.appendChild(b);
-
-      if (group.line1) {
-        const em = document.createElement('em');
-        em.textContent = group.line1;
-        cap.appendChild(em);
+    button.addEventListener('mouseleave', () => {
+      if (!fine()) return;
+      caption($('overview-caption'), selected);
+      buttonsByProject.get(project.id).forEach(b => b.classList.remove('hover-group'));
+    });
+    button.addEventListener('focus', () => caption($('overview-caption'), index));
+    button.addEventListener('click', e => {
+      if (fine() || e.detail === 0 || selected === index) openModal(index, e.detail === 0);
+      else {
+        // Touch has no hover, so a first tap previews (this branch) and a second
+        // tap on the same item opens it (the `selected === index` case above) -
+        // unchanged. What's new: the preview now also scales the whole project via
+        // the same .hover-group class/CSS the Desktop mouseenter path uses above,
+        // not just this one button, so touch and hover show the same grouped
+        // feedback. Clears the previous selection's group first (not just its own
+        // .selected) so switching preview targets doesn't leave a stale group scaled.
+        buttons[selected]?.classList.remove('selected');
+        if (selected >= 0) buttonsByProject.get(sequence[selected].project.id).forEach(b => b.classList.remove('hover-group'));
+        selected = index;
+        button.classList.add('selected');
+        buttonsByProject.get(project.id).forEach(b => b.classList.add('hover-group'));
+        caption($('overview-caption'), index);
       }
-    }
-
-    if (group.line2) {
-      const i = document.createElement('i');
-      i.textContent = group.line2;
-      cap.appendChild(i);
-    }
-
-    headEl.appendChild(cap);
+    });
+    return button;
   });
 
-  /* =========================
-     4) Group Highlight 制御（Hover / Tap 共通）
-     - clear: ハイライト解除
-     - set: keyから同グループのメンバーにclass付与
-     ========================= */
-
-  function clearGroupHighlight() {
-    container.classList.remove('is-group-hover', 'is-group-tap');
-    itemElements.forEach((el) => {
-      el.classList.remove('is-in-group', 'tap-armed');
-    });
-  }
-
-  function setGroupHighlightByKey(key, mode) {
-    const group = groups.get(key);
-    if (!group) return;
-
-    clearGroupHighlight();
-
-    group.members.forEach((el) => el.classList.add('is-in-group'));
-
-    if (mode === 'hover') container.classList.add('is-group-hover');
-    if (mode === 'tap') container.classList.add('is-group-tap');
-  }
-
-  /* =========================
-     5) PC: hoverでグループをハイライト
-     ========================= */
-
-  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    itemElements.forEach((el) => {
-      const key = el.dataset.groupKey;
-      if (!key) return;
-
-      el.addEventListener('mouseenter', () => {
-        setGroupHighlightByKey(key, 'hover');
-      });
-
-      el.addEventListener('mouseleave', () => {
-        clearGroupHighlight();
-      });
-    });
-  }
-
-
-  /* =========================
-     7) Justified Layout: render
-     - items(aspectRatio) -> justifiedLayout -> boxes を absolute 配置
-     ========================= */
-
+  // Same aspect-ratio -> justifiedLayout -> absolute box placement as HTML12.02.
   function render() {
-    const jl = window.justifiedLayout;
-    if (!jl) {
-      console.error('justifiedLayout が見つかりません');
-      return;
-    }
-
-    const containerWidth = container.clientWidth;
-    if (!containerWidth) return;
-
-    const layout = jl(
-      items.map((i) => ({ aspectRatio: i.aspectRatio })),
-      {
-        containerWidth,
-        targetRowHeight: getRowHeight(),
-        boxSpacing: getBoxSpacing()
-      }
-    );
-
-    container.style.height = layout.containerHeight + 'px';
-
-    layout.boxes.forEach((box, index) => {
-      const el = items[index].el;
-      el.style.position = 'absolute';
-      el.style.left = box.left + 'px';
-      el.style.top = box.top + 'px';
-      el.style.width = box.width + 'px';
-      el.style.height = box.height + 'px';
+    const w = innerWidth;
+    const layout = window.justifiedLayout(sequence.map(({media:m}) => ({aspectRatio:m.dataW / m.dataH})), {
+      containerWidth: grid.clientWidth,
+      targetRowHeight: w <= 767 ? Math.min(240, grid.clientWidth / 2) : 210,
+      boxSpacing: 12
     });
-
-    document.body.classList.add('jl-ready');
+    grid.style.height = layout.containerHeight + 'px';
+    layout.boxes.forEach((box, i) => Object.assign(buttons[i].style, {
+      position:'absolute', left:box.left+'px', top:box.top+'px', width:box.width+'px', height:box.height+'px'
+    }));
   }
-
-  // 初回描画
+  let resizeTimer;
+  addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(render, 150); });
   render();
 
-  /* =========================
-     8) resize: debounceしてrender
-     ========================= */
-
-  let resizeTimer = null;
-  window.addEventListener('resize', () => {
-    if (resizeTimer) clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      render();
-    }, 150);
+  function lock(panel) {
+    returnFocus = document.activeElement; scrollY = window.scrollY; active = panel;
+    Object.assign(document.body.style, {position:'fixed', top:-scrollY+'px', width:'100%'});
+    $('overview').inert = true; $('overview-nav').inert = true; $('info-toggle').inert = true; headerNav.inert = true;
+    panel.hidden = false; syncVideos();
+  }
+  function releaseVideo(node) {
+    if (node && node.tagName === 'VIDEO') { node.pause(); node.removeAttribute('src'); node.load(); }
+  }
+  function disposeAll() {
+    activeAnimations.forEach(a => a.cancel()); activeAnimations = []; transitioning = false;
+    [...stage.children].forEach(n => { releaseVideo(n); n.remove(); });
+    liveNode = null;
+  }
+  function close() {
+    if (!active) return;
+    disposeAll(); active.hidden = true; active = null; current = -1; gesture = null;
+    $('overview').inert = false; $('overview-nav').inert = false; $('info-toggle').inert = false; headerNav.inert = false;
+    $('info-toggle').setAttribute('aria-expanded','false');
+    Object.assign(document.body.style, {position:'', top:'', width:''});
+    window.scrollTo(0,scrollY); returnFocus?.focus({preventScroll:true}); syncVideos();
+  }
+  function createNode(index) {
+    const {project, media:m} = sequence[index];
+    const node = document.createElement(m.type === 'video' ? 'video' : 'img');
+    node.className = 'modal-media'; node.draggable = false;
+    if (m.type === 'video') {
+      node.playsInline = true; node.muted = true; node.controls = true; node.preload = 'auto';
+      node.addEventListener('loadedmetadata', () => {
+        if (node.isConnected) { node.currentTime = 0; node.play().catch(() => {}); }
+      }, {once:true});
+      node.src = m.src;
+    } else { node.alt = m.alt || project.title; node.src = m.full; node.decoding = 'async'; }
+    return node;
+  }
+  // Initial display (modal/first open): no previous node, so no slide - just place it.
+  function settle(index) {
+    disposeAll(); current = index;
+    const node = createNode(index);
+    stage.append(node); liveNode = node;
+    caption($('modal-caption'), index);
+    preloadNeighbors(index);
+  }
+  // Committed next/prev transition: outgoing and incoming coexist in `.stage` (both
+  // absolutely positioned, see overview.css) and slide simultaneously in the same
+  // horizontal direction - outgoing exits the side incoming enters from the opposite
+  // side, so they read as one continuous strip rather than a cross-fade. direction:
+  // +1 = Next (outgoing exits left, incoming enters from the right), -1 = Previous
+  // (mirrored). Pure transform, no opacity, so the movement itself reads as the effect.
+  function slide(nextIndex, direction) {
+    if (transitioning) return false;
+    const outgoing = liveNode;
+    const incoming = createNode(nextIndex);
+    stage.append(incoming);
+    current = nextIndex; liveNode = incoming;
+    caption($('modal-caption'), nextIndex);
+    preloadNeighbors(nextIndex);
+    if (reduced()) { if (outgoing) { releaseVideo(outgoing); outgoing.remove(); } return true; }
+    transitioning = true;
+    incoming.style.willChange = 'transform';
+    if (outgoing) outgoing.style.willChange = 'transform';
+    // Continue from wherever a released swipe left the outgoing node (its inline
+    // translateX from the drag), rather than resetting to 0 and losing the gesture's motion.
+    const fromOut = outgoing ? (outgoing.style.transform || 'translateX(0%)') : null;
+    const inAnim = incoming.animate(
+      [{transform:`translateX(${direction * 100}%)`}, {transform:'translateX(0%)'}],
+      {duration:SLIDE_MS, easing:SLIDE_EASING, fill:'forwards'}
+    );
+    const outAnim = outgoing ? outgoing.animate(
+      [{transform:fromOut}, {transform:`translateX(${-direction * 100}%)`}],
+      {duration:SLIDE_MS, easing:SLIDE_EASING, fill:'forwards'}
+    ) : null;
+    activeAnimations = [inAnim, outAnim].filter(Boolean);
+    Promise.all(activeAnimations.map(a => a.finished.catch(() => {}))).then(() => {
+      if (outgoing) { releaseVideo(outgoing); outgoing.remove(); }
+      incoming.style.willChange = ''; incoming.style.transform = '';
+      activeAnimations.forEach(a => a.cancel()); activeAnimations = [];
+      transitioning = false;
+    });
+    return true;
+  }
+  // Shared next/prev step for keyboard, wheel and swipe: loops across the whole
+  // portfolio-data.js sequence (all projects back-to-back), wrapping at the very
+  // first/last media item rather than stopping or looping per-project. Locked out
+  // entirely while a transition is already playing (see `transitioning`).
+  function step(direction) {
+    if (transitioning || current < 0) return false;
+    let next = current + direction;
+    if (next >= sequence.length) next = 0; else if (next < 0) next = sequence.length - 1;
+    return slide(next, direction);
+  }
+  // Safari/WebKit resolves :focus-visible on a script-focused element as true even when
+  // the interaction that triggered it was a mouse click on a different element (Chromium/
+  // Firefox correctly infer the pointer origin and keep it false). So the visible ring on
+  // an initial pointer-triggered open has to be suppressed explicitly, not left to :focus-visible.
+  function focusInitial(el, viaKeyboard) {
+    el.classList.toggle('no-ring', !viaKeyboard);
+    el.focus({preventScroll:true});
+  }
+  function openModal(index, viaKeyboard = false) {
+    lock(modal); wheelSum = 0; wheelLast = 0; wheelCooldown = 0;
+    settle(index); focusInitial($('modal-close'), viaKeyboard);
+  }
+  $('modal-close').addEventListener('click', close);
+  // Background-click close. .modal-media is position:absolute;inset:0 - its own box
+  // always equals the full .stage rect, by design: the two-node slide transition
+  // (see slide() above) needs outgoing/incoming to occupy that exact same box so
+  // their translateX animations cross over each other correctly. That means a click
+  // anywhere in .stage - including the letterboxed margin object-fit:contain leaves
+  // around a portrait/landscape image - lands on the <img>/<video> itself; e.target
+  // is never `modal` or `stage` there, so an identity check alone can't tell "real
+  // pixels" from "empty margin inside the same box." inContentRect() answers that
+  // from the element's own live geometry (getBoundingClientRect + natural size), not
+  // any fixed/hardcoded margin - it's what object-fit:contain itself computes
+  // internally to place the image, just re-derived here so JS can test a point
+  // against it. A click on modal-brand/modal-footer/modal-close is never even IMG or
+  // VIDEO, so this block doesn't touch their existing behavior at all.
+  function inContentRect(el, x, y) {
+    const rect = el.getBoundingClientRect();
+    const naturalW = el.tagName === 'VIDEO' ? el.videoWidth : el.naturalWidth;
+    const naturalH = el.tagName === 'VIDEO' ? el.videoHeight : el.naturalHeight;
+    if (!naturalW || !naturalH) return true; // size not known yet - treat as content, don't close under it
+    const renderedW = Math.min(rect.width, rect.height * (naturalW / naturalH));
+    const renderedH = renderedW * (naturalH / naturalW);
+    const left = rect.left + (rect.width - renderedW) / 2, top = rect.top + (rect.height - renderedH) / 2;
+    return x >= left && x <= left + renderedW && y >= top && y <= top + renderedH;
+  }
+  modal.addEventListener('click', e => {
+    if (e.target === modal || e.target === stage) { close(); return; }
+    if ((e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') && !inContentRect(e.target, e.clientX, e.clientY)) close();
   });
-
+  $('info-toggle').addEventListener('click', e => {
+    lock(info); $('info-toggle').setAttribute('aria-expanded','true');
+    focusInitial($('info-close'), e.detail === 0);
+  });
+  $('info-close').addEventListener('click', close);
+  // Same background-click-close idea for the Information overlay: only a direct
+  // hit on #info itself (outside .info-columns and the close button) counts.
+  info.addEventListener('click', e => { if (e.target === info) close(); });
+  document.addEventListener('visibilitychange', syncVideos);
+  document.addEventListener('keydown', e => {
+    if (!active) return;
+    if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+    if (active === modal && (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+      // All four keys drive the same horizontal slide - Up/Left = Previous, Down/Right = Next.
+      e.preventDefault();
+      if (!e.repeat) { const d = (e.key === 'ArrowDown' || e.key === 'ArrowRight') ? 1 : -1; step(d); }
+    }
+    if (e.key === 'Tab') {
+      const focusable = [...active.querySelectorAll('button, a[href], video[controls]')];
+      focusable.forEach(el => el.classList.remove('no-ring'));
+      const first = focusable[0], last = focusable.at(-1);
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  modal.addEventListener('wheel', e => {
+    e.preventDefault(); const now = performance.now(), idle = now-wheelLast; wheelLast = now;
+    // Require both a cooldown and an idle gap: one step per inertial wheel burst.
+    if (now < wheelCooldown || (wheelCooldown && idle < 180)) return;
+    if (idle > 180) { wheelSum = 0; wheelCooldown = 0; }
+    const delta = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1);
+    wheelSum += delta;
+    if (Math.abs(wheelSum) >= 60) {
+      const d = Math.sign(wheelSum); step(d); wheelSum = 0; wheelCooldown = now+450;
+    }
+  }, {passive:false});
+  stage.addEventListener('pointerdown', e => {
+    // A transition already owns the two current nodes; a fresh drag can only
+    // start once it has settled back down to a single liveNode.
+    if (e.pointerType === 'mouse' || !e.isPrimary || transitioning) return;
+    // Leave the native video control strip available for playback interaction.
+    if (e.target.tagName === 'VIDEO' && e.clientY > stage.getBoundingClientRect().bottom - 48) return;
+    gesture = {id:e.pointerId, x:e.clientX, y:e.clientY, dx:0};
+    stage.setPointerCapture(e.pointerId);
+  });
+  stage.addEventListener('pointermove', e => {
+    if (!gesture || gesture.id !== e.pointerId) return;
+    gesture.dx = e.clientX - gesture.x;
+    if (liveNode) liveNode.style.transform = `translateX(${gesture.dx}px)`;
+  });
+  function endGesture(e, cancelled = false) {
+    if (!gesture || gesture.id !== e.pointerId) return;
+    const {dx,y} = gesture; gesture = null;
+    // Left swipe (dx<0) = Next (+1); right swipe (dx>0) = Previous (-1).
+    const d = dx < 0 ? 1 : -1;
+    if (!cancelled && Math.abs(dx) > Math.max(40,stage.clientWidth*.12) && Math.abs(dx) > Math.abs(e.clientY-y) && step(d)) return;
+    if (liveNode) liveNode.style.transform = '';
+  }
+  stage.addEventListener('pointerup', e => endGesture(e));
+  stage.addEventListener('pointercancel', e => endGesture(e,true));
 })();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* =========================
-   LIGHTBOX (gm)  ※移植版
-   ========================= */
-document.addEventListener('DOMContentLoaded', () => {
-  const gm      = document.getElementById('gm');
-  if (!gm) return;
-
-  let activeCluster = [];
-
-  // -------------------------
-  // Background scroll lock (iOS Safari-safe)
-  // -------------------------
-  let scrollLocked = false;
-  let savedScrollY = 0;
-
-  function lockPageScroll() {
-    if (scrollLocked) return;
-    scrollLocked = true;
-    savedScrollY = window.scrollY || window.pageYOffset || 0;
-
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${savedScrollY}px`;
-    document.body.style.left = '0';
-    document.body.style.right = '0';
-    document.body.style.width = '100%';
-    document.body.style.overflow = 'hidden';
-  }
-
-  function unlockPageScroll() {
-    if (!scrollLocked) return;
-    scrollLocked = false;
-
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.left = '';
-    document.body.style.right = '';
-    document.body.style.width = '';
-    document.body.style.overflow = '';
-
-    window.scrollTo(0, savedScrollY);
-  }
-
-  const gmImg   = gm.querySelector('#gmImage');
-  const gmVWrap = gm.querySelector('.gm-video-wrap');
-  const gmVideo = gm.querySelector('#gmVideo');
-
-  const gmTitle = gm.querySelector('.gm-ttl');
-  const gmSub   = gm.querySelector('.gm-sub');
-  const gmCount = gm.querySelector('.gm-counter');
-
-  const gmClose = gm.querySelector('.gm-close');
-  const gmPrev  = gm.querySelector('.gm-prev');
-  const gmNext  = gm.querySelector('.gm-next');
-  const gmBg    = gm.querySelector('.gm-backdrop');
-
-  const gmNextProject = gm.querySelector('.gm-next-project');
-  const gmPrevProject = gm.querySelector('.gm-prev-project');
-
-  const grid = document.getElementById('grid');
-  const items = Array.from(document.querySelectorAll('#grid .jl-item'));
-  if (!items.length) return;
-
-
-
-
-
-    // -------------------------
-  // THUMB CAPTION: build from data-title
-  // -------------------------
-items.forEach((item) => {
-  if (item.querySelector('.jl-caption')) return;
-
-  const img  = item.querySelector('img[data-title]');
-  const meta = item.querySelector('.lb-data[data-title]');
-
-  const title =
-    (img && img.dataset.title) ||
-    (meta && meta.dataset.title) ||
-    '';
-
-  if (!title) return;
-
-  const line1 =
-    (img && img.dataset.line1) ||
-    (meta && meta.dataset.line1) ||
-    '';
-
-  const line2 =
-    (img && img.dataset.line2) ||
-    (meta && meta.dataset.line2) ||
-    '';
-
-  const cap = document.createElement('div');
-  cap.className = 'jl-caption';
-
-  cap.innerHTML = `
-    <div class="jl-cap-title">${title}</div>
-    ${line1 ? `<div class="jl-cap-line">${line1}</div>` : ''}
-    ${line2 ? `<div class="jl-cap-line">${line2}</div>` : ''}
-  `;
-
-  item.appendChild(cap);
-});
-
-
-
-  // -------------------------
-  // 2-tap behavior on touch devices
-  // 1st tap: show caption
-  // 2nd tap: open lightbox
-  // -------------------------
-  const isTouch = (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
-
-  let lastTappedItem = null;
-  let armedGroupKey = null;
-
-  const closeAllCaptions = () => {
-  items.forEach((el) => {
-    el.classList.remove('is-caption-visible');
-    el.classList.remove('is-in-group');
-  });
-
-  grid.classList.remove('is-group-tap');
- };
-
-  // 画面のどこかを触ったら閉じる（任意だが使いやすい）
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('#grid .jl-item')) return;
-    closeAllCaptions();
-  }, true);
-
-
-
-
-
-
-  let currentIndex = 0;
-
-  function getActiveItems() {
-  return activeCluster.length ? activeCluster : items;
-}
-  const imgCache = new Map(); 
-  
-  // full src -> { image, promise }
-  function preloadFullImage(full) {
-    if (!full) return null;
-    let record = imgCache.get(full);
-    if (record) return record;
-
-    const image = new Image();
-    image.src = full;
-
-    let promise;
-    if (image.decode) {
-      promise = image.decode().catch(() => {});
-    } else {
-      promise = new Promise((resolve) => {
-        image.onload  = () => resolve();
-        image.onerror = () => resolve();
-      });
-    }
-
-    record = { image, promise };
-    imgCache.set(full, record);
-    return record;
-  }
-
-  function preloadAround(index) {
-    const targets = [index + 1, index - 1, index + 2, index - 2];
-    targets.forEach((i) => {
-      const safeIndex = (i + items.length) % items.length;
-      const item = items[safeIndex];
-      if (!item || item.classList.contains('is-video')) return;
-
-      const img = item.querySelector('img');
-      if (!img) return;
-
-      const full = img.dataset.full || img.src;
-      preloadFullImage(full);
-    });
-  }
-
-  function updateCaption(img, meta) {
-    const t  = (img && img.dataset.title) || (meta && meta.dataset.title) || '';
-    const l1 = (img && img.dataset.line1) || (meta && meta.dataset.line1) || '';
-    const l2 = (img && img.dataset.line2) || (meta && meta.dataset.line2) || '';
-    gmTitle.textContent = t;
-    gmSub.textContent   = [l1, l2].filter(Boolean).join(' / ');
-  }
-
-  function updateCounter() {
-    if (gmCount) {
-    gmCount.textContent = `${currentIndex + 1} / ${getActiveItems().length}`;    }
-  }
-
-  function showImage(img) {
-    const full = img.dataset.full || img.src;
-    const record = preloadFullImage(full);
-
-    const apply = () => {
-      gmImg.src = full;
-      gmImg.hidden = false;
-      gmImg.classList.add('ready');
-    };
-
-    if (record && record.promise) {
-      record.promise.then(apply);
-    } else {
-      apply();
-    }
-  }
-
-  function showVideo(meta) {
-    const src = meta.dataset.full;
-    if (!src) return;
-
-    gmImg.hidden = true;
-    gmImg.classList.remove('ready');
-    gmImg.style.pointerEvents = 'none';
-
-    gmVWrap.hidden = false;
-    gmVideo.hidden = false;
-    gmVWrap.classList.remove('is-ready');
-
-    gmVideo.loop = true;
-
-    if (gmVideo.src !== src) gmVideo.src = src;
-    gmVideo.currentTime = 0;
-
-    const onFirstFrame = () => {
-      gmVWrap.classList.add('is-ready');
-      gmVideo.removeEventListener('loadeddata', onFirstFrame);
-    };
-    gmVideo.addEventListener('loadeddata', onFirstFrame);
-
-    const p = gmVideo.play();
-    if (p && p.then) p.catch(() => {});
-  }
-
-  function openAt(index) {
-  lockPageScroll();
-
-  const activeItems = getActiveItems();
-
-  currentIndex = (index + activeItems.length) % activeItems.length;
-  const item = activeItems[currentIndex];
-
-  const img = item.img || (item.querySelector ? item.querySelector('img') : null);
-  const meta = item.meta || (item.querySelector ? item.querySelector('.lb-data') : null);
-
-    gmImg.src = '';
-    gmImg.classList.remove('ready');
-    gmImg.hidden = false;
-
-    gmVideo.pause();
-    gmVideo.removeAttribute('src');
-    gmVideo.currentTime = 0;
-    gmVideo.hidden = true;
-    gmVWrap.hidden = true;
-
-    if (meta && meta.dataset.type === 'video') {
-      showVideo(meta);
-    } else if (img) {
-      showImage(img);
-    }
-
-    updateCaption(img, meta);
-    updateCounter();
-    preloadAround(currentIndex);
-
-    gm.setAttribute('aria-hidden', 'false');
-  }
-
-
-function openNextImageOrProject() {
-  openAt(currentIndex + 1);
-}
-
-function openPrevImageOrProject() {
-  openAt(currentIndex - 1);
-}
-
-
-
-
-
-  function closeModal() {
-    unlockPageScroll();
-
-    gm.setAttribute('aria-hidden', 'true');
-
-    gmImg.src = '';
-    gmImg.classList.remove('ready');
-    gmImg.hidden = false;
-
-    gmVideo.pause();
-    gmVideo.removeAttribute('src');
-    gmVideo.currentTime = 0;
-    gmVideo.hidden = true;
-    gmVWrap.hidden = true;
-  }
-
-
-
- function openNextProject() {
-  if (!lastTappedItem) return;
-
-  const allThumbs = items.filter(item => item.dataset.project);
-  const currentIndex = allThumbs.indexOf(lastTappedItem);
-
-  if (currentIndex === -1) return;
-
-  const nextThumb = allThumbs[(currentIndex + 1) % allThumbs.length];
-
-  openAt(setClusterFromThumb(nextThumb, 0));
-}
-
-function openPrevProject() {
-  if (!lastTappedItem) return;
-
-  const allThumbs = items.filter(item => item.dataset.project);
-  const currentIndex = allThumbs.indexOf(lastTappedItem);
-
-  if (currentIndex === -1) return;
-
-  const prevThumb =
-    allThumbs[(currentIndex - 1 + allThumbs.length) % allThumbs.length];
-
-  openAt(setClusterFromThumb(prevThumb, 0));
-}
-
-function setClusterFromThumb(item, fallbackIndex) {
-  lastTappedItem = item;
-
-activeCluster = Array.from(document.querySelectorAll("#grid .jl-item")).map((thumb) => {
-  const img = thumb.querySelector("img");
-
-    if (img) {
-      return {
-        img: {
-          src: img.dataset.full,
-          dataset: {
-            full: img.dataset.full,
-            title: img.dataset.title || "",
-            line1: img.dataset.line1 || "",
-            line2: img.dataset.line2 || ""
-          }
-        },
-        meta: null
-      };
-    }
-
-    const lbData = thumb.querySelector(".lb-data");
-    return {
-      img: null,
-      meta: {
-        dataset: {
-          type: (lbData && lbData.dataset.type) || "video",
-          full: (lbData && lbData.dataset.full) || "",
-          title: (lbData && lbData.dataset.title) || "",
-          line1: (lbData && lbData.dataset.line1) || "",
-          line2: (lbData && lbData.dataset.line2) || ""
-        }
-      }
-    };
-  });
-
-  return fallbackIndex;
-}
-
-
-
-
-
-items.forEach((item, index) => {
-  item.addEventListener('click', (e) => {
-    // デスクトップは今まで通り
-    if (!isTouch) {
-      e.preventDefault();
-      openAt(setClusterFromThumb(item, index));
-      return;
-    }
-
-    const key = item.dataset.groupKey;
-    if (!key) return;
-
-    // 2回目タップ：同じクラスター内なら Lightbox を開く
-    if (armedGroupKey === key) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      closeAllCaptions();
-      armedGroupKey = null;
-
-      openAt(setClusterFromThumb(item, index));
-      return;
-    }
-
-    // 1回目タップ：同じクラスターのキャプション表示
-    e.preventDefault();
-    e.stopPropagation();
-
-    closeAllCaptions();
-
-    grid.classList.add('is-group-tap');
-
-    items.forEach((el) => {
-      el.classList.toggle(
-        'is-in-group',
-        el.dataset.groupKey === key
-      );
-    });
-
-    armedGroupKey = key;
-  });
-});
-
-
-
-
-gmPrev.addEventListener('click', (e) => {
-  e.stopPropagation();
-  openPrevImageOrProject();
-});
-
- gmNext.addEventListener('click', (e) => {
-  e.stopPropagation();
-  openNextImageOrProject();
-});
-
-  gmClose.addEventListener('click', (e) => {
-    e.stopPropagation();
-    closeModal();
-  });
-
-  if (gmNextProject) {
-  gmNextProject.addEventListener('click', (e) => {
-    e.stopPropagation();
-    openNextProject();
-  });
-}
-
-if (gmPrevProject) {
-  gmPrevProject.addEventListener('click', (e) => {
-    e.stopPropagation();
-    openPrevProject();
-  });
-}
-
-
-  gmBg.addEventListener('click', () => closeModal());
-
-  window.addEventListener('keydown', (e) => {
-  if (gm.getAttribute('aria-hidden') === 'true') return;
-
-  if (e.key === 'Escape') {
-    e.preventDefault();
-    closeModal();
-
-  } else if (e.key === 'ArrowRight') {
-    e.preventDefault();
-    openNextImageOrProject();
-
-  } else if (e.key === 'ArrowLeft') {
-    e.preventDefault();
-    openPrevImageOrProject();
-  }
-});
-
-
-  // swipe (mobile)
-  let touchStartX = 0;
-  let touchStartY = 0;
-  let touchOnControls = false;
-
-  gm.addEventListener('touchstart', (e) => {
-    if (gm.getAttribute('aria-hidden') === 'true') return;
-    const t = e.touches[0];
-    if (!t) return;
-
-    const target = e.target;
-    if (target.closest('.gm-video-wrap') || target.closest('.sv-controls')) {
-      touchOnControls = true;
-      return;
-    }
-
-    touchOnControls = false;
-    touchStartX = t.clientX;
-    touchStartY = t.clientY;
-  }, { passive: true });
-
-
-
-
-
-
-
-
-
-  gm.addEventListener('touchend', (e) => {
-    if (gm.getAttribute('aria-hidden') === 'true') return;
-    if (touchOnControls) {
-      touchOnControls = false;
-      return;
-    }
-
-    const t = e.changedTouches[0];
-    if (!t) return;
-
-    const dx = t.clientX - touchStartX;
-    const dy = t.clientY - touchStartY;
-
-    const minDist = 50;
-    const maxVert = 40;
-
-    const controls = gm.querySelector('.sv-controls');
-
-   if (Math.abs(dx) > minDist && Math.abs(dy) < maxVert) {
-  e.preventDefault();
-  if (controls) controls.classList.remove('is-visible');
-
-  if (dx < 0) {
-    openNextImageOrProject();
-  } else {
-    openPrevImageOrProject();
-  }
-}
-  }, { passive: false });
-
-
-
-  function openFromOverviewParam() {
-  const params = new URLSearchParams(window.location.search);
-  const full = params.get('full');
-
-
-  if (!full) return;
-
-  const cleanPath = full
-  .replace(window.location.origin, '')
-  .replace(/^\.?\//, '');
-
-  const targetIndex = items.findIndex((item) => {
-    const img = item.querySelector('img');
-    if (!img) return false;
-
-    const src = (img.dataset.full || img.src || '')
-      .replace(window.location.origin, '')
-      .replace(/^\.?\//, '');
-
-    return src === cleanPath;
-  });
-
-  if (targetIndex === -1) return;
-
-  const targetThumb = items[targetIndex];
-
-  setTimeout(() => {
-  openAt(setClusterFromThumb(targetThumb, targetIndex));
-  //history.replaceState({}, '', window.location.pathname);
-}, 100);
-}
-
-openFromOverviewParam();
-
-
-});
-
-
-
-/* =========================
-   gm video controls: progress + PLAY/FULL
-   ========================= */
-document.addEventListener('DOMContentLoaded', () => {
-  const gm = document.getElementById('gm');
-  if (!gm) return;
-
-  const videoWrap = gm.querySelector('.gm-video-wrap');
-  const video     = document.getElementById('gmVideo');
-  const controls  = gm.querySelector('.sv-controls');
-  if (!videoWrap || !video || !controls) return;
-
-  const progTrack = controls.querySelector('.sv-progress');
-  const progBar   = controls.querySelector('.sv-progress__bar');
-  const btnPlay   = controls.querySelector('.sv-btn--play');
-  const btnFs     = controls.querySelector('.sv-btn--fs');
-
-  if (progTrack && video) {
-    let isSeeking = false;
-
-    const seekFromClientX = (clientX) => {
-      const rect = progTrack.getBoundingClientRect();
-      if (!rect.width || !video.duration) return;
-      let ratio = (clientX - rect.left) / rect.width;
-      ratio = Math.max(0, Math.min(1, ratio));
-      video.currentTime = ratio * video.duration;
-    };
-
-    const onPointerMove = (e) => {
-      if (!isSeeking) return;
-      e.preventDefault();
-      seekFromClientX(e.clientX);
-    };
-
-    const onPointerUp = () => {
-      if (!isSeeking) return;
-      isSeeking = false;
-      window.removeEventListener('pointermove', onPointerMove);
-      window.removeEventListener('pointerup', onPointerUp);
-    };
-
-    progTrack.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      isSeeking = true;
-      seekFromClientX(e.clientX);
-      window.addEventListener('pointermove', onPointerMove);
-      window.addEventListener('pointerup', onPointerUp);
-    });
-  }
-
-  if (video && progBar) {
-    video.addEventListener('timeupdate', () => {
-      if (!video.duration) return;
-      const ratio = video.currentTime / video.duration;
-      progBar.style.width = `${ratio * 100}%`;
-    });
-    video.addEventListener('loadedmetadata', () => {
-      progBar.style.width = '0%';
-    });
-  }
-
-  if (btnPlay && video) {
-    btnPlay.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (video.paused) {
-        video.play().catch(() => {});
-        btnPlay.textContent = 'PAUSE';
-      } else {
-        video.pause();
-        btnPlay.textContent = 'PLAY';
-      }
-    });
-  }
-
-  if (btnFs && video) {
-    btnFs.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (video.requestFullscreen) video.requestFullscreen();
-      else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
-    });
-  }
-
-  const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
-
-  if (isTouch) {
-    const AUTO_HIDE_MS = 2000;
-    let hideControlsTimer = null;
-
-    const clearHideTimer = () => {
-      if (hideControlsTimer) {
-        clearTimeout(hideControlsTimer);
-        hideControlsTimer = null;
-      }
-    };
-
-    const scheduleHide = () => {
-      clearHideTimer();
-      hideControlsTimer = setTimeout(() => {
-        controls.classList.remove('is-visible');
-        try {
-          controls.style.opacity = '0';
-          controls.style.pointerEvents = 'none';
-        } catch {}
-        hideControlsTimer = null;
-      }, AUTO_HIDE_MS);
-    };
-
-    const showControlsOnce = () => {
-      try {
-        controls.style.opacity = '';
-        controls.style.pointerEvents = '';
-      } catch {}
-      controls.classList.add('is-visible');
-      scheduleHide();
-    };
-
-    const handleVideoTap = (e) => {
-      if (e.target.closest('.sv-controls') || e.target.closest('.sv-btn')) return;
-      e.stopPropagation();
-      if (controls.classList.contains('is-visible')) {
-        clearHideTimer();
-        controls.classList.remove('is-visible');
-      } else {
-        showControlsOnce();
-      }
-    };
-
-    let lastTouchTime = 0;
-
-    video.addEventListener('touchend', (e) => {
-      lastTouchTime = Date.now();
-      handleVideoTap(e);
-    }, { passive: true });
-
-    video.addEventListener('click', (e) => {
-      if (Date.now() - lastTouchTime < 700) return;
-      handleVideoTap(e);
-    });
-
-    const suspendAutoHide = (e) => {
-      e.stopPropagation();
-      clearHideTimer();
-      try {
-        controls.style.opacity = '';
-        controls.style.pointerEvents = '';
-      } catch {}
-      controls.classList.add('is-visible');
-    };
-
-    const resumeAutoHide = (e) => {
-      e.stopPropagation();
-      scheduleHide();
-    };
-
-    controls.addEventListener('pointerdown', suspendAutoHide);
-    controls.addEventListener('pointerup', resumeAutoHide);
-    controls.addEventListener('touchstart', suspendAutoHide, { passive: true });
-    controls.addEventListener('touchend', resumeAutoHide);
-  } else {
-    controls.classList.remove('is-visible');
-  }
-});
