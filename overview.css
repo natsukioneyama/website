@@ -14,6 +14,9 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
    (fixed + mix-blend-mode) rather than a white bar that separates it from the
    visual, on every breakpoint. */
 
+.brand, .info-brand, .modal-brand {
+  font-size: 16px;
+}
 .brand-initial {
   font-family: "UnifrakturMaguntia", serif;
   font-weight: 400;
@@ -53,7 +56,7 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
    must render there too, not only under (hover:hover) and (pointer:fine). */
 .jl-item.hover-group { z-index: 2; }
 .jl-item.hover-group img, .jl-item.hover-group video { transform: scale(0.85); }
-.bottom-nav, .modal-footer { position: fixed; bottom: 0; left: 0; right: 0; padding: 9px max(var(--edge), env(safe-area-inset-right)) max(9px, env(safe-area-inset-bottom)) max(var(--edge), env(safe-area-inset-left)); min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size:10px; }
+.bottom-nav, .modal-footer { position: fixed; bottom: 0; left: 0; right: 0; padding: 9px max(var(--edge), env(safe-area-inset-right)) max(9px, env(safe-area-inset-bottom)) max(var(--edge), env(safe-area-inset-left)); min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size:14px; }
 .bottom-nav { z-index: 5; background: #9d030363; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .bottom-nav[inert], .brand[inert] { visibility: hidden; }
 .caption { line-height: 1.25; min-height: 30px; }
@@ -102,7 +105,7 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
   margin-top: 10px;
 }
 @media (max-width: 767px) {
-  :root { --edge: 10px; font-size: 10px; }
+  :root { --edge: 10px; font-size: 14px; }
   .stage { inset: 48px 0 64px; }
   .info-columns {
   grid-template-columns: min(280px, calc(100vw - 40px));
