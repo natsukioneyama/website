@@ -1,4 +1,4 @@
-:root {   font-family: "Noto Sans HK", sans-serif; color: #191919; --bg: #9d0303; background: var(--bg); font-size: 14px; --edge: 14px; }
+:root { font-family: "Noto Sans HK", sans-serif; color: #191919; --bg: #9d0303; background: var(--bg); font-size: 14px; --edge: 14px; }
 * { box-sizing: border-box; }
 body { margin: 0; }
 button, a { color: inherit; font: inherit; -webkit-tap-highlight-color: transparent; }
@@ -7,67 +7,66 @@ a { text-decoration: none; }
 button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
 .no-ring:focus-visible { outline: none; }
 [hidden] { display: none !important; }
-.brand, .info-brand, .modal-brand { position: fixed; left: max(var(--edge), env(safe-area-inset-left)); top: max(12px, env(safe-area-inset-top)); text-align: left; line-height: 1.2; font-weight: bold; z-index: 10; font-size: 16px; padding-top:20px;}
-.brand { z-index: 10; color: var(--bg); mix-blend-mode: difference; }
-/* Shared by index.html and overview.html (both load this file) so the two pages'
-   top-right nav can never drift apart - same overlay-on-image technique as .brand
-   (fixed + mix-blend-mode) rather than a white bar that separates it from the
-   visual, on every breakpoint. */
-
-.modal-brand {
- padding-top:0;
+/* index / overview / modal 共通のブランド表記。背景と同色+difference blendで常に黒く見せる */
+.brand, .info-brand, .modal-brand {
+  position: fixed;
+  left: max(var(--edge), env(safe-area-inset-left));
+  top: max(12px, env(safe-area-inset-top));
+  text-align: left;
+  line-height: 1.2;
+  font-weight: bold;
+  z-index: 10;
+  font-size: 16px;
+  padding-top: 0;
 }
+.brand { color: var(--bg); mix-blend-mode: difference; }
+
 .brand-initial {
   font-family: "UnifrakturMaguntia", serif;
   font-weight: 400;
   font-size: 2em;
 }
+/* index / overview 共通ヘッダーナビ（右上固定） */
 .index-header-nav {
   display: flex; gap: 10px;
   position: fixed; z-index: 10; color: var(--bg); mix-blend-mode: difference;
   right: max(var(--edge), env(safe-area-inset-right));
-  top: max(12px, env(safe-area-inset-top));
+  top: max(20px, env(safe-area-inset-top));
   font-weight: bold;
 }
 
+#index-modal-caption {
+  font-size: 10px;
+}
 
-
+/* モバイル：ヘッダーナビを左側へ */
 @media (max-width: 699px) {
-
-  .index-header-nav { font-size: 10px; }
+  .index-header-nav {
+    top: 50px;
+    left: 10px;
+    right: auto;
+  }
 }
 #overview { padding: 100px var(--edge) 64px; }
 #grid { position: relative; }
 .jl-item { display: block; margin: 0; }
-/* transform-origin/transition live on the inner media, not this wrapper: the
-   wrapper is the absolutely-positioned, justifiedLayout-sized grid cell that
-   :hover/mouseenter/mouseleave hit-test against, so its own box must never resize -
-   only the visual (img/video) scales. That keeps the hover hit-box static and is
-   what stops the shrink-hover-out/grow-hover-in flicker loop at a thumbnail's edge. */
+/* hoverの拡大はimg/video側で行う。wrapper自体のサイズは固定し、hover判定の境界がズレないようにする */
 .jl-item img, .jl-item video { width: 100%; height: 100%; object-fit: contain; display: block; transform-origin: center; transition: transform 180ms ease; }
 .jl-item:focus-visible { z-index: 2; }
 .jl-item:focus-visible img, .jl-item:focus-visible video { transform: scale(1.065); }
 .jl-item.selected { z-index: 2; }
 .jl-item.selected img, .jl-item.selected video { transform: scale(0.85); }
-/* .hover-group is toggled by overview.js on every thumbnail belonging to the
-   hovered one's project (not just the hovered element itself), replacing the old
-   bare `.jl-item:hover` rule - see the report for why. Not media-query-gated: the
-   same class also drives the touch tap-to-preview flow (coarse pointers), so this
-   must render there too, not only under (hover:hover) and (pointer:fine). */
+/* hover-groupはoverview.jsが同一project内の全thumbnailに付与。タッチのtap-to-previewにも使うためmedia queryで絞らない */
 .jl-item.hover-group { z-index: 2; }
 .jl-item.hover-group img, .jl-item.hover-group video { transform: scale(0.85); }
-.bottom-nav, .modal-footer { position: fixed; bottom: 0; left: 0; right: 0; padding: 9px max(var(--edge), env(safe-area-inset-right)) max(9px, env(safe-area-inset-bottom)) max(var(--edge), env(safe-area-inset-left)); min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size:14px; }
+.bottom-nav, .modal-footer { position: fixed; bottom: 0; left: 0; right: 0; padding: 9px max(var(--edge), env(safe-area-inset-right)) max(9px, env(safe-area-inset-bottom)) max(var(--edge), env(safe-area-inset-left)); min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size:14px;   text-transform: uppercase;}
 .bottom-nav { z-index: 5; background: #9d030363; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .bottom-nav[inert], .brand[inert] { visibility: hidden; }
 .caption { line-height: 1.25; min-height: 30px; }
-.caption span { display: block;  }
+.caption span { display: block; }
 
 .overlay { position: fixed; inset: 0; z-index: 20; background: rgba(245,245,245,.72); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
-/* Scoped to #modal only (not .overlay, which #info also uses and needs to scroll
-   vertically): the image viewer has no native scroll content of its own - horizontal
-   drag is fully JS-driven via pointer events - so no native vertical pan/overscroll
-   is needed here, and leaving it enabled is what lets a big downward drag reach
-   iOS Safari's native Pull-to-Refresh. */
+/* #modalは横drag操作のみのため縦scrollを無効化。#infoは.overlay共通で縦scrollが必要なので対象外 */
 #modal { touch-action: none; overscroll-behavior-y: none; }
 .stage { position: absolute; inset: 48px 30px 54px; overflow: hidden; touch-action: none; }
 .modal-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; user-select: none; -webkit-user-select: none; }
@@ -109,8 +108,9 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
   .stage { inset: 48px 0 64px; }
   .info-columns {
   grid-template-columns: min(280px, calc(100vw - 40px));
-  margin: 150px auto 0;
+  margin: 100px auto 0;
 }
 }
 
+/* reduced motion設定時はhoverのscale transitionを無効化 */
 @media (prefers-reduced-motion: reduce) { .jl-item img, .jl-item video { transition: none; } }

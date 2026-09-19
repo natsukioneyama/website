@@ -109,7 +109,7 @@
     {id: 'vogue-adria-danilo-pavlovic'},
     {id: 'krzysztof-jan'},
     {id: 'carl-diner'},
-    {id: 'beauty-antoine-charlie', mediaIndex: 0},
+    {id: 'beauty'},
     {id: 'replica-man-pavel-golik'},
     {id: 'beauty-papers-jeremie-monnier'},
     {id: 'port-magazine-aude-le-barbey'},

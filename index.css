@@ -1,157 +1,76 @@
-/* index.html: Selected Works top page. Shares base resets, .brand and .bottom-nav
-   positioning/sizing/responsive-behavior with overview.css (loaded first).
-
-   Layout: one continuous 1-column sequence of 14 giant project thumbnails, the same
-   DOM and CSS on every breakpoint (Stussy-style: no separate mobile/desktop grid).
-   <=1023px (Mobile/Tablet Portrait, incl. 820x1180 iPad) is the full-bleed single
-   column. >=1024px (Desktop/Large Tablet) additionally shows a fixed-left dynamic
-   caption (index.js) alongside the central visual column - see the #index-main
-   grid below for how that visual column stays viewport-centered regardless. */
+/* index.html: thumbnail一覧ページ。
+   <=1023px: 左固定caption/navなし、visual columnが全幅
+   >=1024px: 左に固定caption、中央3列gridでvisual columnを配置 */
 :root {
-  /* First-pass placeholder sizes - not final. Easy to retune from here. */
-  --index-visual-width: min(46vw, 620px); /* main visual column width, >=1024px only */
-  --index-nav-gap: 40px;                  /* #index-main's empty side-column gap, >=1024px only (centers .index-visual) */
-  --index-top-space: 140px;               /* whitespace above the first thumbnail (<=1023px default) */
-  --index-footer-space: 160px;            /* whitespace before the footer, after the last thumbnail */
+  --index-visual-width: min(46vw, 620px); /* 中央visual columnの幅（PC用は下のmedia queryで上書き） */
+  --index-nav-gap: 40px;                  /* #index-mainの左右空白カラム幅（PCのみ、.index-visualをセンタリングするため） */
+  --index-top-space: 140px;               /* #index-mainのpadding-top（<=1023px時） */
+  --index-footer-space: 160px;            /* footer手前の余白 */
 
-  --index-nav-top: 100px;
-  --index-featured-label-gap: 15px;       /* space between [ NEWEST FEATURED PROJECT ] and .index-first-ref below it */
-  --index-first-ref-line-gap: 10px;       /* vertical gap between its 2nd and 3rd lines, all breakpoints */
-  --index-first-ref-gap: 20px;            /* space between the first-project reference text and its image */
+  --index-nav-top: 100px;                 /* .index-caption固定位置のtop。#index-mainのpadding-topとも共通 */
+  --index-featured-label-gap: 15px;       /* [NEWEST FEATURED PROJECT]と.index-first-refの間隔 */
+  --index-first-ref-line-gap: 10px;       /* .index-first-ref内、2〜3行目の行間 */
+  --index-first-ref-gap: 20px;            /* .index-first-refとその下の要素との間隔 */
   --index-top-space: var(--index-nav-top);
 }
 
 
 @media (min-width: 1024px) {
   :root {
-    /* First-pass Desktop size, deliberately much larger than before (Stussy-style
-       giant editorial image) - still a CSS var so it's easy to retune after a look
-       on real devices. min(...) keeps it from ever exceeding the viewport. */
     --index-visual-width: min(56vw, 900px);
   }
 }
 
-/* #index-brand no longer needs its own font-weight override: overview.css's shared
-   `.brand, .info-brand, .modal-brand` rule is bold now (see the report). */
 .index-thumb { display: block; }
 
-.brand, .info-brand, .modal-brand {
-  font-size: 14px;
-  padding-top:20px;
-}
-
-   #index-modal-caption {
-    font-size: 10px;
-  }
-
-@media (max-width: 699px) {
-  .brand,
-  .info-brand,
-  .modal-brand {
-    font-size: 12px;
-  }
-    #index-modal-caption {
-    font-size: 10px;
-  }
-}
-
-/* .index-header-nav itself now lives in overview.css, shared by index.html (which
-   loads overview.css then this file) and overview.html (which loads only
-   overview.css) - so the two pages' header nav can never drift out of sync. */
+/* .index-header-nav はoverview.cssで定義（index/overview共通） */
 
 #index-main { padding-top: var(--index-top-space); }
 
-/* >=1024px (Desktop/Large Tablet): main visual column. A 3-track grid -
-   minmax(0,1fr) / auto / minmax(0,1fr) - centers the middle (visual) column on the
-   container: both outer tracks are the same "1fr", so they always end up equal, and
-   minmax(0, ...) stops any content from pulling that equality off (a bare 1fr
-   track's default minimum is its content size, not 0). Columns 1 and 3 are left
-   empty on purpose - .index-caption is taken out of grid flow entirely (fixed
-   positioning, see below), so this 3-track split exists purely to center column 2,
-   no JS measurement, no absolute positioning. */
+/* PC：3列グリッド（左右1frずつ）で中央カラムをセンタリング。.index-captionはfixedのため列には影響しない */
 @media (min-width: 1024px) {
   #index-main { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); column-gap: var(--index-nav-gap); align-items: start; padding-top: 0;}
   .index-visual { grid-column: 2; }
-  /* Left fixed-UI dynamic caption - taken out of #index-main's grid flow (fixed
-     positioning, same left edge as .brand) so its vertical position tracks the
-     brand, not the main visual's document position - a grid item would otherwise
-     start at the row's top, i.e. wherever the visual column happens to start.
-     Being out-of-flow also means it takes zero grid track space itself, so it can
-     never affect the column-1/column-3 balance above. */
+  /* PC用の左固定caption（.brandと同じ左端に固定） */
   .index-caption {
     position: fixed; z-index: 10;
     left: max(var(--edge), env(safe-area-inset-left));
     top: var(--index-nav-top);
     font-weight: 900;
-    color:black
+    color: black;
+     text-transform: uppercase;
   }
-  /* Mobile/Tablet Portrait's static caption (see index.js) is PC-only's opposite -
-     hidden here since >=1024px already has the dynamic .index-caption instead. */
+  /* Mobile用staticキャプションはPCでは非表示（PCは.index-caption側を使用） */
   .index-mobile-caption { display: none; }
-  /* Scroll runway for the last project: on a tall viewport (e.g. iPad 13" Portrait,
-     1024x1366 - see report), the fixed ~198px after the last thumbnail
-     (--index-footer-space + the footer's own height) isn't enough scrollable
-     distance to ever bring that thumbnail's center - or even its top - up to the
-     viewport's vertical center, so the IntersectionObserver's center-line check
-     (index.js) can never fire for it and the active underline gets stuck on the
-     second-to-last project. 50vh is the worst-case room a center-line check could
-     ever need (enough to bring even a zero-height last thumbnail's top up to
-     center); --index-footer-space is subtracted since that space already
-     contributes some of it, and max(0px, ...) keeps this a no-op on short
-     viewports where the existing footer space is already more than enough.
-     >=1024px only - <=1023px's own continuous scroll/footer spacing is untouched. */
+  /* 最後のprojectもIntersectionObserverの中央判定に届くよう、20vh分のscroll余白を確保 */
   .index-visual { padding-bottom: max(0px, calc(20vh - var(--index-footer-space))); }
 }
-/* <=1023px (Mobile/Tablet Portrait, extends the former <=699px mobile presentation
-   up through 820x1180 iPad Portrait): no project index, visual column is the full
-   viewport width. */
+/* <=1023px：左固定captionなし、visual columnは全幅 */
 @media (max-width: 1023px) {
-  /* Left fixed-UI caption is PC-only (see .index-caption above) - without this it
-     would render at its default static position, at the top of #index-main ahead
-     of .index-visual, visibly shifting the mobile layout. */
-  .index-caption { display: none;  }
+  .index-caption { display: none; }
   .index-mobile-caption { font-family: "Noto Sans HK", sans-serif; font-size: 18px; }
 }
 
-/* The one continuous, gap-0 sequence of giant thumbnails - same DOM and CSS at
-   every breakpoint. .index-visual's own width (set above per breakpoint, or simply
-   100% on <=1023px) is the only thing that changes; each thumbnail is always 100%
-   of that column, so this rule never needs a per-breakpoint override. */
 .index-visual { display: flex; flex-direction: column; gap: 0; width: 100%; max-width: var(--index-visual-width); }
 @media (max-width: 1023px) {
   .index-visual { max-width: none; }
 }
 .index-thumb img { display: block; width: 100%; height: auto; }
 
-/* Independent from .index-first-ref on purpose (own class, own rules, no shared
-   selector) so either can be retuned later without touching the other. Shared by
-   both caption contexts built in index.js: the PC dynamic .index-caption (fixed,
-   out of .index-visual's flow entirely) and the <=1023px static
-   .index-mobile-caption (a plain .index-visual-preceding sibling, so here it does
-   sit in normal flow directly above the first thumbnail). */
+/* PC用.index-caption / Mobile用.index-mobile-caption 共通のcaptionラベル・本文 */
 .index-featured-label { font-weight: 900; margin-bottom: var(--index-featured-label-gap); }
 @media (max-width: 1023px) {
   .index-featured-label {
     padding-left: max(var(--edge), env(safe-area-inset-left));
     padding-right: max(var(--edge), env(safe-area-inset-right));
-    color:black;
+    color: black;
   }
 }
 
-.index-caption { color:black; }
-
-/* The only per-project reference text on the page (see index.js/html) - see
-   .index-featured-label above for the two caption contexts this is shared by. */
 .index-first-ref { margin-bottom: var(--index-first-ref-gap); line-height: 1.3; font-weight: 900; }
-.index-first-ref p { margin: 0; color:black; }
-/* 2nd/3rd line gap, all breakpoints - the 1st/2nd lines stay tight (line-height only). */
+.index-first-ref p { margin: 0; color: black; }
 .index-first-ref p:last-child { margin-top: var(--index-first-ref-line-gap); }
 
-/* <=1023px only: align its left/right edges with the header brand/nav's own edge
-   inset instead of sitting flush with the viewport edge like the giant thumbnails
-   below it do. padding (not margin) so this doesn't touch .index-visual's own
-   width/left edge - box-sizing:border-box (set globally in overview.css) keeps the
-   element at 100% width without overflowing. */
 @media (max-width: 1023px) {
   .index-first-ref {
     padding-left: max(var(--edge), env(safe-area-inset-left));
@@ -166,32 +85,13 @@
   font-size: 12px;
 }
 
-/* ============ Horizontal project modal ============ */
+/* === 横スクロールmodal === */
 #index-modal { touch-action: pan-x; overscroll-behavior-y: none; }
 #index-modal:focus-visible { outline: none; }
-/* Brand/caption overlay the image directly (transparent, fixed position) - clicking
-   either closes the modal (see index.js; clicking the media or the background
-   margin does not). z-index:1 (same value/reason as overview.css's own .info-brand)
-   is required now that #index-stage is full height and would otherwise paint over
-   it (later DOM sibling, same z-index:auto stacking level) - this is the one part
-   of this change that isn't pure sizing, but without it the header/caption would be
-   literally invisible behind the media. */
-/* index Horizontal Modal only - scoped to the #id, not the shared .modal-brand
-   class, so overview.html's own modal-brand and index.html's Information Overlay
-   (.info-brand) are unaffected. color:white is required for the blend to actually
-   invert against arbitrary image content (difference(near-black, X) leaves X almost
-   unchanged) - .brand/.index-header-nav elsewhere on this page use the same
-   mix-blend-mode:difference technique, but against var(--bg) (the red theme's own
-   background color) instead, since they sit on the page background rather than
-   over arbitrary media. */
+/* z-index:1で#index-stageより前面に。color:white + difference blendで任意の画像上でも視認性を確保 */
 #index-modal-header { line-height: 1.2; cursor: pointer; z-index: 1; color: white; mix-blend-mode: difference; }
 #index-modal-caption { margin-top: 10px; font-weight: normal; }
-/* Each media's height = the viewport height, full-bleed top to bottom, on every
-   device - no reserved header/caption band, no vertical centering. 100vh first as a
-   fallback, then 100dvh overrides it where supported: 100dvh tracks the *current*
-   visible viewport as iOS Safari's address bar shows/hides, instead of 100vh's fixed
-   "largest possible" viewport, which is what caused the classic mobile Safari
-   overflow/clipping issue - no JS viewport measurement needed either way. */
+/* 100dvhでiOS Safariのアドレスバー分の高さ変動に対応 */
 #index-stage {
   position: absolute; left: 0; right: 0; top: 0;
   height: 100vh;

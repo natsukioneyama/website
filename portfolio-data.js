@@ -54,15 +54,20 @@ window.PORTFOLIO_PROJECTS = [
     ]
   },
   {
-    "id": "beauty-antoine-charlie",
+    "id": "beauty",
     "category": "overview",
     "title": "Beauty",
-    "line1": "Antoine & Charlie",
+    "line1": "",
     "line2": "",
     "media": [
       { "type": "image", "thumb": "thmbs/beauty/beauty01/01.webp", "full": "img/beauty/beauty01/01.webp", "alt": "antoine&charlie", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
       { "type": "image", "thumb": "thmbs/beauty/beauty01/02.webp", "full": "img/beauty/beauty01/02.webp", "alt": "antoine&charlie", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/beauty/beauty01/03.webp", "full": "img/beauty/beauty01/03.webp", "alt": "antoine&charlie", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 }
+      { "type": "image", "thumb": "thmbs/beauty/beauty01/03.webp", "full": "img/beauty/beauty01/03.webp", "alt": "antoine&charlie", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/beauty/beauty01/04.webp", "full": "img/beauty/beauty01/04.webp", "alt": "antoine&charlie", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/beauty/beauty01/05.webp", "full": "img/beauty/beauty01/05.webp", "alt": "antoine&charlie", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/beauty/beauty01/06.webp", "full": "img/beauty/beauty01/06.webp", "alt": "antoine&charlie", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/beauty/beauty01/07.webp", "full": "img/beauty/beauty01/07.webp", "alt": "antoine&charlie", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
+      
     ]
   },
   {
@@ -73,9 +78,9 @@ window.PORTFOLIO_PROJECTS = [
     "line2": "",
     "media": [
       { "type": "image", "thumb": "thmbs/replicaman/ss24/01.webp", "full": "img/replicaman/ss24/01.webp", "alt": "replicaman", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/replicaman/ss24/03.webp", "full": "img/replicaman/ss24/03.webp", "alt": "replicaman", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/replicaman/ss24/04.webp", "full": "img/replicaman/ss24/04.webp", "alt": "replicaman", "width": 350, "height": 280, "dataW": 600, "dataH": 480 },
-      { "type": "image", "thumb": "thmbs/replicaman/ss24/05.webp", "full": "img/replicaman/ss24/05.webp", "alt": "replicaman", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 }
+      { "type": "image", "thumb": "thmbs/replicaman/ss24/02.webp", "full": "img/replicaman/ss24/02.webp", "alt": "replicaman", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/replicaman/ss24/03.webp", "full": "img/replicaman/ss24/03.webp", "alt": "replicaman", "width": 350, "height": 263, "dataW": 1200, "dataH": 900 },
+      { "type": "image", "thumb": "thmbs/replicaman/ss24/04.webp", "full": "img/replicaman/ss24/04.webp", "alt": "replicaman", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 }
     ]
   },
   {
@@ -89,6 +94,18 @@ window.PORTFOLIO_PROJECTS = [
       { "type": "image", "thumb": "thmbs/beautypapers/01/02.webp", "full": "img/beautypapers/01/02.webp", "alt": "beautypapers", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
       { "type": "image", "thumb": "thmbs/beautypapers/01/03.webp", "full": "img/beautypapers/01/03.webp", "alt": "beautypapers", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
       { "type": "image", "thumb": "thmbs/beautypapers/01/04.webp", "full": "img/beautypapers/01/04.webp", "alt": "beautypapers", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 }
+    ]
+  },
+    {
+    "id": "à part-nicolas-valois",
+    "category": "overview",
+    "title": "",
+    "line1": "Nicolas Valois",
+    "line2": "",
+    "media": [
+      { "type": "image", "thumb": "thmbs/img/nicolasvalois_01/01.webp", "full": "img/img/nicolasvalois_01/01.webp", "alt": "nicolasvalois", "width": 247, "height": 350, "dataW": 848, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/img/nicolasvalois_01/02.webp", "full": "img/img/nicolasvalois_01/02.webp", "alt": "nicolasvalois", "width": 247, "height": 350, "dataW": 848, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/img/nicolasvalois_01/03.webp", "full": "img/img/nicolasvalois_01/03.webp", "alt": "nicolasvalois", "width": 247, "height": 350, "dataW": 848, "dataH": 1200 }
     ]
   },
   {
@@ -169,6 +186,7 @@ window.PORTFOLIO_PROJECTS = [
     "line1": "Boris Ovini",
     "line2": "",
     "media": [
+      { "type": "image", "thumb": "thmbs/numeroberlin/visionary/10.webp", "full": "img/numeroberlin/visionary/10.webp", "alt": "numeroberlin", "width": 282, "height": 350, "dataW": 966, "dataH": 1200 },
       { "type": "image", "thumb": "thmbs/numeroberlin/visionary/01.webp", "full": "img/numeroberlin/visionary/01.webp", "alt": "numeroberlin", "width": 263, "height": 350, "dataW": 750, "dataH": 1000 },
       { "type": "image", "thumb": "thmbs/numeroberlin/visionary/02.webp", "full": "img/numeroberlin/visionary/02.webp", "alt": "numeroberlin", "width": 350, "height": 255, "dataW": 1000, "dataH": 728 },
       { "type": "image", "thumb": "thmbs/numeroberlin/visionary/03.webp", "full": "img/numeroberlin/visionary/03.webp", "alt": "numeroberlin", "width": 350, "height": 233, "dataW": 1000, "dataH": 667 },
