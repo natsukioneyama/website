@@ -60,14 +60,12 @@ window.PORTFOLIO_PROJECTS = [
     "line1": "",
     "line2": "",
     "media": [
-      { "type": "image", "thumb": "thmbs/beauty/beauty01/01.webp", "full": "img/beauty/beauty01/01.webp", "alt": "antoine&charlie", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/beauty/beauty01/02.webp", "full": "img/beauty/beauty01/02.webp", "alt": "antoine&charlie", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/beauty/beauty01/03.webp", "full": "img/beauty/beauty01/03.webp", "alt": "antoine&charlie", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/beauty/beauty01/04.webp", "full": "img/beauty/beauty01/04.webp", "alt": "antoine&charlie", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/beauty/beauty01/05.webp", "full": "img/beauty/beauty01/05.webp", "alt": "antoine&charlie", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/beauty/beauty01/06.webp", "full": "img/beauty/beauty01/06.webp", "alt": "antoine&charlie", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/beauty/beauty01/07.webp", "full": "img/beauty/beauty01/07.webp", "alt": "antoine&charlie", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
-      
+      { "type": "image", "thumb": "thmbs/beauty/beauty01/01.webp", "full": "img/beauty/beauty01/01.webp", "alt": "beauty", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/beauty/beauty01/02.webp", "full": "img/beauty/beauty01/02.webp", "alt": "beauty", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/beauty/beauty01/03.webp", "full": "img/beauty/beauty01/03.webp", "alt": "beauty", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/beauty/beauty01/04.webp", "full": "img/beauty/beauty01/04.webp", "alt": "beauty", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/beauty/beauty01/05.webp", "full": "img/beauty/beauty01/05.webp", "alt": "beauty", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/beauty/beauty01/06.webp", "full": "img/beauty/beauty01/06.webp", "alt": "beauty", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 }
     ]
   },
   {
