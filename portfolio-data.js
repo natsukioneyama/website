@@ -3,6 +3,35 @@
 // dataW/dataH are actual full-image pixel dimensions (not thumb-sized placeholders as in html12.02).
 window.PORTFOLIO_PROJECTS = [
   {
+    "id": "modern-weekly-style",
+    "category": "overview",
+    "title": "MODERN WEEKLY STYLE",
+    "line1": "Felix Cooper",
+    "line2": "",
+    "media": [
+      { "type": "image", "thumb": "thmbs/modernweeklystyle/september2026/felixcooper_01/01.webp", "full": "img/modernweeklystyle/september2026/felixcooper_01/01.webp", "alt": "Modern Weekly Style", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/modernweeklystyle/september2026/felixcooper_01/02.webp", "full": "img/modernweeklystyle/september2026/felixcooper_01/02.webp", "alt": "Modern Weekly Style", "width": 280, "height": 350, "dataW": 961, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/modernweeklystyle/september2026/felixcooper_01/03.webp", "full": "img/modernweeklystyle/september2026/felixcooper_01/03.webp", "alt": "Modern Weekly Style", "width": 281, "height": 350, "dataW": 962, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/modernweeklystyle/september2026/felixcooper_01/04.webp", "full": "img/modernweeklystyle/september2026/felixcooper_01/04.webp", "alt": "Modern Weekly Style", "width": 350, "height" : 281, "dataW": 1200, "dataH": 964 },
+      { "type": "image", "thumb": "thmbs/modernweeklystyle/september2026/felixcooper_01/05.webp", "full": "img/modernweeklystyle/september2026/felixcooper_01/05.webp", "alt": "Modern Weekly Style", "width": 281, "height" : 350, "dataW": 964, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/modernweeklystyle/september2026/felixcooper_01/06.webp", "full": "img/modernweeklystyle/september2026/felixcooper_01/06.webp", "alt": "Modern Weekly Style", "width": 281, "height" : 350, "dataW": 965, "dataH": 1200 }
+    ]
+  },  
+  {
+    "id": "voguecs",
+    "category": "overview",
+    "title": "VOGUE CS",
+    "line1": "Gosia Turczynska",
+    "line2": "",
+    "media": [
+      { "type": "image", "thumb": "thmbs/voguecs/september2026/gosiaturczynska/01.webp", "full": "img/voguecs/september2026/gosiaturczynska/01.webp", "alt": "VOGUE CS", "width": 283, "height": 350, "dataW": 969, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/voguecs/september2026/gosiaturczynska/02.webp", "full": "img/voguecs/september2026/gosiaturczynska/02.webp", "alt": "VOGUE CS", "width": 283, "height": 350, "dataW": 969, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/voguecs/september2026/gosiaturczynska/03.webp", "full": "img/voguecs/september2026/gosiaturczynska/03.webp", "alt": "VOGUE CS", "width": 350, "height": 232, "dataW": 1200, "dataH": 796 },
+      { "type": "image", "thumb": "thmbs/voguecs/september2026/gosiaturczynska/04.webp", "full": "img/voguecs/september2026/gosiaturczynska/04.webp", "alt": "VOGUE CS", "width": 283, "height": 350, "dataW": 969, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/voguecs/september2026/gosiaturczynska/05.webp", "full": "img/voguecs/september2026/gosiaturczynska/05.webp", "alt": "VOGUE CS", "width": 283, "height": 350, "dataW": 969, "dataH": 1200 }
+    ]
+  },    
+  {
     "id": "10-magazine",
     "category": "overview",
     "title": "10 MAGAZINE",

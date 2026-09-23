@@ -26,22 +26,30 @@
   // object directly to add/change a project's label or lines - e.g. a future
   // '[FEATURED PROJECT]' entry - nothing else needs to change.
   const INDEX_CAPTIONS = {
-    '10-magazine': {
+    'modern-weekly-style': {
       label: '[NEWEST FEATURED PROJECT]',
+      lines: [
+        'MODERN WEEKLY STYLE',
+        'SEPTEMBER 2026 COVER STORY',
+        'FELIX COOPER'
+      ]
+    },
+    'voguecs': {
+      label: '[NEWEST FEATURED PROJECT]',
+      lines: [
+        'VOGUE CS',
+        'SEPTEMBER 2026',
+        'GOSIA TURCZYNSKA'
+      ]
+    },    
+        '10-magazine': {
+      label: '[NEWESTFEATURED PROJECT]',
       lines: [
         '10 MAGAZINE',
         'ISSUE 77  AUTUMN/WINTER 2026',
         'FERRY VAN DER NAT'
       ]
-    },
-      'vogue-adria-danilo-pavlovic': {
-    label: '[FEATURED PROJECT]',
-    lines: [
-      'VOGUE ADRIA',
-      'SUMMER 2026',
-      'DANILO PAVLOVIC'
-    ]
-  }
+    }
   
   };
 
@@ -105,19 +113,10 @@
   // visual column. Entries without mediaIndex use media[0] as the cover image.
   // Verified against the current portfolio-data.js.
   const SEQUENCE = [
+    {id: 'modern-weekly-style'},
+    {id: 'voguecs'},
     {id: '10-magazine'},
-    {id: 'vogue-adria-danilo-pavlovic'},
-    {id: 'krzysztof-jan'},
-    {id: 'carl-diner'},
-    {id: 'beauty'},
-    {id: 'replica-man-pavel-golik'},
-    {id: 'beauty-papers-jeremie-monnier'},
-    {id: 'port-magazine-aude-le-barbey'},
-    {id: 'office-jesper-lund'},
-    {id: 'vogue-mexico-ward-ivan-rafik'},
-    {id: 'numero-china-carla-rossi'},
-    {id: 'numero-berlin-boris-ovini'},
-    {id: 'sans-title-tess-petronio'}
+    {id: 'beauty'}
   ];
 
   function buildVisual(container, entries) {
