@@ -30,15 +30,15 @@
       label: '[NEWEST FEATURED PROJECT]',
       lines: [
         'MODERN WEEKLY STYLE',
-        'SEPTEMBER 2026 COVER STORY',
+        'OCTOBER 2026 COVER STORY',
         'FELIX COOPER'
       ]
     },
     'voguecs': {
       label: '[NEWEST FEATURED PROJECT]',
       lines: [
-        'VOGUE CS',
-        'SEPTEMBER 2026',
+        'VOGUE CZECHOSLOVAKIA',
+        'OCTOBER ISSUE 2026', 
         'GOSIA TURCZYNSKA'
       ]
     },    
