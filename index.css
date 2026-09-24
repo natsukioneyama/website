@@ -97,7 +97,24 @@
 #index-modal:focus-visible { outline: none; }
 /* z-index:1で#index-stageより前面に。color:white + difference blendで任意の画像上でも視認性を確保 */
 #index-modal-header { line-height: 1.2; cursor: pointer; z-index: 1; color: white; mix-blend-mode: difference; }
-#index-modal-caption { margin-top: 10px; font-weight: normal; }
+#index-modal-caption { display: inline; font-weight: normal; }
+/* captionのすぐ右に表示。見た目は小さいままだが、::beforeで44x44pxのタップ領域だけ拡張する */
+#index-modal-close {
+  display: inline-block;
+  position: relative;
+  margin-left: 8px;
+  font-weight: normal;
+  padding: 0;
+}
+#index-modal-close::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
 /* 100dvhでiOS Safariのアドレスバー分の高さ変動に対応 */
 #index-stage {
   position: absolute; left: 0; right: 0; top: 0;
@@ -112,4 +129,21 @@
 #index-stage img, #index-stage video {
   height: 100%; width: auto; flex: 0 0 auto; display: block;
   object-fit: contain; user-select: none; -webkit-user-select: none;
+}
+
+
+#index-modal-close {
+  display: inline-block;
+  position: relative;
+  margin-left: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: normal;
+  line-height: inherit;
+  cursor: pointer;
 }
