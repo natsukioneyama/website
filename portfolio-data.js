@@ -123,18 +123,6 @@ window.PORTFOLIO_PROJECTS = [
       { "type": "image", "thumb": "thmbs/beautypapers/01/04.webp", "full": "img/beautypapers/01/04.webp", "alt": "beautypapers", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 }
     ]
   },
-    {
-    "id": "à part-nicolas-valois",
-    "category": "overview",
-    "title": "",
-    "line1": "Nicolas Valois",
-    "line2": "",
-    "media": [
-      { "type": "image", "thumb": "thmbs/img/nicolasvalois_01/01.webp", "full": "img/img/nicolasvalois_01/01.webp", "alt": "nicolasvalois", "width": 247, "height": 350, "dataW": 848, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/img/nicolasvalois_01/02.webp", "full": "img/img/nicolasvalois_01/02.webp", "alt": "nicolasvalois", "width": 247, "height": 350, "dataW": 848, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/img/nicolasvalois_01/03.webp", "full": "img/img/nicolasvalois_01/03.webp", "alt": "nicolasvalois", "width": 247, "height": 350, "dataW": 848, "dataH": 1200 }
-    ]
-  },
   {
     "id": "costume-sascha-oda",
     "category": "overview",
