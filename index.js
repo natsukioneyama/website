@@ -43,7 +43,7 @@
       ]
     },    
         '10-magazine': {
-      label: '[NEWESTFEATURED PROJECT]',
+      label: '[NEWEST FEATURED PROJECT]',
       lines: [
         '10 MAGAZINE',
         'ISSUE 77  AUTUMN/WINTER 2026',
