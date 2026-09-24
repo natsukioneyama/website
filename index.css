@@ -5,7 +5,7 @@
   --index-visual-width: min(46vw, 620px); /* 中央visual columnの幅（PC用は下のmedia queryで上書き） */
   --index-nav-gap: 40px;                  /* #index-mainの左右空白カラム幅（PCのみ、.index-visualをセンタリングするため） */
   --index-top-space: 140px;               /* #index-mainのpadding-top（<=1023px時） */
-  --index-footer-space: 160px;            /* footer手前の余白 */
+  --index-footer-space: 200px;            /* footer手前の余白 */
 
   --index-nav-top: 100px;                 /* .index-caption固定位置のtop。#index-mainのpadding-topとも共通 */
   --index-featured-label-gap: 15px;       /* [NEWEST FEATURED PROJECT]と.index-first-refの間隔 */
@@ -42,8 +42,15 @@
   }
   /* Mobile用staticキャプションはPCでは非表示（PCは.index-caption側を使用） */
   .index-mobile-caption { display: none; }
-  /* 最後のprojectもIntersectionObserverの中央判定に届くよう、20vh分のscroll余白を確保 */
-  .index-visual { padding-bottom: max(0px, calc(20vh - var(--index-footer-space))); }
+  /* 最後のprojectもIntersectionObserverの中央判定に届くよう、10vh分のscroll余白を確保 */
+    :root {
+    --index-footer-space: 80px;
+  }
+
+  .index-visual {
+    padding-bottom: max(0px, calc(10vh - var(--index-footer-space)));
+  }
+
 }
 /* <=1023px：左固定captionなし、visual columnは全幅 */
 @media (max-width: 1023px) {
