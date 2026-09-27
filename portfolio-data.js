@@ -45,6 +45,18 @@ window.PORTFOLIO_PROJECTS = [
     ]
   },
   {
+    "id": "hube-frabonasia",
+    "category": "overview",
+    "title": "HUBE",
+    "line1": "Fra Bonasia",
+    "line2": "",
+    "media": [
+      { "type": "image", "thumb": "thmbs/hube/october2026/frabonasia_01/01.webp", "full": "img/hube/october2026/frabonasia_01/01.webp", "alt": "Hube", "width": 300, "height": 200, "dataW": 1200, "dataH": 800 },
+      { "type": "image", "thumb": "thmbs/hube/october2026/frabonasia_01/02.webp", "full": "img/hube/october2026/frabonasia_01/02.webp", "alt": "Hube", "width": 300, "height": 200, "dataW": 1200, "dataH": 800 },
+      { "type": "image", "thumb": "thmbs/hube/october2026/frabonasia_01/03.webp", "full": "img/hube/october2026/frabonasia_01/03.webp", "alt": "Hube", "width": 300, "height": 200, "dataW": 1200, "dataH": 800 }
+    ]
+  },  
+  {
     "id": "vogue-adria-danilo-pavlovic",
     "category": "overview",
     "title": "VOGUE ADRIA",
