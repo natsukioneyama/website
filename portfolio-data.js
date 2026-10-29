@@ -2,6 +2,19 @@
 // Array order is the continuous modal sequence, preserved from the html12.02 source of truth.
 // dataW/dataH are actual full-image pixel dimensions (not thumb-sized placeholders as in html12.02).
 window.PORTFOLIO_PROJECTS = [
+    {
+    "id": "more-or-less",
+    "category": "overview",
+    "title": "MORE OR LESS",
+    "line1": "Durimel",
+    "line2": "",
+    "media": [
+      { "type": "image", "thumb": "thmbs/moreorless/9_2026/durimel/01.webp", "full": "img/moreorless/9_2026/durimel/01.webp", "alt": "More or Less", "width": 283, "height": 350, "dataW": 969, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/moreorless/9_2026/durimel/02.webp", "full": "img/moreorless/9_2026/durimel/02.webp", "alt": "More or Less", "width": 274, "height": 350, "dataW": 938, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/moreorless/9_2026/durimel/03.webp", "full": "img/moreorless/9_2026/durimel/03.webp", "alt": "More or Less", "width": 282, "height": 350, "dataW": 968, "dataH": 1200 },
+      { "type": "image", "thumb": "thmbs/moreorless/9_2026/durimel/04.webp", "full": "img/moreorless/9_2026/durimel/04.webp", "alt": "More or Less", "width": 288, "height": 350, "dataW": 986, "dataH": 1200 },
+     ]
+  },  
   {
     "id": "modern-weekly-style",
     "category": "overview",

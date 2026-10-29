@@ -26,6 +26,14 @@
   // object directly to add/change a project's label or lines - e.g. a future
   // '[FEATURED PROJECT]' entry - nothing else needs to change.
   const INDEX_CAPTIONS = {
+    'more-or-less': {
+      label: '[NEWEST FEATURED PROJECT]',
+      lines: [
+        'MORE OR LESS',
+        '#9 2026 COVER STORY',
+        'DURIMEL'
+      ]
+    },
     'modern-weekly-style': {
       label: '[NEWEST FEATURED PROJECT]',
       lines: [
@@ -35,7 +43,7 @@
       ]
     },
     'voguecs': {
-      label: '[NEWEST FEATURED PROJECT]',
+      label: '[FEATURED PROJECT]',
       lines: [
         'VOGUE CZECHOSLOVAKIA',
         'OCTOBER ISSUE 2026', 
@@ -43,7 +51,7 @@
       ]
     },    
         '10-magazine': {
-      label: '[NEWEST FEATURED PROJECT]',
+      label: '[FEATURED PROJECT]',
       lines: [
         '10 MAGAZINE',
         'ISSUE 77  AUTUMN/WINTER 2026',
@@ -113,10 +121,10 @@
   // visual column. Entries without mediaIndex use media[0] as the cover image.
   // Verified against the current portfolio-data.js.
   const SEQUENCE = [
+    {id: 'more-or-less'},
     {id: 'modern-weekly-style'},
     {id: 'voguecs'},
     {id: '10-magazine'},
-    {id: 'beauty'}
   ];
 
   function buildVisual(container, entries) {
