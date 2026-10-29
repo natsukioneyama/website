@@ -1,72 +1,163 @@
-/* index.html: thumbnail一覧ページ。
-   <=1023px: 左固定caption/navなし、visual columnが全幅
-   >=1024px: 左に固定caption、中央3列gridでvisual columnを配置 */
+/* index.html: 固定画面型スライド（experiment/fixed-index-scroll）。
+   ページ自体はスクロールさせず、.index-thumbを1枚ずつ上下にスライドして切り替える（index.js）。
+   >=768px（PC・タブレット）: 左に全作品の一覧（選択中だけ大きく展開し、その中心を画像の中心に揃える）、中央に画像
+   <=767px（スマートフォン）: 上部ナビ、中央に画像、下部に固定caption */
 :root {
-  --index-visual-width: min(46vw, 620px); /* 中央visual columnの幅（PC用は下のmedia queryで上書き） */
-  --index-nav-gap: 40px;                  /* #index-mainの左右空白カラム幅（PCのみ、.index-visualをセンタリングするため） */
-  --index-top-space: 140px;               /* #index-mainのpadding-top（<=1023px時） */
-  --index-footer-space: 200px;            /* footer手前の余白 */
+  --index-visual-width: 44vw;             /* 画像の最大幅（PC・スマホ用は下のmedia queryで上書き） */
+  --index-image-max-h: min(50vh, 54vw);   /* 画像の最大高さ（タブレット）。54vwは幅の上限44vwの縦長画像の高さ。縦横比は維持 */
+  --index-screen-h: 100vh;                /* 画面高さ。dvh対応ブラウザでは下で100dvhに上書き */
+  --index-slide-top: 50px;                /* 画像エリア上端の予約余白（brand/nav分） */
+  --index-slide-bottom: 50px;             /* 画像エリア下端の予約余白（footer/caption分） */
 
-  --index-nav-top: 100px;                 /* .index-caption固定位置のtop。#index-mainのpadding-topとも共通 */
+  --index-caption-size: 15px;             /* 一覧の選択中（展開）項目の文字サイズ（PCは下で上書き） */
+  --index-list-size: 10px;                /* 一覧の非選択項目の文字サイズ */
+  --index-list-pitch: 36px;               /* 非選択項目の間隔（Dock拡大時に重ならない値。index.jsのDOCK_*と連動） */
+  --index-current-gap: 16px;              /* 選択中項目の上下の余白 */
   --index-featured-label-gap: 15px;       /* [NEWEST FEATURED PROJECT]と.index-first-refの間隔 */
   --index-first-ref-line-gap: 10px;       /* .index-first-ref内、2〜3行目の行間 */
   --index-first-ref-gap: 20px;            /* .index-first-refとその下の要素との間隔 */
-  --index-top-space: var(--index-nav-top);
+  --index-footer-h: 40px;                 /* 固定footerの高さ（スマホcaptionの下端位置に使用） */
+
+  /* 画像の縦中心。スマホ：上下の予約余白の間の中央（従来どおり）。PC・タブレットは下のmedia queryで上書き */
+  --index-center-y: calc(var(--index-slide-top) + (var(--index-screen-h) - var(--index-slide-top) - var(--index-slide-bottom)) / 2);
+}
+@supports (height: 100dvh) {
+  :root { --index-screen-h: 100dvh; }
 }
 
+@media (min-width: 768px) {
+  :root {
+    --index-slide-top: 60px;
+    --index-slide-bottom: 60px;
+    /* ---- PC・タブレットの画像と左captionの配置（スマホには影響しない） ----
+       基準デザイン（表示領域 約1170×659px）の実測値を画面高さに対する比率にしたもの：
+         画像上端 94px（14.3%）／画像高さ 422px（64%、--index-image-max-hで指定）／
+         選択中captionの上端 画像上端＋約16px（2.4%） */
+    --index-image-top-ratio: 0.143; /* 【縦位置】画像上端を画面高さの何割に置くか */
+    --index-caption-offset: 2.4vh;  /* 【caption位置】選択中captionの上端を画像上端からどれだけ下げるか */
+    --index-safe-top: 72px;         /* 画像上端・一覧上端の最低位置（ロゴ・上部ナビの下端約50px＋余白） */
+    --index-center-x: 50%;          /* 【横位置】画像の横中心（画面幅に対する位置） */
+    /* 【サイズ】--index-image-max-h（下の1024px以上・未満それぞれで指定） */
 
+    /* 画像の枠の高さ（縦長画像はこの高さで表示される） */
+    --index-image-box-h: min(var(--index-image-max-h), calc(var(--index-screen-h) - var(--index-slide-top) - var(--index-slide-bottom)));
+    /* 画像上端。低い画面でもロゴ・ナビに重ならないようsafe-topより上には出さない */
+    --index-image-top: max(calc(var(--index-screen-h) * var(--index-image-top-ratio)), var(--index-safe-top));
+    /* スライドは縦中心で配置しているので、上端から中心を求める */
+    --index-center-y: calc(var(--index-image-top) + var(--index-image-box-h) / 2);
+    /* 選択中captionの上端（index.jsのalignList()がこの線に選択中ブロックの上端を合わせる） */
+    --index-caption-y: calc(var(--index-image-top) + var(--index-caption-offset));
+  }
+}
 @media (min-width: 1024px) {
   :root {
-    --index-visual-width: min(56vw, 900px);
+    --index-visual-width: 40vw;
+    --index-image-max-h: 64vh; /* 基準デザインの画像高さ 422px ÷ 表示領域の高さ 約659px */
+    --index-caption-size: clamp(16px, 1.8vw, 24px); /* 1328px幅で約24px */
+  }
+}
+/* スマホ：上はbrand+nav、下はcaption+footerの分を空けて、その間の中央に画像を置く */
+@media (max-width: 767px) {
+  :root {
+    --index-visual-width: 80vw;
+    /* 上下を同じ値にして画面の中央に置く（下はcaption+footer分、上も同じだけ空ける） */
+    --index-slide-top: 170px;
+    --index-slide-bottom: 170px;
   }
 }
 
-.index-thumb { display: block; }
+/* INDEX画面自体はスクロールさせない（#index-info/#index-modalは自身の中でスクロール） */
+html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
 
 /* .index-header-nav はoverview.cssで定義（index/overview共通） */
 
-#index-main { padding-top: var(--index-top-space); }
+/* touch-action:noneでブラウザ標準のpan/pull-to-refreshを止め、スワイプはindex.jsで処理 */
+#index-main { position: fixed; inset: 0; touch-action: none; }
 
-/* PC：3列グリッド（左右1frずつ）で中央カラムをセンタリング。.index-captionはfixedのため列には影響しない */
-@media (min-width: 1024px) {
-  #index-main { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); column-gap: var(--index-nav-gap); align-items: start; padding-top: 0;}
-  .index-visual { grid-column: 2; }
-  /* PC用の左固定caption（.brandと同じ左端に固定） */
+/* スライドを重ねるステージ。画面外のスライドはoverflowで隠す */
+.index-visual { position: absolute; inset: 0; overflow: hidden; }
+
+/* 各スライド：画像エリアの中央に配置し、data-posで画面の上（prev）・中（current）・下（next）へ移動 */
+.index-thumb {
+  position: absolute; left: var(--index-center-x, 50%);
+  top: var(--index-center-y);
+  display: block;
+  transform: translate(-50%, -50%);
+  transition: transform var(--index-slide-ms, 600ms) cubic-bezier(0.65, 0, 0.35, 1);
+}
+.index-thumb[data-pos="prev"] { transform: translate(-50%, calc(-50% - var(--index-screen-h))); }
+.index-thumb[data-pos="next"] { transform: translate(-50%, calc(-50% + var(--index-screen-h))); }
+/* 一覧から2つ以上離れた作品へ移動する時、間の作品は画面外で瞬時に移動させる（index.js layoutSlides） */
+.index-thumb.is-instant { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  .index-thumb { transition: none; }
+}
+/* 幅・高さの上限の小さい方に合わせて縦横比を保って縮小。スマホは上下の予約余白内に収める */
+.index-thumb img {
+  display: block; width: auto; height: auto;
+  max-width: var(--index-visual-width);
+  max-height: min(var(--index-image-max-h), calc(var(--index-screen-h) - var(--index-slide-top) - var(--index-slide-bottom)));
+}
+@media (max-width: 767px) {
+  .index-thumb img { max-height: calc(var(--index-screen-h) - var(--index-slide-top) - var(--index-slide-bottom)); }
+}
+
+/* PC・タブレット：左の作品一覧（.brandと同じ左端）。上端を--index-caption-y（画像上端＋offset）に固定し、
+   index.jsのalignList()が一覧をずらして選択中の展開ブロックの上端をこの線に合わせる */
+@media (min-width: 768px) {
   .index-caption {
     position: fixed; z-index: 10;
     left: max(var(--edge), env(safe-area-inset-left));
-    top: var(--index-nav-top);
+    top: var(--index-caption-y);
+    /* 画像の左端より手前で折り返し、画像に重ならないようにする */
+    max-width: calc(50vw - var(--index-visual-width) / 2 - 2 * var(--edge));
     font-weight: 900;
     color: black;
      text-transform: uppercase;
   }
-  /* Mobile用staticキャプションはPCでは非表示（PCは.index-caption側を使用） */
+  /* 選択中の展開表示：ラベルも作品名と同じサイズ。間隔は文字サイズに比例（em） */
+  .index-caption .index-featured-label { font-size: var(--index-caption-size); line-height: 1.2; margin-bottom: 1.2em; }
+  .index-caption .index-first-ref { font-size: var(--index-caption-size); line-height: 1.2; margin-bottom: 0; }
+  .index-caption .index-first-ref p:last-child { margin-top: 0.8em; }
+
+  /* 全作品の一覧。非選択項目は固定ピッチ、選択中だけ展開。Dock拡大はtransformのみ（他の項目を押し出さない） */
+  .index-list { position: relative; list-style: none; margin: 0; padding: 0; }
+  .index-list li { height: var(--index-list-pitch); display: flex; align-items: center; }
+  .index-list li.is-current { height: auto; display: block; padding: var(--index-current-gap) 0; }
+  .index-list li:not(.is-current) .index-list-detail,
+  .index-list li.is-current .index-list-item { display: none; }
+  .index-list-item {
+    display: block; text-align: left;
+    font-size: var(--index-list-size); line-height: 1.25; font-weight: 900;
+    color: black; opacity: 0.45;
+    transform-origin: left center;
+    transition: transform 180ms ease-out, opacity 180ms ease-out;
+  }
+  .index-list-item span { display: block; }
+  @media (prefers-reduced-motion: reduce) {
+    .index-list-item { transition: none; }
+  }
+  /* Mobile用キャプションはPC・タブレットでは非表示（.index-caption側を使用） */
   .index-mobile-caption { display: none; }
-  /* 最後のprojectもIntersectionObserverの中央判定に届くよう、10vh分のscroll余白を確保 */
-    :root {
-    --index-footer-space: 80px;
-  }
-
-  .index-visual {
-    padding-bottom: max(0px, calc(10vh - var(--index-footer-space)));
-  }
-
 }
-/* <=1023px：左固定captionなし、visual columnは全幅 */
-@media (max-width: 1023px) {
+/* スマホ：左上captionは使わず、footerの上に固定したcaptionを使う */
+@media (max-width: 767px) {
   .index-caption { display: none; }
-  .index-mobile-caption { font-family: "Noto Sans HK", sans-serif; font-size: 18px; }
+  .index-mobile-caption {
+    position: fixed; z-index: 10; left: 0; right: 0;
+    bottom: calc(var(--index-footer-h) + env(safe-area-inset-bottom));
+    font-family: "Noto Sans HK", sans-serif; font-size: 18px;
+  }
 }
 
-.index-visual { display: flex; flex-direction: column; gap: 0; width: 100%; max-width: var(--index-visual-width); }
-@media (max-width: 1023px) {
-  .index-visual { max-width: none; }
+/* PCは展開表示を折り返さない（行数が作品ごとに変わらず、一覧の並びが安定する） */
+@media (min-width: 1024px) {
+  .index-caption { max-width: none; white-space: nowrap; }
 }
-.index-thumb img { display: block; width: 100%; height: auto; }
 
 /* PC用.index-caption / Mobile用.index-mobile-caption 共通のcaptionラベル・本文 */
 .index-featured-label { font-weight: 900; margin-bottom: var(--index-featured-label-gap); }
-@media (max-width: 1023px) {
+@media (max-width: 767px) {
   .index-featured-label {
     padding-left: max(var(--edge), env(safe-area-inset-left));
     padding-right: max(var(--edge), env(safe-area-inset-right));
@@ -78,17 +169,21 @@
 .index-first-ref p { margin: 0; color: black; }
 .index-first-ref p:last-child { margin-top: var(--index-first-ref-line-gap); }
 
-@media (max-width: 1023px) {
+@media (max-width: 767px) {
   .index-first-ref {
     padding-left: max(var(--edge), env(safe-area-inset-left));
     padding-right: max(var(--edge), env(safe-area-inset-right));
   }
+  /* footerとの間はcaption側のbottomで確保するので、最後のmarginは不要 */
+  .index-mobile-caption .index-first-ref { margin-bottom: 0; }
 }
 
+/* 画面下に固定 */
 .index-footer {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  height: calc(var(--index-footer-h) + env(safe-area-inset-bottom));
   display: flex; justify-content: space-between; align-items: center;
-  margin-top: var(--index-footer-space);
-  padding: 0 var(--edge) 24px;
+  padding: 0 var(--edge) env(safe-area-inset-bottom);
   font-size: 12px;
 }
 

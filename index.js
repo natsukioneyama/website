@@ -61,15 +61,11 @@
   
   };
 
-  // Built once, in place, rather than as per-project DOM - hover and scroll both
-  // just rewrite this same node's content (see updateCaption below).
+  // PC/tablet left caption: a container for the project list built further down
+  // (see "list"), where the current project is expanded in place - there is no
+  // separate big-caption block any more. Hidden on phones (index.css).
   const caption = document.createElement('div');
   caption.className = 'index-caption';
-  const captionLabel = document.createElement('div');
-  captionLabel.className = 'index-featured-label';
-  const captionRef = document.createElement('div');
-  captionRef.className = 'index-first-ref';
-  caption.append(captionLabel, captionRef);
   main.prepend(caption);
 
   // Mobile/Tablet Portrait (<=1023px - see report) static caption: same
@@ -81,40 +77,36 @@
   // without joining the thumbnail sequence itself. Hidden >=1024px in index.css.
   // Reuses .index-featured-label/.index-first-ref (and their existing <=1023px
   // padding rules) rather than introducing new typography/spacing CSS.
-  const [, firstCaption] = Object.entries(INDEX_CAPTIONS)[0];
+  // (experiment/fixed-index-scroll: now fixed to the bottom of the screen via
+  // index.css and updated by updateCaption() together with the PC caption, so it
+  // follows the current slide instead of always showing the first entry.)
   const mobileCaption = document.createElement('div');
   mobileCaption.className = 'index-mobile-caption';
-  if (firstCaption.label) {
-    const mobileCaptionLabel = document.createElement('div');
-    mobileCaptionLabel.className = 'index-featured-label';
-    mobileCaptionLabel.textContent = firstCaption.label;
-    mobileCaption.append(mobileCaptionLabel);
-  }
+  const mobileCaptionLabel = document.createElement('div');
+  mobileCaptionLabel.className = 'index-featured-label';
   const mobileCaptionRef = document.createElement('div');
   mobileCaptionRef.className = 'index-first-ref';
-  mobileCaptionRef.append(...firstCaption.lines.map(text => {
+  mobileCaption.append(mobileCaptionLabel, mobileCaptionRef);
+  main.insertBefore(mobileCaption, $('index-visual'));
+
+  // Caption text for a project. Projects with no INDEX_CAPTIONS entry fall back to
+  // the same [title, line1] pairing the modal caption already uses (see
+  // openProject); the label line is simply omitted for those.
+  function captionFor(project) {
+    const entry = INDEX_CAPTIONS[project.id];
+    return {label: entry?.label || '', lines: entry ? entry.lines : [project.title, project.line1].filter(Boolean)};
+  }
+  const toParagraphs = lines => lines.map(text => {
     const p = document.createElement('p');
     p.textContent = text;
     return p;
-  }));
-  mobileCaption.append(mobileCaptionRef);
-  main.insertBefore(mobileCaption, $('index-visual'));
-
-  // The single source of truth for "what the caption currently shows" - called
-  // from the scroll-driven IntersectionObserver below (the only update path now
-  // that the left index is gone). Projects with no INDEX_CAPTIONS entry fall back
-  // to the same [title, line1] pairing the modal caption already uses (see
-  // openProject); the label line is simply omitted for those.
+  });
+  // Phone bottom caption (the PC/tablet list expands the current item itself).
   function updateCaption(project) {
-    const entry = INDEX_CAPTIONS[project.id];
-    captionLabel.textContent = entry?.label || '';
-    captionLabel.style.visibility = entry?.label ? '' : 'hidden';
-    const lines = entry ? entry.lines : [project.title, project.line1].filter(Boolean);
-    captionRef.replaceChildren(...lines.map(text => {
-      const p = document.createElement('p');
-      p.textContent = text;
-      return p;
-    }));
+    const {label, lines} = captionFor(project);
+    mobileCaptionLabel.textContent = label;
+    mobileCaptionLabel.hidden = !label;
+    mobileCaptionRef.replaceChildren(...toParagraphs(lines));
   }
 
   // The single 14-project sequence, in display order, for the giant-thumbnail
@@ -144,6 +136,9 @@
       // element's intrinsic-size hint; loading="lazy" still keeps off-screen cost down.
       img.src = media.full; img.alt = media.alt || project.title || '';
       img.width = media.width; img.height = media.height;
+      // Off-screen slides sit inside an overflow:hidden stage, which native lazy
+      // loading may never consider "near the viewport" - see preloadAround() below,
+      // which switches the neighbours to eager before they slide in.
       img.loading = 'lazy'; img.decoding = 'async'; img.draggable = false;
       button.append(img);
       button.addEventListener('click', () => openProject(project));
@@ -152,33 +147,312 @@
   }
   buildVisual($('index-visual'), SEQUENCE);
 
-  // Initial state: whatever is actually first on screen at scroll position 0 -
-  // SEQUENCE[0], not a separate "newest" constant - so this can never disagree with
-  // what the IntersectionObserver below reports once it fires.
-  updateCaption(projectsById.get(SEQUENCE[0].id));
+  // Fixed-screen slide controller (experiment/fixed-index-scroll). The page itself
+  // never scrolls (index.css); each .index-thumb is a full-screen slide stacked in
+  // the same spot, and data-pos puts it above (prev), on screen (current) or below
+  // (next) the viewport. Every slide before the current one is "prev" and every
+  // slide after it is "next", so moving one step only ever changes two slides and
+  // each always enters from / leaves to the correct side - no reset frames needed.
+  const SLIDE_MS = 600;           // must match the transition - set as a CSS var below
+  const WHEEL_THRESHOLD = 8;      // px of accumulated deltaY that counts as one step
+  const WHEEL_GESTURE_GAP = 150;  // ms of wheel silence that ends one gesture
+  const SWIPE_THRESHOLD = 40;     // px of vertical finger travel that counts as a swipe
+  const visual = $('index-visual');
+  const slides = [...visual.querySelectorAll('.index-thumb')];
+  visual.style.setProperty('--index-slide-ms', SLIDE_MS + 'ms');
+  let current = 0, animating = false, queuedTarget = null;
 
-  // Keeps the caption in sync with plain scrolling: it always reflects whichever
-  // .index-thumb is currently centered in the viewport. rootMargin shrinks the
-  // intersection root to a thin band straddling the exact vertical center (49% in
-  // from top and bottom, not the full 50%, so the band has a hair of real height
-  // instead of collapsing to a single geometric line - avoids relying on browsers
-  // handling a zero-height root perfectly). Thumbnails are laid out edge-to-edge
-  // with no gap (index.css: `gap: 0`), so exactly one is ever under that band at a
-  // time. matchMedia is checked once, here, at load - not on resize - since this
-  // feature is PC-only and the instructions call for no resize listener;
-  // .index-thumb elements exist at every breakpoint (unlike .index-caption, which
-  // is hidden <=1023px via CSS), so without this check the observer would keep
-  // recomputing on mobile for no visible effect.
-  if (matchMedia('(min-width: 1024px)').matches) {
-    const thumbObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const project = projectsById.get(entry.target.dataset.projectId);
-        if (project) updateCaption(project);
-      });
-    }, {rootMargin: '-49% 0px -49% 0px', threshold: 0});
-    document.querySelectorAll('.index-thumb').forEach(thumb => thumbObserver.observe(thumb));
+  // One list of every SEQUENCE project (PC/tablet only - .index-caption is hidden
+  // on phones). Each <li> holds both views of its project: a small two-line button
+  // (publication + issue, the first two INDEX_CAPTIONS lines) and the full big
+  // caption (label + every line). Only the current item shows the big one, and the
+  // whole list is shifted so that block starts just below the image's top edge
+  // (alignList) - earlier projects end up above it, later ones below. Hover (PC) and tap (tablet) both just request that slide.
+  const list = document.createElement('ol');
+  list.className = 'index-list';
+  const listRows = [];
+  const listItems = slides.map((slide, i) => {
+    const {label, lines} = captionFor(projectsById.get(slide.dataset.projectId));
+    const li = document.createElement('li');
+    const button = document.createElement('button');
+    button.type = 'button'; button.className = 'index-list-item';
+    button.append(...lines.slice(0, 2).map(text => {
+      const span = document.createElement('span');
+      span.textContent = text;
+      return span;
+    }));
+    button.addEventListener('click', () => requestSlide(i));
+    const detail = document.createElement('div');
+    detail.className = 'index-list-detail';
+    if (label) {
+      const labelEl = document.createElement('div');
+      labelEl.className = 'index-featured-label';
+      labelEl.textContent = label;
+      detail.append(labelEl);
+    }
+    const ref = document.createElement('div');
+    ref.className = 'index-first-ref';
+    ref.append(...toParagraphs(lines));
+    detail.append(ref);
+    li.append(button, detail);
+    list.append(li);
+    listRows.push(li);
+    return button;
+  });
+  caption.append(list);
+
+  // Shift the list so the current item's expanded caption (its first line) starts
+  // exactly at .index-caption's top edge, which index.css pins a little below the
+  // image's top edge (--index-caption-y). Layout (offsetTop, relative to the
+  // positioned .index-list) ignores transforms, so this is stable mid-animation.
+  // Later projects stack their predecessors above that line, so when there isn't
+  // room for them the whole list is pushed down just enough that its first row
+  // stays below --index-safe-top (clear of the logo/nav) - the expanded caption
+  // then sits lower than usual rather than the list running under the header.
+  //
+  // Exception - the first project: its expanded caption starts at the same Y as
+  // its small entry does while the second project is selected, so the first
+  // caption's top edge never moves when switching between the two. That position
+  // is derived from the current layout: with row 0 expanded, row 1 is a small row,
+  // whose height (pitch) and button inset are exactly what row 0 would have.
+  function alignList() {
+    const detail = listRows[current]?.querySelector('.index-list-detail');
+    if (!detail) return;
+    const safeTop = parseFloat(getComputedStyle(caption).getPropertyValue('--index-safe-top')) || 0;
+    const clamp = shift => Math.max(shift, safeTop - caption.getBoundingClientRect().top);
+    let shift = clamp(-detail.offsetTop);
+    if (current === 0 && listRows.length > 1) {
+      const pitch = listRows[1].offsetHeight;
+      // Small rows centre their button (index.css: align-items: center). Computed
+      // rather than read from offsetTop, which rounds to whole pixels.
+      const inset = (pitch - listItems[1].offsetHeight) / 2;
+      const gap = detail.offsetTop - listRows[0].offsetTop;
+      const shiftWhenSecond = clamp(-(pitch + gap)); // second row's caption then sits at pitch + gap
+      shift = shiftWhenSecond + inset - detail.offsetTop;
+    }
+    list.style.transform = `translateY(${shift}px)`;
   }
+  // FLIP: after the current row changes (rows resize, list re-aligns), animate
+  // every row from where it was on screen to where it is now, with the same
+  // duration/easing as the image slide, and fade in the swapped text of the two
+  // rows that changed size. Rows are the animated elements; the Dock scale lives on
+  // the inner button, so the two never fight over one transform.
+  function relayoutList(from) {
+    const before = listRows.map(row => row.getBoundingClientRect().top);
+    listRows.forEach((row, i) => row.classList.toggle('is-current', i === current));
+    alignList();
+    if (reducedMotion.matches || from === current) return; // initial layout: no animation
+    listRows.forEach((row, i) => {
+      const dy = before[i] - row.getBoundingClientRect().top;
+      if (dy) row.animate([{transform: `translateY(${dy}px)`}, {transform: 'none'}], {duration: SLIDE_MS, easing: 'cubic-bezier(0.65, 0, 0.35, 1)'});
+      if (i === current || i === from) row.animate([{opacity: 0}, {opacity: 1}], {duration: SLIDE_MS * 0.6, easing: 'ease-out'});
+    });
+  }
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  function layoutSlides(from) {
+    slides.forEach((slide, i) => {
+      const pos = i < current ? 'prev' : i > current ? 'next' : 'current';
+      // A jump of more than one step (list hover/tap) moves the slides in between
+      // from below to above (or back). They're off screen the whole time, so they
+      // jump instantly instead of sweeping across the viewport - only the outgoing
+      // and incoming slides animate.
+      const skipped = i !== from && i !== current && slide.dataset.pos !== pos;
+      slide.classList.toggle('is-instant', skipped);
+      slide.dataset.pos = pos;
+      // Off-screen slides stay out of the tab order and the accessibility tree.
+      slide.inert = i !== current;
+    });
+    visual.offsetWidth; // flush the instant moves before transitions come back
+    slides.forEach(slide => slide.classList.remove('is-instant'));
+    listItems.forEach((item, i) => item.toggleAttribute('aria-current', i === current));
+    relayoutList(from);
+  }
+  function preloadAround() {
+    [current - 1, current + 1].forEach(i => {
+      const img = slides[i]?.querySelector('img');
+      if (img) img.loading = 'eager';
+    });
+  }
+  // The one place a slide change happens. Whatever the distance, exactly two slides
+  // animate: the outgoing one leaves upward when moving forward (downward when
+  // moving back) and the target enters from the opposite side, in SLIDE_MS.
+  function moveTo(target) {
+    if (target < 0 || target >= slides.length || target === current) return;
+    const from = current;
+    animating = true;
+    current = target;
+    const img = slides[current].querySelector('img');
+    if (img) img.loading = 'eager';
+    layoutSlides(from);
+    preloadAround();
+    updateCaption(projectsById.get(slides[current].dataset.projectId));
+    listSettledAt = performance.now() + SLIDE_MS;
+    clearTimeout(hoverTimer);
+    setTimeout(() => {
+      animating = false;
+      // The list has stopped moving: whatever row now sits under a still pointer
+      // must not count as a hover until the pointer actually moves (see dockFrame).
+      hoverArmY = dockY;
+      // The latest request that arrived mid-animation (wheel gesture, list hover or
+      // tap) runs now - intermediate ones were simply overwritten, so a fast hover
+      // sweep never stacks up animations.
+      const next = queuedTarget; queuedTarget = null;
+      if (next != null && indexActive()) moveTo(next);
+    }, SLIDE_MS);
+  }
+  // Keyboard and touch swipes: ignored while a slide is moving (unchanged behaviour).
+  function go(dir) {
+    if (!animating) moveTo(current + dir);
+  }
+  // Wheel gestures and the list: never dropped - queued if a slide is moving.
+  function requestSlide(target) {
+    target = Math.max(0, Math.min(slides.length - 1, target));
+    if (animating) queuedTarget = target === current ? null : target;
+    else moveTo(target);
+  }
+  const indexActive = () => modal.hidden && info.hidden;
+
+  // Initial state: SEQUENCE[0], laid out without animating in.
+  layoutSlides(0);
+  preloadAround();
+  if (slides.length) updateCaption(projectsById.get(slides[0].dataset.projectId));
+
+  // Wheel / trackpad: one gesture = exactly one step, fired as early as possible.
+  // A macOS trackpad flick keeps sending inertial wheel events for 1-2s after the
+  // finger lifts, with no gap in between, so "wait for silence" alone would swallow
+  // any second swipe made during that tail. Instead, once a gesture has fired its
+  // step, its remaining events are watched rather than just ignored:
+  //  - inertia only ever decays, so after the deltas fall below half their peak
+  //    ("decaying"), a renewed rise (two events in a row clearly above the lowest
+  //    value seen since) can only be a new finger swipe;
+  //  - inertia never reverses, so a delta in the opposite direction is a new swipe;
+  //  - WHEEL_GESTURE_GAP ms of silence also ends the gesture (mouse wheels, which
+  //    have no inertia and don't decay).
+  // A new gesture that completes while a slide is still animating is queued (one
+  // step, latest request wins - see requestSlide) and runs the moment the 600ms
+  // animation ends.
+  let wheelAcc = 0, wheelLast = 0, wheelSign = 0, wheelConsumed = false;
+  let wheelPeak = 0, wheelTrough = 0, wheelDecaying = false, wheelRise = 0;
+  addEventListener('wheel', e => {
+    if (!indexActive() || e.ctrlKey) return; // ctrlKey = trackpad pinch-zoom
+    e.preventDefault();
+    const scale = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1;
+    const dy = e.deltaY * scale, dx = e.deltaX * scale;
+    if (dy === 0 || Math.abs(dy) < Math.abs(dx)) return; // mostly-horizontal swipe
+    const now = performance.now(), abs = Math.abs(dy), sign = Math.sign(dy);
+
+    let newGesture = now - wheelLast > WHEEL_GESTURE_GAP;
+    wheelLast = now;
+    if (!newGesture && wheelConsumed) {
+      if (sign !== wheelSign) {
+        newGesture = true;
+      } else if (!wheelDecaying) {
+        wheelPeak = Math.max(wheelPeak, abs);
+        if (abs < wheelPeak * 0.5) { wheelDecaying = true; wheelTrough = abs; }
+      } else if (abs > wheelTrough * 2 + 4) {
+        newGesture = ++wheelRise >= 2;
+      } else {
+        wheelRise = 0; wheelTrough = Math.min(wheelTrough, abs);
+      }
+    }
+    if (newGesture) { wheelConsumed = false; wheelAcc = 0; }
+    if (wheelConsumed) return;
+
+    if (Math.sign(wheelAcc) !== sign) wheelAcc = 0;
+    wheelAcc += dy;
+    if (Math.abs(wheelAcc) >= WHEEL_THRESHOLD) {
+      requestSlide(current + sign);
+      wheelConsumed = true; wheelAcc = 0; wheelSign = sign;
+      wheelPeak = abs; wheelDecaying = false; wheelRise = 0;
+    }
+  }, {passive: false});
+
+  // Touch: vertical swipe, judged on release. A tap (no real movement) falls through
+  // to the slide button's normal click, which opens the project modal.
+  let touchStartX = 0, touchStartY = 0, touchTracking = false;
+  addEventListener('touchstart', e => {
+    touchTracking = indexActive() && e.touches.length === 1;
+    if (!touchTracking) return;
+    touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY;
+  }, {passive: true});
+  addEventListener('touchend', e => {
+    if (!touchTracking) return;
+    touchTracking = false;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStartX, dy = t.clientY - touchStartY;
+    if (Math.abs(dy) >= SWIPE_THRESHOLD && Math.abs(dy) > Math.abs(dx)) go(dy < 0 ? 1 : -1);
+  }, {passive: true});
+  addEventListener('touchcancel', () => { touchTracking = false; }, {passive: true});
+
+  // PC list hover: macOS Dock-style magnification + hover-to-switch. Mouse only
+  // (pointerType check), so tablet taps go through the plain click handler above
+  // and phones never see the list at all. Each small item's scale depends only on
+  // its distance from the pointer (cosine falloff over DOCK_RANGE px), measured from
+  // the <li> rows, and is applied as a transform on the inner button - so nothing
+  // is pushed aside. The CSS transition on that transform smooths the wave and the
+  // return to 1 on leave; it is separate from the 600ms slide/list movement.
+  //
+  // Because selecting a project re-centres the list, the row under a motionless
+  // pointer changes on its own. To stop that from chaining into further switches:
+  //  - no hover switching while the list is moving (until listSettledAt);
+  //  - once it settles, the pointer must move HOVER_REARM_PX from where it was
+  //    (hoverArmY) before hover counts again;
+  //  - a row must stay under the pointer for HOVER_DWELL_MS, so sweeping across
+  //    rows on the way to another one doesn't select each of them.
+  const DOCK_MAX_SCALE = 1.2;  // first pass, deliberately modest - easy to retune
+  const DOCK_RANGE = 72;       // px from the pointer at which magnification reaches 0
+  const HOVER_REARM_PX = 12;
+  const HOVER_DWELL_MS = 80;
+  let dockY = null, dockRaf = null, listSettledAt = 0, hoverArmY = null;
+  let hoverTimer = null, hoverPending = -1;
+  function rowAt(y) {
+    return listRows.findIndex(row => {
+      const r = row.getBoundingClientRect();
+      return y >= r.top && y < r.bottom;
+    });
+  }
+  function hoverAllowed() {
+    if (dockY == null || !indexActive() || performance.now() < listSettledAt) return false;
+    if (hoverArmY != null) {
+      if (Math.abs(dockY - hoverArmY) < HOVER_REARM_PX) return false;
+      hoverArmY = null;
+    }
+    return true;
+  }
+  function dockFrame() {
+    dockRaf = null;
+    if (dockY == null) return;
+    listRows.forEach((row, i) => {
+      const r = row.getBoundingClientRect();
+      const d = Math.abs(dockY - (r.top + r.height / 2));
+      const f = i !== current && d < DOCK_RANGE ? (1 + Math.cos(Math.PI * d / DOCK_RANGE)) / 2 : 0;
+      listItems[i].style.transform = reducedMotion.matches || f === 0 ? '' : `scale(${1 + (DOCK_MAX_SCALE - 1) * f})`;
+    });
+    const target = hoverAllowed() ? rowAt(dockY) : -1;
+    if (target === hoverPending) return;
+    clearTimeout(hoverTimer);
+    hoverPending = target;
+    if (target < 0 || target === current) return;
+    hoverTimer = setTimeout(() => {
+      hoverPending = -1;
+      if (hoverAllowed() && rowAt(dockY) === target) requestSlide(target);
+    }, HOVER_DWELL_MS);
+  }
+  list.addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse') return;
+    dockY = e.clientY;
+    dockRaf ??= requestAnimationFrame(dockFrame);
+  });
+  list.addEventListener('pointerleave', () => {
+    dockY = null; hoverArmY = null; hoverPending = -1;
+    clearTimeout(hoverTimer);
+    listItems.forEach(item => { item.style.transform = ''; });
+  });
+  // The big caption's size follows the viewport (clamp() in index.css), and web
+  // fonts change line heights once loaded - re-centre without animating.
+  addEventListener('resize', alignList);
+  document.fonts?.ready.then(alignList);
 
   // Scroll lock/restore: same technique as overview.js's lock()/close() (fixed body,
   // remember scrollY, inert the background, restore and refocus on close). main
@@ -372,7 +646,13 @@
       else if (!info.hidden) { e.preventDefault(); closeInfo(); }
       return;
     }
-    if (modal.hidden) return;
+    if (modal.hidden) {
+      // Index slide navigation from the keyboard (only while no overlay is open).
+      if (!info.hidden) return;
+      if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); go(1); }
+      else if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); go(-1); }
+      return;
+    }
     if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
       e.preventDefault();
       // Ignore the OS's own key-repeat events entirely - our own rAF loop (started
