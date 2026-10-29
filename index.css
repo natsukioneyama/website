@@ -148,6 +148,10 @@ html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
     bottom: calc(var(--index-footer-h) + env(safe-area-inset-bottom));
     font-family: "Noto Sans HK", sans-serif; font-size: 18px;
   }
+  /* 18px基準の比率。ラベル85%（15.3px）、作品名・説明・フォトグラファー名90%（16.2px）。
+     行間は既存の比率（ラベルnormal、本文1.3）のまま文字サイズに追従する */
+  .index-mobile-caption .index-featured-label { font-size: 0.85em; }
+  .index-mobile-caption .index-first-ref { font-size: 0.9em; }
 }
 
 /* PCは展開表示を折り返さない（行数が作品ごとに変わらず、一覧の並びが安定する） */
