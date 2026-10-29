@@ -24,10 +24,7 @@ window.PORTFOLIO_PROJECTS = [
     "media": [
       { "type": "image", "thumb": "thmbs/modernweeklystyle/september2026/felixcooper_01/01.webp", "full": "img/modernweeklystyle/september2026/felixcooper_01/01.webp", "alt": "Modern Weekly Style", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
       { "type": "image", "thumb": "thmbs/modernweeklystyle/september2026/felixcooper_01/02.webp", "full": "img/modernweeklystyle/september2026/felixcooper_01/02.webp", "alt": "Modern Weekly Style", "width": 280, "height": 350, "dataW": 961, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/modernweeklystyle/september2026/felixcooper_01/03.webp", "full": "img/modernweeklystyle/september2026/felixcooper_01/03.webp", "alt": "Modern Weekly Style", "width": 281, "height": 350, "dataW": 962, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/modernweeklystyle/september2026/felixcooper_01/04.webp", "full": "img/modernweeklystyle/september2026/felixcooper_01/04.webp", "alt": "Modern Weekly Style", "width": 350, "height" : 281, "dataW": 1200, "dataH": 964 },
-      { "type": "image", "thumb": "thmbs/modernweeklystyle/september2026/felixcooper_01/05.webp", "full": "img/modernweeklystyle/september2026/felixcooper_01/05.webp", "alt": "Modern Weekly Style", "width": 281, "height" : 350, "dataW": 964, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/modernweeklystyle/september2026/felixcooper_01/06.webp", "full": "img/modernweeklystyle/september2026/felixcooper_01/06.webp", "alt": "Modern Weekly Style", "width": 281, "height" : 350, "dataW": 965, "dataH": 1200 }
+      { "type": "image", "thumb": "thmbs/modernweeklystyle/september2026/felixcooper_01/03.webp", "full": "img/modernweeklystyle/september2026/felixcooper_01/03.webp", "alt": "Modern Weekly Style", "width": 281, "height": 350, "dataW": 962, "dataH": 1200 }
     ]
   },  
   {
@@ -39,8 +36,6 @@ window.PORTFOLIO_PROJECTS = [
     "media": [
       { "type": "image", "thumb": "thmbs/voguecs/september2026/gosiaturczynska/01.webp", "full": "img/voguecs/september2026/gosiaturczynska/01.webp", "alt": "VOGUE CS", "width": 283, "height": 350, "dataW": 969, "dataH": 1200 },
       { "type": "image", "thumb": "thmbs/voguecs/september2026/gosiaturczynska/02.webp", "full": "img/voguecs/september2026/gosiaturczynska/02.webp", "alt": "VOGUE CS", "width": 283, "height": 350, "dataW": 969, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/voguecs/september2026/gosiaturczynska/03.webp", "full": "img/voguecs/september2026/gosiaturczynska/03.webp", "alt": "VOGUE CS", "width": 350, "height": 232, "dataW": 1200, "dataH": 796 },
-      { "type": "image", "thumb": "thmbs/voguecs/september2026/gosiaturczynska/04.webp", "full": "img/voguecs/september2026/gosiaturczynska/04.webp", "alt": "VOGUE CS", "width": 283, "height": 350, "dataW": 969, "dataH": 1200 },
       { "type": "image", "thumb": "thmbs/voguecs/september2026/gosiaturczynska/05.webp", "full": "img/voguecs/september2026/gosiaturczynska/05.webp", "alt": "VOGUE CS", "width": 283, "height": 350, "dataW": 969, "dataH": 1200 }
     ]
   },    
@@ -53,9 +48,7 @@ window.PORTFOLIO_PROJECTS = [
     "media": [
       { "type": "image", "thumb": "thmbs/10magazine/september_2026/01.webp", "full": "img/10magazine/september_2026/01.webp", "alt": "10magazine", "width": 268, "height": 350, "dataW": 920, "dataH": 1200 },
       { "type": "image", "thumb": "thmbs/10magazine/september_2026/02.webp", "full": "img/10magazine/september_2026/02.webp", "alt": "10magazine", "width": 268, "height": 350, "dataW": 920, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/10magazine/september_2026/03.webp", "full": "img/10magazine/september_2026/03.webp", "alt": "10magazine", "width": 268, "height": 350, "dataW": 920, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/10magazine/september_2026/04.webp", "full": "img/10magazine/september_2026/04.webp", "alt": "10magazine", "width": 268, "height": 350, "dataW": 920, "dataH": 1200 }
-    ]
+      { "type": "image", "thumb": "thmbs/10magazine/september_2026/03.webp", "full": "img/10magazine/september_2026/03.webp", "alt": "10magazine", "width": 268, "height": 350, "dataW": 920, "dataH": 1200 }    ]
   },
   {
     "id": "hube-frabonasia",
@@ -76,7 +69,6 @@ window.PORTFOLIO_PROJECTS = [
     "line1": "Danilo Pavlovic",
     "line2": "",
     "media": [
-      { "type": "image", "thumb": "thmbs/vogueadria/summer2026/01.webp", "full": "img/vogueadria/summer2026/01.webp", "alt": "Danilo Pavlovic", "width": 275, "height": 350, "dataW": 942, "dataH": 1200 },
       { "type": "image", "thumb": "thmbs/vogueadria/summer2026/02.webp", "full": "img/vogueadria/summer2026/02.webp", "alt": "Danilo Pavlovic", "width": 275, "height": 350, "dataW": 942, "dataH": 1200 },
       { "type": "image", "thumb": "thmbs/vogueadria/summer2026/03.webp", "full": "img/vogueadria/summer2026/03.webp", "alt": "Danilo Pavlovic", "width": 350, "height": 283, "dataW": 1200, "dataH": 969 }
     ]
@@ -131,9 +123,7 @@ window.PORTFOLIO_PROJECTS = [
     "media": [
       { "type": "image", "thumb": "thmbs/replicaman/ss24/01.webp", "full": "img/replicaman/ss24/01.webp", "alt": "replicaman", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
       { "type": "image", "thumb": "thmbs/replicaman/ss24/02.webp", "full": "img/replicaman/ss24/02.webp", "alt": "replicaman", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/replicaman/ss24/03.webp", "full": "img/replicaman/ss24/03.webp", "alt": "replicaman", "width": 350, "height": 263, "dataW": 1200, "dataH": 900 },
-      { "type": "image", "thumb": "thmbs/replicaman/ss24/04.webp", "full": "img/replicaman/ss24/04.webp", "alt": "replicaman", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 }
-    ]
+      { "type": "image", "thumb": "thmbs/replicaman/ss24/03.webp", "full": "img/replicaman/ss24/03.webp", "alt": "replicaman", "width": 350, "height": 263, "dataW": 1200, "dataH": 900 }    ]
   },
   {
     "id": "beauty-papers-jeremie-monnier",
@@ -144,7 +134,6 @@ window.PORTFOLIO_PROJECTS = [
     "media": [
       { "type": "image", "thumb": "thmbs/beautypapers/01/01.webp", "full": "img/beautypapers/01/01.webp", "alt": "beautypapers", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
       { "type": "image", "thumb": "thmbs/beautypapers/01/02.webp", "full": "img/beautypapers/01/02.webp", "alt": "beautypapers", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/beautypapers/01/03.webp", "full": "img/beautypapers/01/03.webp", "alt": "beautypapers", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
       { "type": "image", "thumb": "thmbs/beautypapers/01/04.webp", "full": "img/beautypapers/01/04.webp", "alt": "beautypapers", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 }
     ]
   },
@@ -156,9 +145,7 @@ window.PORTFOLIO_PROJECTS = [
     "line2": "",
     "media": [
       { "type": "image", "thumb": "thmbs/costume/saschaoda/01/01.webp", "full": "img/costume/saschaoda/01/01.webp", "alt": "costume", "width": 265, "height": 350, "dataW": 907, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/costume/saschaoda/01/02.webp", "full": "img/costume/saschaoda/01/02.webp", "alt": "costume", "width": 265, "height": 350, "dataW": 907, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/costume/saschaoda/01/03.webp", "full": "img/costume/saschaoda/01/03.webp", "alt": "costume", "width": 265, "height": 350, "dataW": 907, "dataH": 1200 }
-    ]
+      { "type": "image", "thumb": "thmbs/costume/saschaoda/01/02.webp", "full": "img/costume/saschaoda/01/02.webp", "alt": "costume", "width": 265, "height": 350, "dataW": 907, "dataH": 1200 }    ]
   },
   {
     "id": "port-magazine-aude-le-barbey",
@@ -168,9 +155,7 @@ window.PORTFOLIO_PROJECTS = [
     "line2": "",
     "media": [
       { "type": "image", "thumb": "thmbs/portmagazine/isuue38/audelebarbey/01.webp", "full": "img/portmagazine/isuue38/audelebarbey/01.webp", "alt": "audelebarbey", "width": 263, "height": 350, "dataW": 900, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/portmagazine/isuue38/audelebarbey/03.webp", "full": "img/portmagazine/isuue38/audelebarbey/03.webp", "alt": "audelebarbey", "width": 350, "height": 233, "dataW": 1200, "dataH": 800 },
-      { "type": "image", "thumb": "thmbs/portmagazine/isuue38/audelebarbey/04.webp", "full": "img/portmagazine/isuue38/audelebarbey/04.webp", "alt": "audelebarbey", "width": 350, "height": 263, "dataW": 1200, "dataH": 900 }
-    ]
+      { "type": "image", "thumb": "thmbs/portmagazine/isuue38/audelebarbey/03.webp", "full": "img/portmagazine/isuue38/audelebarbey/03.webp", "alt": "audelebarbey", "width": 350, "height": 233, "dataW": 1200, "dataH": 800 }    ]
   },
   {
     "id": "office-jesper-lund",
@@ -180,9 +165,7 @@ window.PORTFOLIO_PROJECTS = [
     "line2": "",
     "media": [
       { "type": "image", "thumb": "thmbs/office/ofiicexkeen/01.webp", "full": "img/office/ofiicexkeen/01.webp", "alt": "JesperLund", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/office/ofiicexkeen/02.webp", "full": "img/office/ofiicexkeen/02.webp", "alt": "JesperLund", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/office/ofiicexkeen/03.webp", "full": "img/office/ofiicexkeen/03.webp", "alt": "JesperLund", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 }
-    ]
+      { "type": "image", "thumb": "thmbs/office/ofiicexkeen/02.webp", "full": "img/office/ofiicexkeen/02.webp", "alt": "JesperLund", "width": 280, "height": 350, "dataW": 960, "dataH": 1200 }    ]
   },
   {
     "id": "marrknull-aw26-jumbo-tsui",
@@ -192,9 +175,7 @@ window.PORTFOLIO_PROJECTS = [
     "line2": "",
     "media": [
       { "type": "image", "thumb": "thmbs/marrknull/AW26/01.webp", "full": "img/marrknull/AW26/01.webp", "alt": "maarknullaw26", "width": 264, "height": 350, "dataW": 905, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/marrknull/AW26/02.webp", "full": "img/marrknull/AW26/02.webp", "alt": "maarknullaw26", "width": 264, "height": 350, "dataW": 907, "dataH": 1200 },
-      { "type": "image", "thumb": "thmbs/marrknull/AW26/03.webp", "full": "img/marrknull/AW26/03.webp", "alt": "maarknullaw26", "width": 265, "height": 350, "dataW": 909, "dataH": 1200 }
-    ]
+      { "type": "image", "thumb": "thmbs/marrknull/AW26/02.webp", "full": "img/marrknull/AW26/02.webp", "alt": "maarknullaw26", "width": 264, "height": 350, "dataW": 907, "dataH": 1200 }    ]
   },
   {
     "id": "numero-china-carla-rossi",
