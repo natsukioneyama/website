@@ -188,7 +188,7 @@ html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
   height: calc(var(--index-footer-h) + env(safe-area-inset-bottom));
   display: flex; justify-content: space-between; align-items: center;
   padding: 0 var(--edge) env(safe-area-inset-bottom);
-  font-size: 12px;
+  font-size: 8px;
 }
 
 /* === 横スクロールmodal === */
