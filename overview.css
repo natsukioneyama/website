@@ -68,7 +68,9 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
 .overlay { position: fixed; inset: 0; z-index: 20; background: var(--bg); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
 /* #modalは横drag操作のみのため縦scrollを無効化。#infoは.overlay共通で縦scrollが必要なので対象外 */
 #modal { touch-action: none; overscroll-behavior-y: none; }
-.stage { position: absolute; inset: 48px 30px 54px; overflow: hidden; touch-action: none; }
+/* 上端・下端の固定値（48px / 54px）は最小値。名前（.modal-brand）が2行になった時や、iPhoneの安全領域で
+   名前・キャプションが内側に寄った時は、overview.jsが実測した位置（--stage-top / --stage-bottom）まで広げて重ならないようにする */
+.stage { position: absolute; inset: max(48px, var(--stage-top, 0px)) 30px max(54px, var(--stage-bottom, 0px)); overflow: hidden; touch-action: none; }
 .modal-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; user-select: none; -webkit-user-select: none; }
 .modal-footer button { font-size: 22px; min-width: 44px; min-height: 44px; text-align: right; }
 .info { overflow-y: auto; overscroll-behavior: contain; }
@@ -105,7 +107,7 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
 }
 @media (max-width: 767px) {
   :root { --edge: 10px; font-size: 14px; }
-  .stage { inset: 48px 0 64px; }
+  .stage { inset: max(48px, var(--stage-top, 0px)) 0 max(64px, var(--stage-bottom, 0px)); }
   .info-columns {
   grid-template-columns: min(280px, calc(100vw - 40px));
   margin: 100px auto 0;
