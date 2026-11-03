@@ -146,7 +146,7 @@
   }
   function close() {
     if (!active) return;
-    disposeAll(); active.hidden = true; active = null; current = -1; gesture = null;
+    disposeAll(); unwatchStageInsets(); active.hidden = true; active = null; current = -1; gesture = null;
     $('overview').inert = false; $('overview-nav').inert = false; $('info-toggle').inert = false; headerNav.inert = false;
     $('info-toggle').setAttribute('aria-expanded','false');
     Object.assign(document.body.style, {position:'', top:'', width:''});
@@ -229,8 +229,34 @@
     el.classList.toggle('no-ring', !viaKeyboard);
     el.focus({preventScroll:true});
   }
+  // Keep .stage clear of the modal's header (brand) and footer (caption + close)
+  // whatever their real size: the brand can wrap to two lines, and on iPhone it sits
+  // below the notch (safe-area-inset-top) while the footer rises above the home
+  // indicator. Measured from live geometry and handed to overview.css, where the
+  // original fixed insets remain the minimums - so nothing moves unless needed.
+  const modalBrand = modal.querySelector('.modal-brand');
+  function syncStageInsets() {
+    if (modal.hidden) return;
+    const modalRect = modal.getBoundingClientRect();
+    const footerTop = Math.min($('modal-caption').getBoundingClientRect().top, $('modal-close').getBoundingClientRect().top);
+    modal.style.setProperty('--stage-top', (modalBrand.getBoundingClientRect().bottom - modalRect.top) + 'px');
+    modal.style.setProperty('--stage-bottom', (modalRect.bottom - footerTop) + 'px');
+  }
+  // Watched only while the modal is open (close() disconnects): size changes of the
+  // brand (late web-font swap, wrapping) or footer (caption), and viewport changes
+  // (resize/rotation, which also move the safe-area insets).
+  const stageInsetObserver = new ResizeObserver(syncStageInsets);
+  function watchStageInsets() {
+    [modalBrand, modal.querySelector('.modal-footer')].forEach(el => stageInsetObserver.observe(el));
+    addEventListener('resize', syncStageInsets);
+  }
+  function unwatchStageInsets() {
+    stageInsetObserver.disconnect();
+    removeEventListener('resize', syncStageInsets);
+  }
+
   function openModal(index, viaKeyboard = false) {
-    lock(modal); wheelSum = 0; wheelLast = 0; wheelCooldown = 0;
+    lock(modal); syncStageInsets(); watchStageInsets(); wheelSum = 0; wheelLast = 0; wheelCooldown = 0;
     settle(index); focusInitial($('modal-close'), viaKeyboard);
   }
   $('modal-close').addEventListener('click', close);
