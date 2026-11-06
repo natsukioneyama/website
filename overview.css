@@ -10,7 +10,9 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
 /* 通常ヘッダーのブランドとナビが共有する寸法。ナビのベースラインはこの値から自動で追従する */
 :root {
   --brand-top: max(12px, env(safe-area-inset-top));
-  --brand-size: 18px;
+  --brand-name-size: 22px;
+  --brand-role-size: 14px;
+  --brand-role-gap: 4px;     /* 名前と肩書きの間 */
   --brand-line-height: 1.2;
 }
 /* index / overview / modal 共通のブランド表記。背景と同色+difference blendで常に黒く見せる */
@@ -25,24 +27,26 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
   font-size: 16px;
   padding-top: 0;
 }
-.brand { color: var(--bg); mix-blend-mode: difference; font-size: var(--brand-size); }
+.brand { color: var(--bg); mix-blend-mode: difference; }
 /* 名前と肩書きを1行ずつ（通常ヘッダー・Info・モーダル共通） */
 .brand-name, .brand-role { display: block; }
+.brand-name { font-size: var(--brand-name-size); }
+.brand-role { font-size: var(--brand-role-size); margin-top: var(--brand-role-gap); }
 
 /* index / overview 共通ヘッダーナビ（右上固定）。ブランド2行目と同じ高さに置き、下の::beforeを基準にベースラインを揃える */
 .index-header-nav {
   display: flex; gap: 10px; align-items: baseline;
   position: fixed; z-index: 10; color: var(--bg); mix-blend-mode: difference;
   right: max(var(--edge), env(safe-area-inset-right));
-  top: calc(var(--brand-top) + var(--brand-size) * var(--brand-line-height));
+  top: calc(var(--brand-top) + var(--brand-name-size) * var(--brand-line-height) + var(--brand-role-gap));
   font-weight: 400;
   font-size: 12px;
 }
-/* ブランドと同じ文字サイズ・行間の見えない文字。リンクはこの行のベースラインに揃う。marginはgap分の打ち消し */
+/* 肩書きと同じ文字サイズ・行間の見えない文字。リンクはこの行のベースラインに揃う。marginはgap分の打ち消し */
 .index-header-nav::before {
   content: "\200b";
   margin-right: -10px;
-  font-size: var(--brand-size);
+  font-size: var(--brand-role-size);
   line-height: var(--brand-line-height);
 }
 
@@ -50,10 +54,10 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
   font-size: 10px;
 }
 
-/* 幅が足りずブランドと横に並ばない時だけ、ナビをブランドの下の行へ */
-@media (max-width: 339px) {
+/* 幅が足りず肩書きと横に並ばない時だけ、ナビをブランドの下の行へ */
+@media (max-width: 259px) {
   .index-header-nav {
-    top: calc(var(--brand-top) + 2 * var(--brand-size) * var(--brand-line-height));
+    top: calc(var(--brand-top) + (var(--brand-name-size) + var(--brand-role-size)) * var(--brand-line-height) + var(--brand-role-gap));
     left: max(var(--edge), env(safe-area-inset-left));
     right: auto;
   }
