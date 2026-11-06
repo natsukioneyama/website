@@ -12,42 +12,33 @@
   <script src="overview.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@100..900&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;700;900&family=Noto+Sans+HK:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
   <button class="brand" id="info-toggle" aria-expanded="false" aria-controls="info">
-  <span class="brand-initial">N</span>ATSUKI
-  <span class="brand-initial">O</span>NEYAMA
-  <span class="brand-initial">M</span>AKEUP
-  <span class="brand-initial">A</span>RTIST
+  <span class="brand-name">NATSUKI ONEYAMA</span>
+  <span class="brand-role">Makeup Artist</span>
 </button>
   <!-- Same class/position/behavior as index.html's own header nav (shared rule
-       lives in overview.css) - inerted alongside #overview-nav/#info-toggle while
+       lives in overview.css) - inerted alongside #info-toggle while
        the modal or info overlay is open, see overview.js's lock()/close(). -->
   <nav class="index-header-nav" aria-label="Site">
     <a href="index.html">INDEX</a>
     <a href="mailto:natsukioneyama@gmail.com">CONTACT</a>
   </nav>
   <main id="overview"><div id="grid" aria-label="Selected portfolio"></div></main>
-  <footer class="bottom-nav" id="overview-nav">
-    <div class="caption" id="overview-caption" aria-live="polite"></div>
-  </footer>
   <section id="modal" class="overlay" role="dialog" aria-modal="true" aria-label="Portfolio media viewer" hidden>
 <div class="modal-brand">
-<span class="brand-initial">N</span>ATSUKI
-<span class="brand-initial">O</span>NEYAMA
-<span class="brand-initial">M</span>AKEUP
-<span class="brand-initial">A</span>RTIST
+<span class="brand-name">NATSUKI ONEYAMA</span>
+<span class="brand-role">Makeup Artist</span>
 </div>
     <div id="stage" class="stage"></div>
     <div class="modal-footer"><div id="modal-caption" class="caption" aria-live="polite"></div><button id="modal-close" aria-label="Close media viewer">×</button></div>
   </section>
   <section id="info" class="overlay info" role="dialog" aria-modal="true" aria-label="About Natsuki Oneyama" hidden>
     <button id="info-close" class="info-brand" aria-label="Close information">
-      <span class="brand-initial">N</span>ATSUKI
-      <span class="brand-initial">O</span>NEYAMA
-      <span class="brand-initial">M</span>AKEUP
-      <span class="brand-initial">A</span>RTIST
+      <span class="brand-name">NATSUKI ONEYAMA</span>
+      <span class="brand-role">Makeup Artist</span>
     </button>
     <div class="info-columns">
       <p class="bio">Paris-based makeup artist creating refined beauty with a modern, image-driven sensibility. Working across fashion, beauty and commercial projects, his approach combines precision, restraint and a strong understanding of how makeup functions within the broader visual narrative of an image.</p>

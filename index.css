@@ -117,8 +117,8 @@ html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
   }
   /* 選択中の展開表示：ラベルも作品名と同じサイズ。間隔は文字サイズに比例（em） */
   .index-caption .index-featured-label { font-size: var(--index-caption-size); line-height: 1.2; margin-bottom: 1.2em; }
-  .index-caption .index-first-ref { font-size: var(--index-caption-size); line-height: 1.2; margin-bottom: 0; }
-  .index-caption .index-first-ref p:last-child { margin-top: 0.8em; }
+  .index-caption .index-first-ref { font-size: var(--index-caption-size); line-height: 1.2; margin-bottom: 0;font-weight:200;}
+  .index-caption .index-first-ref p:last-child { margin-top: 0.8em;  font-size: 13px; font-weight:200;}
 
   /* 全作品の一覧。非選択項目は固定ピッチ、選択中だけ展開。Dock拡大はtransformのみ（他の項目を押し出さない） */
   .index-list { position: relative; list-style: none; margin: 0; padding: 0; }
@@ -146,12 +146,13 @@ html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
   .index-mobile-caption {
     position: fixed; z-index: 10; left: 0; right: 0;
     bottom: calc(var(--index-footer-h) + env(safe-area-inset-bottom));
-    font-family: "Noto Sans HK", sans-serif; font-size: 18px;
+    font-family: "Inter", "Noto Sans HK", sans-serif; font-size: 18px;
   }
   /* 18px基準の比率。ラベル85%（15.3px）、作品名・説明・フォトグラファー名90%（16.2px）。
      行間は既存の比率（ラベルnormal、本文1.3）のまま文字サイズに追従する */
   .index-mobile-caption .index-featured-label { font-size: 0.85em; }
-  .index-mobile-caption .index-first-ref { font-size: 0.9em; }
+  .index-mobile-caption .index-first-ref { font-size: 0.9em; font-weight: 200; }
+  .index-mobile-caption .index-first-ref p:last-child { font-weight: 200; } /* 太さはPCの.index-captionと同じ */
 }
 
 /* PCは展開表示を折り返さない（行数が作品ごとに変わらず、一覧の並びが安定する） */
@@ -160,7 +161,7 @@ html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
 }
 
 /* PC用.index-caption / Mobile用.index-mobile-caption 共通のcaptionラベル・本文 */
-.index-featured-label { font-weight: 900; margin-bottom: var(--index-featured-label-gap); }
+.index-featured-label { font-weight: 200; margin-bottom: var(--index-featured-label-gap); }
 @media (max-width: 767px) {
   .index-featured-label {
     padding-left: max(var(--edge), env(safe-area-inset-left));
@@ -171,7 +172,7 @@ html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
 
 .index-first-ref { margin-bottom: var(--index-first-ref-gap); line-height: 1.3; font-weight: 900; }
 .index-first-ref p { margin: 0; color: black; }
-.index-first-ref p:last-child { margin-top: var(--index-first-ref-line-gap); }
+.index-first-ref p:last-child { margin-top: var(--index-first-ref-line-gap); font-size:11px; font-weight:normal;}
 
 @media (max-width: 767px) {
   .index-first-ref {

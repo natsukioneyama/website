@@ -1,4 +1,4 @@
-:root { font-family: "Noto Sans HK", sans-serif; color: #191919; --bg: #FAFAF8; background: var(--bg); font-size: 14px; --edge: 14px; }
+:root { font-family: "Inter", "Noto Sans HK", sans-serif; color: #191919; --bg: #FAFAF8; background: var(--bg); font-size: 14px; --edge: 14px; }
 * { box-sizing: border-box; }
 body { margin: 0; }
 button, a { color: inherit; font: inherit; -webkit-tap-highlight-color: transparent; }
@@ -7,61 +7,72 @@ a { text-decoration: none; }
 button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
 .no-ring:focus-visible { outline: none; }
 [hidden] { display: none !important; }
+/* 通常ヘッダーのブランドとナビが共有する寸法。ナビのベースラインはこの値から自動で追従する */
+:root {
+  --brand-top: max(12px, env(safe-area-inset-top));
+  --brand-size: 18px;
+  --brand-line-height: 1.2;
+}
 /* index / overview / modal 共通のブランド表記。背景と同色+difference blendで常に黒く見せる */
 .brand, .info-brand, .modal-brand {
   position: fixed;
   left: max(var(--edge), env(safe-area-inset-left));
-  top: max(12px, env(safe-area-inset-top));
+  top: var(--brand-top);
   text-align: left;
-  line-height: 1.2;
-  font-weight: bold;
+  line-height: var(--brand-line-height);
+  font-weight: 400;
   z-index: 10;
   font-size: 16px;
   padding-top: 0;
 }
-.brand { color: var(--bg); mix-blend-mode: difference; }
+.brand { color: var(--bg); mix-blend-mode: difference; font-size: var(--brand-size); }
+/* 名前と肩書きを1行ずつ（通常ヘッダー・Info・モーダル共通） */
+.brand-name, .brand-role { display: block; }
 
-.brand-initial {
-  font-family: "UnifrakturMaguntia", serif;
-  font-weight: 400;
-  font-size: 2em;
-}
-/* index / overview 共通ヘッダーナビ（右上固定） */
+/* index / overview 共通ヘッダーナビ（右上固定）。ブランド2行目と同じ高さに置き、下の::beforeを基準にベースラインを揃える */
 .index-header-nav {
-  display: flex; gap: 10px;
+  display: flex; gap: 10px; align-items: baseline;
   position: fixed; z-index: 10; color: var(--bg); mix-blend-mode: difference;
   right: max(var(--edge), env(safe-area-inset-right));
-  top: max(20px, env(safe-area-inset-top));
-  font-weight: bold;
+  top: calc(var(--brand-top) + var(--brand-size) * var(--brand-line-height));
+  font-weight: 400;
+  font-size: 12px;
+}
+/* ブランドと同じ文字サイズ・行間の見えない文字。リンクはこの行のベースラインに揃う。marginはgap分の打ち消し */
+.index-header-nav::before {
+  content: "\200b";
+  margin-right: -10px;
+  font-size: var(--brand-size);
+  line-height: var(--brand-line-height);
 }
 
 #index-modal-caption {
   font-size: 10px;
 }
 
-/* モバイル：ヘッダーナビを左側へ */
-@media (max-width: 699px) {
+/* 幅が足りずブランドと横に並ばない時だけ、ナビをブランドの下の行へ */
+@media (max-width: 339px) {
   .index-header-nav {
-    top: 50px;
-    left: 10px;
+    top: calc(var(--brand-top) + 2 * var(--brand-size) * var(--brand-line-height));
+    left: max(var(--edge), env(safe-area-inset-left));
     right: auto;
   }
 }
-#overview { padding: 100px var(--edge) 64px; }
+#overview { padding: 100px var(--edge) max(var(--edge), env(safe-area-inset-bottom)); }
 #grid { position: relative; }
 .jl-item { display: block; margin: 0; }
-/* hoverの拡大はimg/video側で行う。wrapper自体のサイズは固定し、hover判定の境界がズレないようにする */
 .jl-item img, .jl-item video { width: 100%; height: 100%; object-fit: contain; display: block; transform-origin: center; transition: transform 180ms ease; }
 .jl-item:focus-visible { z-index: 2; }
 .jl-item:focus-visible img, .jl-item:focus-visible video { transform: scale(1.065); }
-.jl-item.selected { z-index: 2; }
-.jl-item.selected img, .jl-item.selected video { transform: scale(0.85); }
-/* hover-groupはoverview.jsが同一project内の全thumbnailに付与。タッチのtap-to-previewにも使うためmedia queryで絞らない */
-.jl-item.hover-group { z-index: 2; }
-.jl-item.hover-group img, .jl-item.hover-group video { transform: scale(0.85); }
-.bottom-nav, .modal-footer { position: fixed; bottom: 0; left: 0; right: 0; padding: 9px max(var(--edge), env(safe-area-inset-right)) max(9px, env(safe-area-inset-bottom)) max(var(--edge), env(safe-area-inset-left)); min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size:11px;   text-transform: uppercase;}
-.bottom-nav { z-index: 5; background: var(--bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
-.bottom-nav[inert], .brand[inert] { visibility: hidden; }
+/* is-in-groupはoverview.jsが同じ作品の全thumbnailに付与（PCのhover・タッチの1回目のtap）。html11.01と同じ白の半透明 */
+.jl-item.is-in-group::after { content: ""; position: absolute; inset: 0; z-index: 1; background: rgba(255, 255, 255, 0.763); pointer-events: none; }
+/* キャプションは作品の先頭thumbnail（data-head）にだけ表示。位置はhtml11.01と同じ */
+.ov-cap { position: absolute; left: 4px; top: 2px; z-index: 2; max-width: calc(100% - 8px); color: #000; font-size: 9px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.3; text-align: left; opacity: 0; pointer-events: none; }
+.ov-cap span { display: block; }
+.ov-cap span + span { opacity: 0.9; }
+.jl-item[data-head="1"].is-in-group .ov-cap { opacity: 1; }
+.modal-footer { position: fixed; bottom: 0; left: 0; right: 0; padding: 9px max(var(--edge), env(safe-area-inset-right)) max(9px, env(safe-area-inset-bottom)) max(var(--edge), env(safe-area-inset-left)); min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size:11px;   text-transform: uppercase;}
+.brand[inert] { visibility: hidden; }
 .caption { line-height: 1.25; min-height: 30px; }
 .caption span { display: block; }
 
