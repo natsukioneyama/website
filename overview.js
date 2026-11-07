@@ -11,14 +11,13 @@
   const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
   let selected = -1, current = -1, active = null, returnFocus, scrollY = 0;
   let wheelSum = 0, wheelLast = 0, wheelCooldown = 0, gesture = null;
-  const videos = new Set(), visibleVideos = new Set();
   // Two-node slide transition state: `liveNode` is the settled, currently-visible media
   // element (the one drag/keyboard/wheel act on); `transitioning` locks out new navigation
   // input for the duration of a committed slide so inputs never overlap animations.
   let liveNode = null, transitioning = false, activeAnimations = [];
   const SLIDE_MS = 280, SLIDE_EASING = 'ease-out';
   // Neighbor preloading: warms the browser's network+decode cache for the media one step
-  // ahead/behind the current index (wrapping across the 51-item sequence), so by the time
+  // ahead/behind the current index (wrapping across the page sequence), so by the time
   // the user actually navigates there the image is already fetched/decoded. Never awaited
   // by navigation itself, so it can never slow down the response to input.
   const preloadedSrcs = new Set();
@@ -44,22 +43,28 @@
       const line = document.createElement('span'); line.textContent = text; target.append(line);
     });
   }
+  const videos = new Set();
+  const visibleVideos = new Set();
+
   function syncVideos() {
-    videos.forEach(v => {
-      if (!active && !document.hidden && visibleVideos.has(v)) v.play().catch(() => {});
-      else v.pause();
-    });
-    if (document.hidden) stage.querySelector('video')?.pause();
+    for (const video of videos) {
+      if (!active && !document.hidden && visibleVideos.has(video)) {
+        if (video.paused) video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    }
+    if (document.hidden) stage.querySelectorAll('video').forEach(video => video.pause());
   }
+
   const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => e.isIntersecting ? visibleVideos.add(e.target) : visibleVideos.delete(e.target));
+    for (const { target, isIntersecting } of entries) {
+      if (isIntersecting) visibleVideos.add(target);
+      else visibleVideos.delete(target);
+    }
     syncVideos();
   });
-  // Groups thumbnails by project.id (the existing stable identifier from
-  // portfolio-data.js, not a title string compare) so hovering any one of a
-  // project's thumbnails can highlight the whole project - built incrementally as
-  // each button is created below, since sequence.map() reuses the same `project`
-  // object reference for every media item of that project.
+
   const buttonsByProject = new Map();
   let highlighted = null;
   function clearGroupHighlight() {
@@ -81,17 +86,32 @@
   }
   const buttons = sequence.map(({project, media: m}, index) => {
     const button = document.createElement('button'); button.className = 'jl-item';
-    button.type = 'button'; button.setAttribute('aria-label', `${project.title}, image ${index + 1}: open media`);
+    button.type = 'button';
+    const isVideo = m.type === 'video';
+    const mediaLabel = isVideo ? 'Play film' : `Open image ${project.media.indexOf(m) + 1}`;
+    button.setAttribute('aria-label', `${mediaLabel} · ${project.title}`);
     button.dataset.w = m.dataW; button.dataset.h = m.dataH;
-    const node = document.createElement(m.type === 'video' ? 'video' : 'img');
-    if (m.type === 'video') {
-      node.muted = true; node.loop = true; node.playsInline = true; node.preload = 'metadata';
-      node.src = m.src; videos.add(node); observer.observe(node);
+    const node = document.createElement(isVideo ? 'video' : 'img');
+    if (isVideo) {
+      node.muted = true;
+      node.loop = true;
+      node.playsInline = true;
+      node.preload = 'none';
+      if (m.thumb) node.poster = m.thumb;
+      node.src = m.src;
+      videos.add(node);
+      observer.observe(node);
     } else {
-      node.src = m.thumb; node.alt = m.alt || project.title;
-      node.width = m.width; node.height = m.height; node.loading = 'lazy'; node.decoding = 'async';
+      node.src = m.thumb;
+      node.alt = '';
+      node.width = m.width;
+      node.height = m.height;
+      node.loading = 'lazy';
+      node.decoding = 'async';
     }
-    node.draggable = false; button.append(node); grid.append(button);
+    node.draggable = false;
+    button.append(node);
+    grid.append(button);
     if (!buttonsByProject.has(project.id)) {
       buttonsByProject.set(project.id, []);
       button.dataset.head = '1';
@@ -124,17 +144,45 @@
     clearGroupHighlight();
   });
 
-  // Same aspect-ratio -> justifiedLayout -> absolute box placement as HTML12.02.
   function render() {
-    const w = innerWidth;
-    const layout = window.justifiedLayout(sequence.map(({media:m}) => ({aspectRatio:m.dataW / m.dataH})), {
-      containerWidth: grid.clientWidth,
-      targetRowHeight: w <= 767 ? Math.min(240, grid.clientWidth / 2) : 210,
-      boxSpacing: 12
-    });
-    grid.style.height = layout.containerHeight + 'px';
-    layout.boxes.forEach((box, i) => Object.assign(buttons[i].style, {
-      position:'absolute', left:box.left+'px', top:box.top+'px', width:box.width+'px', height:box.height+'px'
+    if (!sequence.length) return;
+    const width = grid.clientWidth;
+    const mobile = innerWidth <= 767;
+    const spacing = 12;
+    const options = {
+      containerWidth: width,
+      targetRowHeight: mobile ? Math.min(240, width / 2) : 210,
+      boxSpacing: spacing,
+    };
+    const boxes = [];
+    let top = 0;
+    let photos = [];
+
+    function placeRows(items) {
+      if (!items.length) return;
+      const layout = window.justifiedLayout(items, options);
+      boxes.push(...layout.boxes.map(box => ({ ...box, top: box.top + top })));
+      top += layout.containerHeight + spacing;
+    }
+
+    for (const { media } of sequence) {
+      const aspectRatio = media.dataW / media.dataH;
+      if (mobile && media.type === 'video') {
+        placeRows(photos);
+        photos = [];
+        const height = width / aspectRatio;
+        boxes.push({ left: 0, top, width, height });
+        top += height + spacing;
+      } else {
+        photos.push({ aspectRatio });
+      }
+    }
+    placeRows(photos);
+
+    grid.style.height = (top - spacing) + 'px';
+    boxes.forEach((box, i) => Object.assign(buttons[i].style, {
+      position: 'absolute', left: box.left + 'px', top: box.top + 'px',
+      width: box.width + 'px', height: box.height + 'px',
     }));
   }
   let resizeTimer;
@@ -145,10 +193,15 @@
     returnFocus = document.activeElement; scrollY = window.scrollY; active = panel;
     Object.assign(document.body.style, {position:'fixed', top:-scrollY+'px', width:'100%'});
     $('overview').inert = true; $('info-toggle').inert = true; headerNav.inert = true;
-    panel.hidden = false; syncVideos();
+    panel.hidden = false;
+    syncVideos();
   }
   function releaseVideo(node) {
-    if (node && node.tagName === 'VIDEO') { node.pause(); node.removeAttribute('src'); node.load(); }
+    const video = node.querySelector('video');
+    if (!video) return;
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
   }
   function disposeAll() {
     activeAnimations.forEach(a => a.cancel()); activeAnimations = []; transitioning = false;
@@ -157,24 +210,120 @@
   }
   function close() {
     if (!active) return;
-    disposeAll(); unwatchStageInsets(); active.hidden = true; active = null; current = -1; gesture = null;
+    disposeAll(); active.hidden = true; active = null; current = -1; gesture = null;
     $('overview').inert = false; $('info-toggle').inert = false; headerNav.inert = false;
-    $('info-toggle').setAttribute('aria-expanded','false');
+    $('info-toggle').setAttribute('aria-expanded', 'false');
     Object.assign(document.body.style, {position:'', top:'', width:''});
-    window.scrollTo(0,scrollY); returnFocus?.focus({preventScroll:true}); syncVideos();
+    window.scrollTo(0,scrollY); returnFocus?.focus({preventScroll:true});
+    syncVideos();
   }
-  function createNode(index) {
-    const {project, media:m} = sequence[index];
-    const node = document.createElement(m.type === 'video' ? 'video' : 'img');
-    node.className = 'modal-media'; node.draggable = false;
-    if (m.type === 'video') {
-      node.playsInline = true; node.muted = true; node.controls = true; node.preload = 'auto';
-      node.addEventListener('loadedmetadata', () => {
-        if (node.isConnected) { node.currentTime = 0; node.play().catch(() => {}); }
-      }, {once:true});
-      node.src = m.src;
-    } else { node.alt = m.alt || project.title; node.src = m.full; node.decoding = 'async'; }
+  // The Nanase player fits the control bar to the visible video frame.
+  function createVideoNode(media) {
+    const node = document.createElement('div');
+    node.className = 'modal-media modal-video';
+
+    const wrap = document.createElement('div');
+    wrap.className = 'gm-video-wrap';
+    wrap.style.setProperty('--ar', media.dataW / media.dataH);
+
+    const video = document.createElement('video');
+    video.playsInline = true;
+    video.muted = true;
+    video.preload = 'auto';
+    video.draggable = false;
+    if (media.thumb) video.poster = media.thumb;
+
+    const controls = document.createElement('div');
+    controls.className = 'sv-controls';
+    controls.innerHTML = `
+      <div class="sv-progress">
+        <div class="sv-progress__bar"></div>
+        <input type="range" min="0" max="0" step="0.1" value="0" aria-label="Video progress" disabled>
+      </div>
+      <div class="sv-nav">
+        <button type="button" class="sv-btn sv-btn--play">PLAY</button>
+        <span class="sv-nav__right">
+          <button type="button" class="sv-btn sv-btn--sound">SOUND ON</button>
+          <button type="button" class="sv-btn sv-btn--fs">FULL</button>
+        </span>
+      </div>`;
+
+    wrap.append(video, controls);
+    node.append(wrap);
+    bindVideoControls(video, controls);
+    video.addEventListener('loadedmetadata', () => {
+      if (node === liveNode && !document.hidden) video.play().catch(() => {});
+    }, { once: true });
+    video.src = media.src;
     return node;
+  }
+
+  function bindVideoControls(video, controls) {
+    const progress = controls.querySelector('input');
+    const bar = controls.querySelector('.sv-progress__bar');
+    const play = controls.querySelector('.sv-btn--play');
+    const sound = controls.querySelector('.sv-btn--sound');
+    const fullscreen = controls.querySelector('.sv-btn--fs');
+
+    function updateProgress() {
+      const duration = video.duration;
+      if (!Number.isFinite(duration) || duration <= 0) return;
+      progress.disabled = false;
+      progress.max = duration;
+      progress.value = video.currentTime;
+      bar.style.width = `${video.currentTime / duration * 100}%`;
+    }
+
+    video.addEventListener('durationchange', updateProgress);
+    video.addEventListener('timeupdate', updateProgress);
+    progress.addEventListener('input', () => { video.currentTime = progress.valueAsNumber; });
+    video.addEventListener('play', () => { play.textContent = 'PAUSE'; });
+    video.addEventListener('pause', () => { play.textContent = 'PLAY'; });
+    play.addEventListener('click', () => {
+      if (video.paused) video.play().catch(() => {});
+      else video.pause();
+    });
+    video.addEventListener('volumechange', () => {
+      sound.textContent = video.muted ? 'SOUND ON' : 'SOUND OFF';
+    });
+    sound.addEventListener('click', () => {
+      video.muted = !video.muted;
+      if (!video.muted && video.paused) video.play().catch(() => {});
+    });
+    fullscreen.addEventListener('click', () => {
+      if (video.requestFullscreen) video.requestFullscreen().catch(() => {});
+      else video.webkitEnterFullscreen?.();
+    });
+
+    let hideTimer;
+    function showControls() {
+      clearTimeout(hideTimer);
+      controls.classList.add('is-visible');
+      hideTimer = setTimeout(() => controls.classList.remove('is-visible'), 2000);
+    }
+    video.addEventListener('click', event => {
+      if ((fine() && event.pointerType !== 'touch') || transitioning) return;
+      if (controls.classList.contains('is-visible')) {
+        clearTimeout(hideTimer);
+        controls.classList.remove('is-visible');
+      } else showControls();
+    });
+    controls.addEventListener('pointerdown', () => clearTimeout(hideTimer));
+    controls.addEventListener('pointerup', showControls);
+    controls.addEventListener('pointercancel', showControls);
+    video.addEventListener('emptied', () => clearTimeout(hideTimer));
+  }
+
+  function createNode(index) {
+    const { project, media } = sequence[index];
+    if (media.type === 'video') return createVideoNode(media);
+    const image = document.createElement('img');
+    image.className = 'modal-media';
+    image.draggable = false;
+    image.alt = media.alt || project.title;
+    image.src = media.full;
+    image.decoding = 'async';
+    return image;
   }
   // Initial display (modal/first open): no previous node, so no slide - just place it.
   function settle(index) {
@@ -193,6 +342,11 @@
   function slide(nextIndex, direction) {
     if (transitioning) return false;
     const outgoing = liveNode;
+    if (outgoing) {
+      outgoing.querySelector('video')?.pause();
+      if (outgoing.contains(document.activeElement)) $('modal-close').focus({ preventScroll: true });
+      outgoing.inert = true;
+    }
     const incoming = createNode(nextIndex);
     stage.append(incoming);
     current = nextIndex; liveNode = incoming;
@@ -213,8 +367,10 @@
       [{transform:fromOut}, {transform:`translateX(${-direction * 100}%)`}],
       {duration:SLIDE_MS, easing:SLIDE_EASING, fill:'forwards'}
     ) : null;
-    activeAnimations = [inAnim, outAnim].filter(Boolean);
-    Promise.all(activeAnimations.map(a => a.finished.catch(() => {}))).then(() => {
+    const animations = [inAnim, outAnim].filter(Boolean);
+    activeAnimations = animations;
+    Promise.all(animations.map(a => a.finished.catch(() => {}))).then(() => {
+      if (activeAnimations !== animations) return;
       if (outgoing) { releaseVideo(outgoing); outgoing.remove(); }
       incoming.style.willChange = ''; incoming.style.transform = '';
       activeAnimations.forEach(a => a.cancel()); activeAnimations = [];
@@ -240,34 +396,8 @@
     el.classList.toggle('no-ring', !viaKeyboard);
     el.focus({preventScroll:true});
   }
-  // Keep .stage clear of the modal's header (brand) and footer (caption + close)
-  // whatever their real size: the brand can wrap to two lines, and on iPhone it sits
-  // below the notch (safe-area-inset-top) while the footer rises above the home
-  // indicator. Measured from live geometry and handed to overview.css, where the
-  // original fixed insets remain the minimums - so nothing moves unless needed.
-  const modalBrand = modal.querySelector('.modal-brand');
-  function syncStageInsets() {
-    if (modal.hidden) return;
-    const modalRect = modal.getBoundingClientRect();
-    const footerTop = Math.min($('modal-caption').getBoundingClientRect().top, $('modal-close').getBoundingClientRect().top);
-    modal.style.setProperty('--stage-top', (modalBrand.getBoundingClientRect().bottom - modalRect.top) + 'px');
-    modal.style.setProperty('--stage-bottom', (modalRect.bottom - footerTop) + 'px');
-  }
-  // Watched only while the modal is open (close() disconnects): size changes of the
-  // brand (late web-font swap, wrapping) or footer (caption), and viewport changes
-  // (resize/rotation, which also move the safe-area insets).
-  const stageInsetObserver = new ResizeObserver(syncStageInsets);
-  function watchStageInsets() {
-    [modalBrand, modal.querySelector('.modal-footer')].forEach(el => stageInsetObserver.observe(el));
-    addEventListener('resize', syncStageInsets);
-  }
-  function unwatchStageInsets() {
-    stageInsetObserver.disconnect();
-    removeEventListener('resize', syncStageInsets);
-  }
-
   function openModal(index, viaKeyboard = false) {
-    lock(modal); syncStageInsets(); watchStageInsets(); wheelSum = 0; wheelLast = 0; wheelCooldown = 0;
+    lock(modal); wheelSum = 0; wheelLast = 0; wheelCooldown = 0;
     settle(index); focusInitial($('modal-close'), viaKeyboard);
   }
   $('modal-close').addEventListener('click', close);
@@ -286,8 +416,8 @@
   // VIDEO, so this block doesn't touch their existing behavior at all.
   function inContentRect(el, x, y) {
     const rect = el.getBoundingClientRect();
-    const naturalW = el.tagName === 'VIDEO' ? el.videoWidth : el.naturalWidth;
-    const naturalH = el.tagName === 'VIDEO' ? el.videoHeight : el.naturalHeight;
+    const naturalW = el.naturalWidth;
+    const naturalH = el.naturalHeight;
     if (!naturalW || !naturalH) return true; // size not known yet - treat as content, don't close under it
     const renderedW = Math.min(rect.width, rect.height * (naturalW / naturalH));
     const renderedH = renderedW * (naturalH / naturalW);
@@ -295,28 +425,33 @@
     return x >= left && x <= left + renderedW && y >= top && y <= top + renderedH;
   }
   modal.addEventListener('click', e => {
-    if (e.target === modal || e.target === stage) { close(); return; }
-    if ((e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') && !inContentRect(e.target, e.clientX, e.clientY)) close();
+    if (e.target === modal || e.target === stage || e.target.classList.contains('modal-video')) {
+      close();
+      return;
+    }
+    if (e.target.tagName === 'IMG' && !inContentRect(e.target, e.clientX, e.clientY)) close();
   });
-  $('info-toggle').addEventListener('click', e => {
-    lock(info); $('info-toggle').setAttribute('aria-expanded','true');
-    focusInitial($('info-close'), e.detail === 0);
+  $('info-toggle').addEventListener('click', event => {
+    lock(info);
+    $('info-toggle').setAttribute('aria-expanded', 'true');
+    focusInitial($('info-close'), event.detail === 0);
   });
   $('info-close').addEventListener('click', close);
-  // Same background-click-close idea for the Information overlay: only a direct
-  // hit on #info itself (outside .info-columns and the close button) counts.
-  info.addEventListener('click', e => { if (e.target === info) close(); });
+  info.addEventListener('click', event => {
+    if (event.target === info) close();
+  });
   document.addEventListener('visibilitychange', syncVideos);
   document.addEventListener('keydown', e => {
     if (!active) return;
     if (e.key === 'Escape') { e.preventDefault(); close(); return; }
-    if (active === modal && (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+    if (active === modal && !e.target.closest('.sv-controls') && (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
       // All four keys drive the same horizontal slide - Up/Left = Previous, Down/Right = Next.
       e.preventDefault();
       if (!e.repeat) { const d = (e.key === 'ArrowDown' || e.key === 'ArrowRight') ? 1 : -1; step(d); }
     }
     if (e.key === 'Tab') {
-      const focusable = [...active.querySelectorAll('button, a[href], video[controls]')];
+      const focusable = [...active.querySelectorAll('button, a[href], input:not(:disabled)')
+        .filter(el => !el.closest('[inert]'))];
       focusable.forEach(el => el.classList.remove('no-ring'));
       const first = focusable[0], last = focusable.at(-1);
       if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
@@ -338,10 +473,9 @@
     // A transition already owns the two current nodes; a fresh drag can only
     // start once it has settled back down to a single liveNode.
     if (e.pointerType === 'mouse' || !e.isPrimary || transitioning) return;
-    // Leave the native video control strip available for playback interaction.
-    if (e.target.tagName === 'VIDEO' && e.clientY > stage.getBoundingClientRect().bottom - 48) return;
+    if (e.target.closest('.sv-controls')) return;
     gesture = {id:e.pointerId, x:e.clientX, y:e.clientY, dx:0};
-    stage.setPointerCapture(e.pointerId);
+    e.target.setPointerCapture(e.pointerId);
   });
   stage.addEventListener('pointermove', e => {
     if (!gesture || gesture.id !== e.pointerId) return;

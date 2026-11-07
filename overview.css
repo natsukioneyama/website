@@ -7,18 +7,31 @@ a { text-decoration: none; }
 button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
 .no-ring:focus-visible { outline: none; }
 [hidden] { display: none !important; }
-/* 通常ヘッダーのブランドとナビが共有する寸法。ナビのベースラインはこの値から自動で追従する */
+/* Both pages anchor the nav to the Overview header's second line. */
 :root {
   --brand-top: max(12px, env(safe-area-inset-top));
-  --brand-name-size: 22px;
-  --brand-role-size: 14px;
-  --brand-role-gap: 4px;     /* 名前と肩書きの間 */
   --brand-line-height: 1.2;
+  --overview-brand-top: max(18px, env(safe-area-inset-top));
+  --overview-brand-name-size: 28px;
+  --overview-brand-role-size: 12px;
+  --nav-edge: 24px;
+  --nav-size: 12px;
+  --brand-lines-bottom: calc(var(--overview-brand-top) + (var(--overview-brand-name-size) + var(--overview-brand-role-size)) * var(--brand-line-height));
+  --nav-top: calc(var(--brand-lines-bottom) - var(--nav-size) * var(--brand-line-height));
 }
-/* index / overview / modal 共通のブランド表記。背景と同色+difference blendで常に黒く見せる */
+
+.overview-page {
+  --header-edge: var(--nav-edge);
+  --brand-top: var(--overview-brand-top);
+  --brand-name-size: var(--overview-brand-name-size);
+  --brand-role-size: var(--overview-brand-role-size);
+  --header-pad-bottom: 12px;
+  --header-height: calc(var(--brand-lines-bottom) + var(--header-pad-bottom));
+}
+
 .brand, .info-brand, .modal-brand {
   position: fixed;
-  left: max(var(--edge), env(safe-area-inset-left));
+  left: max(var(--header-edge, var(--edge)), env(safe-area-inset-left));
   top: var(--brand-top);
   text-align: left;
   line-height: var(--brand-line-height);
@@ -28,41 +41,48 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
   padding-top: 0;
 }
 .brand { color: var(--bg); mix-blend-mode: difference; }
-/* 名前と肩書きを1行ずつ（通常ヘッダー・Info・モーダル共通） */
-.brand-name, .brand-role { display: block; }
-.brand-name { font-size: var(--brand-name-size); }
-.brand-role { font-size: var(--brand-role-size); margin-top: var(--brand-role-gap); }
+.overview-page .brand { color: #000; mix-blend-mode: normal; }
+.brand-line { display: block; font-size: var(--brand-name-size); letter-spacing: -0.02em; }
+.brand-line + .brand-line { font-size: var(--brand-role-size); }
 
-/* index / overview 共通ヘッダーナビ（右上固定）。ブランド2行目と同じ高さに置き、下の::beforeを基準にベースラインを揃える */
-.index-header-nav {
-  display: flex; gap: 10px; align-items: baseline;
-  position: fixed; z-index: 10; color: var(--bg); mix-blend-mode: difference;
-  right: max(var(--edge), env(safe-area-inset-right));
-  top: calc(var(--brand-top) + var(--brand-name-size) * var(--brand-line-height) + var(--brand-role-gap));
+.index-header-nav, #modal-close {
+  position: fixed;
+  z-index: 10;
+  color: #000;
+  right: max(var(--nav-edge), env(safe-area-inset-right));
+  top: var(--nav-top);
+  font-size: var(--nav-size);
   font-weight: 400;
-  font-size: 12px;
-}
-/* 肩書きと同じ文字サイズ・行間の見えない文字。リンクはこの行のベースラインに揃う。marginはgap分の打ち消し */
-.index-header-nav::before {
-  content: "\200b";
-  margin-right: -10px;
-  font-size: var(--brand-role-size);
   line-height: var(--brand-line-height);
+  white-space: nowrap;
+}
+.index-header-nav {
+  display: grid;
+  grid-template-columns: 6em auto;
+  align-items: center;
+  gap: 10px;
+  mix-blend-mode: normal;
+}
+.index-header-nav > a:first-child { justify-self: end; }
+
+.header-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9;
+  height: var(--header-height);
+  background: rgba(255, 255, 255, 0.555);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  pointer-events: none;
 }
 
 #index-modal-caption {
   font-size: 10px;
 }
 
-/* 幅が足りず肩書きと横に並ばない時だけ、ナビをブランドの下の行へ */
-@media (max-width: 259px) {
-  .index-header-nav {
-    top: calc(var(--brand-top) + (var(--brand-name-size) + var(--brand-role-size)) * var(--brand-line-height) + var(--brand-role-gap));
-    left: max(var(--edge), env(safe-area-inset-left));
-    right: auto;
-  }
-}
-#overview { padding: 100px var(--edge) max(var(--edge), env(safe-area-inset-bottom)); }
+#overview { padding: calc(var(--header-height) + 20px) var(--edge) max(var(--edge), env(safe-area-inset-bottom)); }
 #grid { position: relative; }
 .jl-item { display: block; margin: 0; }
 .jl-item img, .jl-item video { width: 100%; height: 100%; object-fit: contain; display: block; transform-origin: center; transition: transform 180ms ease; }
@@ -75,21 +95,20 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
 .ov-cap span { display: block; }
 .ov-cap span + span { opacity: 0.9; }
 .jl-item[data-head="1"].is-in-group .ov-cap { opacity: 1; }
-.modal-footer { position: fixed; bottom: 0; left: 0; right: 0; padding: 9px max(var(--edge), env(safe-area-inset-right)) max(9px, env(safe-area-inset-bottom)) max(var(--edge), env(safe-area-inset-left)); min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size:11px;   text-transform: uppercase;}
-.brand[inert] { visibility: hidden; }
+.modal-footer { position: fixed; bottom: 0; left: 0; right: 0; padding: 9px max(var(--edge), env(safe-area-inset-right)) max(9px, env(safe-area-inset-bottom)) max(var(--edge), env(safe-area-inset-left)); min-height: calc(53px + max(9px, env(safe-area-inset-bottom))); display: flex; align-items: center; font-size:11px;   text-transform: uppercase;}
+.brand[inert], .brand[inert] ~ .header-bg { visibility: hidden; }
 .caption { line-height: 1.25; min-height: 30px; }
 .caption span { display: block; }
 
 .overlay { position: fixed; inset: 0; z-index: 20; background: var(--bg); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
-/* #modalは横drag操作のみのため縦scrollを無効化。#infoは.overlay共通で縦scrollが必要なので対象外 */
-#modal { touch-action: none; overscroll-behavior-y: none; }
-/* 上端・下端の固定値（48px / 54px）は最小値。名前（.modal-brand）が2行になった時や、iPhoneの安全領域で
-   名前・キャプションが内側に寄った時は、overview.jsが実測した位置（--stage-top / --stage-bottom）まで広げて重ならないようにする */
-.stage { position: absolute; inset: max(48px, var(--stage-top, 0px)) 30px max(54px, var(--stage-bottom, 0px)); overflow: hidden; touch-action: none; }
+#modal { background: #fff; touch-action: none; overscroll-behavior-y: none; }
+.stage { position: absolute; inset: var(--header-height) 30px 54px; overflow: hidden; touch-action: none; }
 .modal-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; user-select: none; -webkit-user-select: none; }
-.modal-footer button { font-size: 22px; min-width: 44px; min-height: 44px; text-align: right; }
+#modal-close { min-width: 44px; text-align: right; }
+#modal-close::before { content: ""; position: absolute; inset: -16px 0; }
 .info { overflow-y: auto; overscroll-behavior: contain; }
 .info-brand { z-index: 1; }
+.overview-page .info-brand { z-index: 10; }
 .info-columns {
   display: grid;
   grid-template-columns: 230px;
@@ -121,13 +140,132 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
   margin-top: 10px;
 }
 @media (max-width: 767px) {
-  :root { --edge: 10px; font-size: 14px; }
-  .stage { inset: max(48px, var(--stage-top, 0px)) 0 max(64px, var(--stage-bottom, 0px)); }
+  :root {
+    --edge: 10px;
+    --nav-edge: 20px;
+    --nav-size: 10px;
+    --overview-brand-top: var(--brand-top);
+    --overview-brand-name-size: 18px;
+    --overview-brand-role-size: 13px;
+  }
+  .overview-page { --header-pad-bottom: 8px; }
+  .index-header-nav { display: flex; }
+  .stage { inset: var(--header-height) 0 64px; }
   .info-columns {
-  grid-template-columns: min(280px, calc(100vw - 40px));
-  margin: 100px auto 0;
+    grid-template-columns: min(280px, calc(100vw - 40px));
+    margin: 100px auto 0;
+  }
 }
+
+@media (max-width: 560px) {
+  :root {
+    --nav-size: 12px;
+    --nav-mobile-offset: 16px;
+  }
+  .overview-page { --header-height: calc(var(--brand-lines-bottom) + var(--nav-mobile-offset) + 28px); }
+  .index-header-nav {
+    left: max(var(--header-edge, var(--edge)), env(safe-area-inset-left));
+    right: auto;
+    gap: 16px;
+    top: calc(var(--brand-lines-bottom) + var(--nav-mobile-offset));
+  }
+}
+
+/* Leave room when the Gothic wordmark wraps on narrow phones. */
+@media (max-width: 375px) {
+  :root { --nav-mobile-offset: 48px; }
 }
 
 /* reduced motion設定時はhoverのscale transitionを無効化 */
 @media (prefers-reduced-motion: reduce) { .jl-item img, .jl-item video { transition: none; } }
+
+/* Lightbox video controls adapted from Nanase Ito. */
+.modal-video {
+  display: flex; align-items: center; justify-content: center;
+  container-type: size;
+}
+.gm-video-wrap {
+  position: relative;
+  flex: 0 0 auto;
+  width: min(100cqw, 100cqh * var(--ar));
+  height: min(100cqh, 100cqw / var(--ar));
+}
+.gm-video-wrap video {
+  display: block; width: 100%; height: 100%; object-fit: contain;
+  user-select: none; -webkit-user-select: none;
+}
+/* ネイティブの操作UIは使わない（iOS Safari の再生ボタン等も含め非表示） */
+.gm-video-wrap video::-webkit-media-controls,
+.gm-video-wrap video::-webkit-media-controls-start-playback-button,
+.gm-video-wrap video::-webkit-media-controls-panel { display: none !important; -webkit-appearance: none; }
+
+/* コントロール本体（動画の下端に沿わせる） */
+.sv-controls {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 6px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s ease;
+  z-index: 10;
+  background: linear-gradient(to top, rgba(0,0,0,0.35), rgba(0,0,0,0));
+  border-radius: 0 0 6px 6px;
+}
+/* PC：ホバーで表示 */
+.gm-video-wrap:hover .sv-controls,
+.gm-video-wrap:has(:focus-visible) .sv-controls { opacity: 1; pointer-events: auto; }
+/* JS で付与：表示 */
+.sv-controls.is-visible { opacity: 1; pointer-events: auto; }
+/* プログレスバー（クリックでシーク） */
+.sv-progress {
+  position: relative; height: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  overflow: hidden; cursor: pointer; touch-action: none;
+}
+/* 進捗バー（JS で width を更新） */
+.sv-progress__bar { width: 0; height: 100%; background: #fff; }
+/* ボタン行（左右配置） */
+.sv-nav { display: flex; justify-content: space-between; align-items: center; }
+.sv-nav__right { display: flex; gap: 14px; }
+/* ボタン共通（白文字） */
+.sv-btn {
+  border: none; background: transparent; color: #fff;
+  font-size: 11px; letter-spacing: 0.06em;
+  padding: 4px 0; cursor: pointer;
+}
+/* モバイル用：コントロールの余白を少し減らす */
+@media (max-width: 480px) { .sv-controls { padding: 8px 12px; } }
+/* hover なし（タッチ）：初期非表示、.is-visible で表示 */
+@media (hover: none) and (pointer: coarse) {
+  .gm-video-wrap .sv-controls { opacity: 0; pointer-events: none; transition: opacity .35s ease; }
+  .gm-video-wrap .sv-controls.is-visible,
+  .gm-video-wrap:has(:focus-visible) .sv-controls { opacity: 1; pointer-events: auto; }
+}
+.sv-progress input {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  margin: 0; opacity: 0; cursor: pointer;
+}
+.sv-progress:focus-within { outline: 1px solid #fff; outline-offset: 2px; }
+
+/* Wide photo lightbox: keep the image centered and reserve room for credits. */
+@media (min-width: 1200px) {
+  #modal:has(.stage > img:not([inert])) {
+    --photo-side: clamp(180px, 14vw, 248px);
+    --photo-bottom: 54px;
+    --photo-caption-left: max(var(--header-edge), env(safe-area-inset-left));
+  }
+
+  #modal:has(.stage > img:not([inert])) .stage {
+    inset-inline: var(--photo-side);
+    bottom: var(--photo-bottom);
+  }
+
+  #modal:has(.stage > img:not([inert])) #modal-caption {
+    position: fixed;
+    left: var(--photo-caption-left);
+    top: calc((100dvh + var(--header-height) - var(--photo-bottom)) / 2);
+    width: calc(var(--photo-side) - var(--photo-caption-left) - 24px);
+    min-height: 0;
+    overflow-wrap: anywhere;
+    transform: translateY(-50%);
+  }
+}

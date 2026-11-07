@@ -40,7 +40,7 @@
   <script src="index.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;700;900&family=Noto+Sans+HK:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;700;900&family=Noto+Sans+HK:wght@100..900&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
 </head>
 <body>
   <!-- Same look as before (position/blend-mode/bold are id/class rules that don't
@@ -49,8 +49,10 @@
        Information overlay below, exactly like overview.html's #info-toggle brand
        button. -->
  <button class="brand" id="index-brand" aria-expanded="false" aria-controls="index-info">
-<span class="brand-name">NATSUKI ONEYAMA</span>
-<span class="brand-role">Makeup Artist</span>
+<span class="brand-initial">N</span>ATSUKI
+<span class="brand-initial">O</span>NEYAMA
+<span class="brand-initial">M</span>AKEUP
+<span class="brand-initial">A</span>RTIST
 </button>
        <!-- Header nav, all breakpoints (overlays the images, same fixed+mix-blend-mode
        technique as #index-brand - see index.css). "PERSONAL" has no confirmed link
@@ -83,8 +85,10 @@
        avoid any collision) - see report for what's reused verbatim. -->
   <section id="index-info" class="overlay info" role="dialog" aria-modal="true" aria-label="About Natsuki Oneyama" hidden>
 <button id="index-info-close" class="info-brand" aria-label="Close information">
-  <span class="brand-name">NATSUKI ONEYAMA</span>
-  <span class="brand-role">Makeup Artist</span>
+  <span class="brand-initial">N</span>ATSUKI
+  <span class="brand-initial">O</span>NEYAMA
+  <span class="brand-initial">M</span>AKEUP
+  <span class="brand-initial">A</span>RTIST
 </button>
     <div class="info-columns">
       <p class="bio">Paris-based makeup artist creating refined beauty with a modern, image-driven sensibility. Working across fashion, beauty and commercial projects, his approach combines precision, restraint and a strong understanding of how makeup functions within the broader visual narrative of an image.</p>

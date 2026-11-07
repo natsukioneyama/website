@@ -69,7 +69,17 @@
 /* INDEX画面自体はスクロールさせない（#index-info/#index-modalは自身の中でスクロール） */
 html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
 
-/* .index-header-nav はoverview.cssで定義（index/overview共通） */
+/* Restore the original wordmark on Index; Inter remains the text font. */
+#index-brand, #index-info-close {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.brand-initial {
+  font-family: "UnifrakturMaguntia", serif;
+  font-weight: 400;
+  font-size: 2em;
+}
 
 /* touch-action:noneでブラウザ標準のpan/pull-to-refreshを止め、スワイプはindex.jsで処理 */
 #index-main { position: fixed; inset: 0; touch-action: none; }
@@ -189,7 +199,7 @@ html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
   height: calc(var(--index-footer-h) + env(safe-area-inset-bottom));
   display: flex; justify-content: space-between; align-items: center;
   padding: 0 var(--edge) env(safe-area-inset-bottom);
-  font-size: 8px;
+  font-size: 8px; color:gray;
 }
 
 /* === 横スクロールmodal === */
