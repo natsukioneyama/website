@@ -226,5 +226,41 @@ window.PORTFOLIO_PROJECTS = [
       { "type": "image", "thumb": "thmbs/sanstitle/001/02.webp", "full": "img/sanstitle/001/02.webp", "alt": "sanstitle", "width": 233, "height": 350, "dataW": 800, "dataH": 1200 },
       { "type": "image", "thumb": "thmbs/sanstitle/001/03.webp", "full": "img/sanstitle/001/03.webp", "alt": "sanstitle", "width": 233, "height": 350, "dataW": 800, "dataH": 1200 }
     ]
-  }
+  },
+  // Preview films (start).
+  /*
+  {
+    id: "film-01",
+    category: "moving-image",
+    title: "Film 01",
+    media: [
+      {"type":"video","thumb":"thmbs/films/film-01.jpg","src":"video/10000000_178996090025604_7361427675567393984_n.mp4","dataW":1152,"dataH":648},
+    ],
+  },
+  {
+    id: "film-02",
+    category: "moving-image",
+    title: "Carlife Therapy — King Kong",
+    media: [
+      {"type":"video","thumb":"thmbs/films/film-02.jpg","src":"video/Carlife Therapy King Kong mp4.mp4","dataW":1920,"dataH":1080},
+    ],
+  },
+  {
+    id: "film-03",
+    category: "moving-image",
+    title: "Film 03",
+    media: [
+      {"type":"video","thumb":"thmbs/films/film-03.jpg","src":"video/SnapInsta.to_AQMuP5e3K8XwGZt7dNB39UvV1BTcnhQyF0FPYm0yeZ10FVIunnCrt1nRksLUJgr0bfTY0YB6_AMjVDr0YEhcMq0-seNKf7KnsDwH6uM.mp4","dataW":752,"dataH":480},
+    ],
+  },
+  {
+    id: "film-04",
+    category: "moving-image",
+    title: "Vogue CS — Film",
+    media: [
+      {"type":"video","thumb":"thmbs/films/film-04.jpg","src":"video/VDEF_VOGUECS_by Gosia Turczynska.mp4","dataW":1350,"dataH":1080},
+    ],
+  },
+  */
+  // Preview films (end).
 ];
